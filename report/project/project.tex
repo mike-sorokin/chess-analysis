@@ -1,0 +1,74 @@
+\chapter{Planning}
+Note: this section will be should be removed after the interim report!
+\section{Project plan}
+
+\subsection{Research more literature}
+There are still a number of papers that attempt to come up with new ways to
+algorithmically analyse chess positions and these should also be reviewed. There
+is also a very large amount of papers to do with psychology of professional chess
+players, and the biggest conclusion of these, the fact that chess players often
+analyse the piece patterns and links, not the squares \cite{thoughtAndChoice}, 
+has been the backbone of many papers. It's possible that there are still untapped
+findings that could be explored by this project. 
+
+\subsection{Decide on deterministic/graph-based vs CNN approach (or both?)}
+So far, I have come across 2 main ways in which previous work has dealt with
+problems similar to this one. The first is a way to logically encode piece
+relationships \cite{chessPatterns}, \cite{bilalic2010mechanisms}, \cite{chessLanguage}, 
+\cite{cql}, \cite{lichessTagger}, which can prove to be difficult without manually
+encoding patterns. The second is a machine learning approach, usually with CNNs,
+since they tend to effectively `identify patterns' \cite{chessCNN}, \cite{chessKernel},
+\cite{middlegamePatterns}. Since my project concerts itself only with a stationary 
+position, without accounting for lookforward moves, it's possible that some sort
+of encoding can be use (in fact, there is a paper called Chess2Vec \cite{chess2vec}
+which has attempted to predict chess moves -- not analyse positions).
+
+
+\subsection{Implement a prototype to categorise puzzles by lichess label and difficulty, using
+their puzzle tagger as a helper}
+A well written prototype should be created to implement the algorithm described.
+The implementation language depends on the algorithm chosen, but my initial guess
+is that any logical solution would lend itself to Haskell (or another FP language),
+whilst the most natural language for any machine learning approach is python (almost
+definitely with the pytorch library, as I have the most experience with it). 
+
+A soft requirement for a language for this is to have a well-made chess library
+to analyse moves, pieces, etc. Implementing one from scratch is hopefully not
+too difficult, but reinventing the wheel is unnecessary.
+
+\subsection{Given a set of positions, attempt to cluster them into labels. The labels
+are either manual or automatic(?) or even absent(? unsupervised?)}
+This is part of the implementation and is in essence, using the output of the 
+written program to analyse a set of chess problems.
+
+\subsection{Experiment with the other approach, contrast and compare}
+Time permitting, the other approach (either graph-based or CNN) could be analysed.
+The outputs, advantages, disadvantages, etc. of the 2 methods should be compared
+and contrasted here -- it's possible that one of them works much better than the other.
+
+
+\section{Evaluation plan}
+\subsection{Quantitative}
+The simplest metric to check if the solution is correct would be to compare
+against lichess's 3.6million database. It is possible there exist other
+chess position databases (this should be investigated) to compare to. For
+obvious reasons, this will be split into training/test (if the algorithm requires
+training on positions). Lichess's puzzle tags can be treated as a multi-label
+classification algorithm, and as long as the project produces a similar output,
+this can be used. The labels and difficulty can also be used to create a basic
+notion of distance based on lichess's classification, which should then be compared
+with the project's results.
+
+Some papers researched in the background section (and possibly ones that are yet
+to be read) have attempted a similar problem with chess position analysis. The
+results of this project can be then compared against their solution, hopefully
+on the same benchmark.
+
+\subsection{Qualitative}
+Multiple positions can be designed/retrieved from a database and analysed by a
+chess player. Of course, the player's skill dictates the complexity of positions
+which they are able to sufficiently analyse and compare, but with the help of
+modern chess engines, it should be possible for an intermediate player who is
+aware of tactic and puzzle classifications to draw conclusions. These could then
+be compared to the predictions of the program implemented by the project and 
+conclusions can then be drawn. 

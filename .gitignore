@@ -1,3 +1,16 @@
+# Main report pdf
+main.pdf
+
+# LaTeX intermediate files
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.out
+*.pyg
+*.toc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
