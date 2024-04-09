@@ -29,7 +29,8 @@ In Figures \ref{chess1}, \ref{chess2}, 2 chess positions are shown, featuring
 beginner might learn. A castled king is forced to stay on the back-rank due to
 the configuration of his men, and an opposing heavy piece exploits this
 weakness by delivering checkmate. It is already non-trivial to programmatically
-identify this type of tactic, as a checkmate delivered to a king on the back rank is not necessarily a \emph{back-rank checkmate}.
+identify this type of tactic, as a checkmate delivered to a king on the back
+rank is not necessarily a \emph{back-rank checkmate}.
 
 Given positions similar to ones like these, how does one draw similarities
 between the abstract relations of the heavy piece, king, and vulnerable back
@@ -39,7 +40,7 @@ rank?
     \begin{minipage}{0.475\textwidth}
         \centering
         \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-        \caption{A trivial back-rank checkmate, white mates with \textbf{Rb8\#}
+        \caption{A trivial back-rank checkmate, white mates with \texttt{Rb8\#}
         (TODO: Find real chess games where these positions/similar ones happened)}
         \label{chess1}
     \end{minipage}
@@ -47,7 +48,7 @@ rank?
     \begin{minipage}{0.475\textwidth}
         \centering
         \chessboard[setfen=6k1/5ppp/1p1Q4/p3p1B1/Pn4P1/1q6/1Pr4P/K6R w - - 1 2]
-        \caption{White mates with \textbf{Qd8\#}.}
+        \caption{White mates with \texttt{Qd8\#}.}
         \label{chess2}
     \end{minipage}
 \end{figure}
@@ -63,8 +64,8 @@ TODO: Explain basic chessprogramming, e.g. bitboards, 0x88
 
 \section{A language for encoding piece relationships}
 
-In ``A description language for chess'',\cite{chessLanguage} López-Michelone
-et al\@. describe a language to search across chess positions. The main features
+In ``A description language for chess'',\cite{chessLanguage} López-Michelone et
+al.\@ describe a language to search across chess positions. The main features
 of this language are descriptions for a chess piece attacking/defending
 another, attacking/defending a square, being located at a square, a square not
 being available for the enemy king, and the structure of white/black pawns on
@@ -72,14 +73,14 @@ the board.
 
 With their novel language, they are able to search a chess database for a
 pre-determined pattern, such as the \emph{Greek gift sacrifice}, defined in the
-language as ``kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5''\footnote{This string
-corresponds to a black king on g8, black pawns on f7, g7, h7, a white bishop
-attacking h7, a white knight on f3 (ready to deliver a check with
-\textbf{Ng5+}, a common motif in \emph{Greek gift sacrifices}), a white queen
+language as ``\texttt{kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5}''\footnote{This
+string corresponds to a black king on g8, black pawns on f7, g7, h7, a white
+bishop attacking h7, a white knight on f3 (ready to deliver a check with
+\texttt{Ng5+}, a common motif in \emph{Greek gift sacrifices}), a white queen
 on d1, and finally, a white pawn on e5 to dislodge the usual black knight on
 f6.}, which returns positions such as the one shown in Figure \ref{chess3}.
-After \textbf{16...Be7 17. O-O}, Black blundered with \textbf{17...Bxa3??},
-after which, the \emph{Greek gift sacrifice} (\textbf{18. Bxh7!!}, shown in
+After \texttt{16...Be7 17. O-O}, Black blundered with \texttt{17...Bxa3??},
+after which, the \emph{Greek gift sacrifice} (\texttt{18.Bxh7!!}, shown in
 Figure \ref{chess4}) was employed, eventually culminating in a win for White.
 
 \begin{figure}[H]
@@ -100,12 +101,12 @@ Figure \ref{chess4}) was employed, eventually culminating in a win for White.
 
 Their language is also able to deal with some light variations, as it is able
 to identify the games shown in Figures \ref{chess5}, \ref{chess6}. In both of
-these positions, White has the brilliant move \textbf{1. Qh6+!!}, following
-with \textbf{2. Rh8\#} if \textbf{1...Kxh6}, and either \textbf{2. Rf7\#} or
-\textbf{2. Rb7+} (leading to a quick mate) if \textbf{1...gxh6}. 
+these positions, White has the brilliant move \texttt{1.Qh6+!!}, following
+with \texttt{2.Rh8\#} if \texttt{1...Kxh6}, and either \texttt{2.Rf7\#} or
+\texttt{2.Rb7+} (leading to a quick mate) if \texttt{1...gxh6}. 
 
 This pattern, whilst very rare, is undeniably identical between the 2 games.
-The unavailability of the \textbf{g6} square to the enemy king, combined with
+The unavailability of the \texttt{g6} square to the enemy king, combined with
 the harmony of White's pieces leads to the same tactic in both games.
 
 \begin{figure}[H]
@@ -124,7 +125,7 @@ the harmony of White's pieces leads to the same tactic in both games.
     \end{minipage}
 \end{figure}
 
-The work of López-Michelone et al\@. is a promising proof of concept that shows
+The work of López-Michelone et al.\@ is a promising proof of concept that shows
 the power of a language that allows to specify piece relationships on a more
 abstract level than previously possible. The biggest drawback of their
 solution, as mentioned by the authors, is the fact that this language still
@@ -168,8 +169,8 @@ input, or as a baseline to compare the results to.
 
 \section{Recognition of the \emph{Greek gift sacrifice} in  chess games}
 
-Miroslav et al\@. report their findings on a program \cite{middlegamePatterns} to
-identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{A
+Miroslav et al.\@ report their findings on a program \cite{middlegamePatterns}
+to identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{A
 hard-to-quantify phase of the chess game where most pieces are developed and
 the kings are positioned away from danger.}. They found success, partly thanks
 to their detailed representatioon of the board, where each square is
@@ -181,7 +182,7 @@ were devised by expert chess players, and represent the more complex, but still
 quantifiable relationships.\cite{middlegamePatterns} These include open files,
 control of vulnerable squares, piece activity, and so on.
 
-Miroslav et al\@. achieved an 87.7\% classification performance on detecting
+Miroslav et al.\@ achieved an 87.7\% classification performance on detecting
 whether a position features a successful \emph{Greek gift sacrifice} on
 relatively small (<200 positions) datasets. This work is promising, but more
 investigation is needed given their analysis of only one pattern with a
@@ -212,7 +213,7 @@ given chess position.
 
 \section{Chess moves as kernels for texture classifier}
 
-In this study, Turker et al\@. propose novel kernels for efficient feature
+In this study, Turker et al.\@ propose novel kernels for efficient feature
 extraction in the task of texture detection.\cite{chessKernel} These 5x5
 kernels are directly based on the move a rook, bishop, knight, and their
 combinations. 
