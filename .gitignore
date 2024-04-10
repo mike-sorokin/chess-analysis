@@ -1,5 +1,5 @@
 # Main report pdf
-main.pdf
+report/main.pdf
 
 # LaTeX intermediate files
 *.aux
