@@ -8,7 +8,7 @@ interactions, and potential interactions, of pieces in a more abstract sense.
 This is made strikingly clear by a chess player's drawing of a position from
 memory. (Figure \ref{deGrootFigure})
 
-de Groot writes, ``the pieces themselves do not appear in the drawing: rather
+De Groot writes, ``the pieces themselves do not appear in the drawing: rather
 the lines of force that go out from them''. This heuristic allows expert human
 players to quickly hone in on the correct moves,\cite{bilalic2010mechanisms}
 and significantly reduces their search space, when compared to a naive
@@ -40,8 +40,7 @@ rank?
     \begin{minipage}{0.475\textwidth}
         \centering
         \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-        \caption{A trivial back-rank checkmate, white mates with \texttt{Rb8\#}
-        (TODO: Find real chess games where these positions/similar ones happened)}
+        \caption{A trivial back-rank checkmate, white mates with \texttt{Rb8\#}.}
         \label{chess1}
     \end{minipage}
     \hspace{0.05\textwidth}
@@ -53,16 +52,96 @@ rank?
     \end{minipage}
 \end{figure}
 
-\section{Chess notation}
+\section{Chess Notation}
 
-TODO: Explain chess FEN, PGN notation. The reader is assumed to know how to
-play chess at a basic level
+For many decades, the standard for chess notation has been the Algebraic
+System, where, generally speaking, moves are encoded by the piece abbreviation
+(\texttt{Q} for queen, \texttt{K} for king, \texttt{N} for kNight) and a
+reference to the destination square, which can be any letter \texttt{a-h} and
+any number \texttt{1-8}.\cite{fideNotation} We assume that the reader is familiarwith the basic chess rules.
 
-TODO: Show examples of basic puzzles/tactics in chess
+When storing chess games and positions in a computer-readable format was
+required, many formats were proposed by various people, but Portable Game
+Notation (PGN) and Forsyth-Edwards Notation (FEN) stuck.\cite{pgnNotation}
 
-TODO: Explain basic chessprogramming, e.g. bitboards, 0x88
+\subsection{Portable Game Notation (PGN)}
 
-\section{A language for encoding piece relationships}
+PGN is a specific way to write chess moves in a text file. An example, taken
+from Section 2.3 of the PGN Standard \cite{pgnNotation} is shown below. Along
+with some metadata at the top of the file (player names, location, etc.\@), the
+chess moves are written in algebraic notation, with an incrementing move
+counter. In this example, Fischer played \texttt{e4} as his first move, with
+Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's 43rd move.
+
+\begin{verbatim}
+[Event "F/S Return Match"]
+[Site "Belgrade, Serbia JUG"]
+[Date "1992.11.04"]
+[Round "29"]
+[White "Fischer, Robert J."]
+[Black "Spassky, Boris V."]
+[Result "1/2-1/2"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3
+O-O 9. h3 Nb8 10. d4 Nbd7 11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15.
+Nb1 h6 16. Bh4 c5 17. dxe5 Nxe4 18. Bxe7 Qxe7 19. exd6 Qf6 20. Nbd2 Nxd6 21.
+Nc4 Nxc4 22. Bxc4 Nb6 23. Ne5 Rae8 24. Bxf7+ Rxf7 25. Nxf7 Rxe1+ 26. Qxe1 Kxf7
+27. Qe3 Qg5 28. Qxg5 hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33.
+f3 Bc8 34. Kf2 Bf5 35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4 38. g3 Nxh3 39. Kd2 Kb5
+40. Rd6 Kc5 41. Ra6 Nf2 42. g4 Bd3 43. Re6 1/2-1/2 
+\end{verbatim}
+
+The main advantages of PGN are the ease with which it can be read by a human
+\cite{pgnNotation} and, given its consistent structure, the simplicity of
+parsing it programmatically. This led PGN to become widely adopted and
+recognised by almost all chess software. However, a downside of PGN is that it
+is difficult to retrieve a position at a given move -- it must be recalculated
+by tracing the moves of the game from the start.
+
+\subsection{Forsyth-Edwards Notation (FEN)}
+
+An alternative notation used for static chess positions is FEN. This is much
+more compact than PGN, as no metadata about the game is stored other than the
+state of the board. Below is an example FEN string for the board in Figure
+\ref{chessKGA}.
+
+\begin{verbatim}
+rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq - 1 3
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \chessboard[setfen=rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq - 1 3]
+    \caption{King's Gambit Accepted}
+    \label{chessKGA}
+\end{figure}
+
+In FEN, pieces have their standard one-letter names, but pawns are explicitly
+referred to with \texttt{P} or \texttt{p}. The number of consecutive empty
+squares is denoted by an integer between \texttt{1} and \texttt{8}. The case of
+the letter dictates what colour the chessman is: uppercase for white, and
+lowercase for black. The arrangement of pieces is stored per rank,
+left-to-right, with the first appearing rank in the string corresponding to
+rank 8 on the board, and forward slashes delimiting the ranks. In the given
+example, the 6th rank is stored as \texttt{8}, meaning there are 8 consecutive
+empty squares on this rank. The 4th rank is stored as \texttt{4Pp2}, meaning
+there are 4 empty squares, followed by a white pawn, then a black pawn, then 2
+more empty squares.
+
+The remaining characters store other information about the board. The single
+\texttt{b} means it is Black to move; the string \texttt{KQkq} means White can
+castle kingside (\texttt{K}) and queenside (\texttt{Q}), and Black can castle
+both ways too (\texttt{kq}). If castling was not possible, this would be
+denoted as \texttt{-}. The final 3 characters are en passant\footnote{French
+for ``in passing''. A special move where a pawn that advanced two squares can
+be captured by an enemy pawn as if it was on the square behind. This is an
+unending source of confusion for beginner players.} file, number of halfmoves
+since the last pawn move or capture\footnote{Used for the fifty move draw
+rule.}, and the number of full moves played.
+
+\section{Related Work}
+
+\subsection{A Language For Encoding Piece Relationships}
 
 In ``A description language for chess'',\cite{chessLanguage} López-Michelone et
 al.\@ describe a language to search across chess positions. The main features
@@ -134,7 +213,7 @@ into their language. The authors hypothesise that automatic recognition of
 these patterns is likely some sort of neural network, which is one of the many
 possible directions of this project.
 
-\section{CQL: Chess Query Language}
+\subsection{CQL: Chess Query Language}
 
 The Chess Query Language (CQL), as invented by Costeff,\cite{cql} is another
 implementation of an advanced way to find chess positions in a given database.
@@ -149,7 +228,7 @@ In addition to the Costeff's CQL, there is a from-scratch clone of CQL 6.1
 which includes extra features (TODO: list some) and supports other chess
 variants.\cite{cqli}
 
-\section{lichess.org puzzle database}
+\subsection{lichess.org Puzzle Database}
 
 \url{https://lichess.org} is a popular, open-source chess website which often
 publishes the games that have been played by players of all skill levels on it.
@@ -167,22 +246,22 @@ database evolved until their current state.
 This database is invaluable for this project, and can likely serve either as
 input, or as a baseline to compare the results to.
 
-\section{Recognition of the \emph{Greek gift sacrifice} in  chess games}
+\subsection{Recognition of the \emph{Greek Gift Sacrifice} In Chess Games}
 
-Miroslav et al.\@ report their findings on a program \cite{middlegamePatterns}
-to identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{A
-hard-to-quantify phase of the chess game where most pieces are developed and
-the kings are positioned away from danger.}. They found success, partly thanks
-to their detailed representatioon of the board, where each square is
-represented by 71 binary attribites \cite{middlegamePatterns} to encode the
-piece on the square and the possible squares which are reachable by this piece. 
+Kub\'{a}t et al.\@ report their findings on a program \cite{middlegamePatterns}
+to identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{The
+phase of the chess game where most pieces are developed and the kings are
+positioned away from danger.}. They found success, partly thanks to their
+detailed representatioon of the board, where each square is represented by 71
+binary attribites \cite{middlegamePatterns} to encode the piece on the square
+and the possible squares which are reachable by this piece. 
 
 These attributes were also supplemented by 59 other binary attribites which
 were devised by expert chess players, and represent the more complex, but still
 quantifiable relationships.\cite{middlegamePatterns} These include open files,
 control of vulnerable squares, piece activity, and so on.
 
-Miroslav et al.\@ achieved an 87.7\% classification performance on detecting
+Kub\'{a}t et al.\@ achieved an 87.7\% classification performance on detecting
 whether a position features a successful \emph{Greek gift sacrifice} on
 relatively small (<200 positions) datasets. This work is promising, but more
 investigation is needed given their analysis of only one pattern with a
@@ -190,7 +269,7 @@ decision tree algorithm. Also, their program still relied on predetermined
 chess patterns, which introduces bias and might miss intricate similarities
 between positions.
 
-\section{A novel chess board representation for convolutional neural networks}
+\subsection{A Novel Chess Board Representation For Convolutional Neural Networks}
 
 In Sabatelli's thesis,\cite{chessCNN} the effectiveness of neural networks to
 analyse whether a chess position is winning or losing is explored, without
@@ -211,9 +290,9 @@ This work is also a promising result, as it shows that these chess patterns,
 albeit manually quantified, are valuable for an algorithm when analysing a
 given chess position.
 
-\section{Chess moves as kernels for texture classifier}
+\subsection{Chess Moves As Kernels For Texture Classification}
 
-In this study, Turker et al.\@ propose novel kernels for efficient feature
+In this study, Tuncer et al.\@ propose novel kernels for efficient feature
 extraction in the task of texture detection.\cite{chessKernel} These 5x5
 kernels are directly based on the move a rook, bishop, knight, and their
 combinations. 
