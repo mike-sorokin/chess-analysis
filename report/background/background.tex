@@ -8,8 +8,8 @@ interactions, and potential interactions, of pieces in a more abstract sense.
 This is made strikingly clear by a chess player's drawing of a position from
 memory. (Figure \ref{deGrootFigure})
 
-De Groot writes, ``the pieces themselves do not appear in the drawing: rather
-the lines of force that go out from them''. This heuristic allows expert human
+De Groot writes, `the pieces themselves do not appear in the drawing: rather
+the lines of force that go out from them'. This heuristic allows expert human
 players to quickly hone in on the correct moves,\cite{bilalic2010mechanisms}
 and significantly reduces their search space, when compared to a naive
 brute-force search, which is the most common strategy for chess engines. When
@@ -133,34 +133,159 @@ The remaining characters store other information about the board. The single
 castle kingside (\texttt{K}) and queenside (\texttt{Q}), and Black can castle
 both ways too (\texttt{kq}). If castling was not possible, this would be
 denoted as \texttt{-}. The final 3 characters are en passant\footnote{French
-for ``in passing''. A special move where a pawn that advanced two squares can
+for `in passing'. A special move where a pawn that advanced two squares can
 be captured by an enemy pawn as if it was on the square behind. This is an
 unending source of confusion for beginner players.} file, number of halfmoves
 since the last pawn move or capture\footnote{Used for the fifty move draw
 rule.}, and the number of full moves played.
 
+\section{Examples of Chess Puzzle Themes}
+
+In this section, we list a collection of common chess tactics which occur in
+puzzles, and on a wider scale, games. Some of the positions are taken from the
+chess.\@com blog.\cite{chesscomTactics}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=5r1k/4q1pp/3n2B1/1R5Q/8/7P/6P1/7K w - - 0 1]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Mate In One}
+        
+        White wins in one move with \texttt{1.Qxh7\#}. There are many variants
+        of simple checkmates, some of which are covered below.
+
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=6k1/5ppp/3r4/8/8/3q4/5PPP/R2B2K1 b - - 0 1]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Back-Rank Mate}
+        
+        Black wins with \texttt{1...Qxd1+ 2.Rxd1 Rxd1\#}. These positions occur
+        very often when a king is castled, and the pawns surrounding the king
+        on the 2nd/7th rank are preventing his escape to a different rank. A
+        heavy piece\footnote{Rook or queen.} delivers the checkmate
+        single-handedly.
+
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=q2r3k/6pp/8/3Q2N1/8/8/5PPP/6K1 w - - 0 1]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Smothered Mate}
+        
+        After \texttt{1.Nf7+ Kg8}, White delivers a \emph{double check} with
+        \texttt{2.Nh6+}. Since Black is unable to remove both attacks on his
+        king in one move, he is forced to move his king. \texttt{2...Kf8} leads
+        to immediate mate with \texttt{3.Qf7\#}, so Black runs to the corner
+        with \texttt{2...Kh8}. The white queen is sacrificed with
+        \texttt{3.Qg8+ Rxg8}, entombing the black king in the corner. The white
+        knight delivers checkmate with \texttt{4.Nf7\#}.
+
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=r2qk1nr/ppp2ppp/2np4/4p3/1b2P1b1/2NPBN2/PPP2PPP/R2QKB1R w KQkq - 2 6]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Absolute and Relative Pins}
+        
+        In this position, Black's bishops are pinning White's knights on
+        \texttt{c3} and \texttt{f3}. The white knight on \texttt{c3} is under
+        an \emph{absolute pin} from the black bishop on \texttt{b4}, as moving
+        it is illegal. The white knight on \texttt{f3} is under a
+        \emph{relative pin} from the other black bishop on \texttt{g4}. Whilst
+        moving this knight is legal, it is rarely done, as the bishop is then
+        able to capture the white queen on \texttt{d1}.
+
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=2r3k1/8/8/n1n2N2/8/8/1P6/6K1 w - - 0 1]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Fork}
+        
+        Forks come in multiple flavours, as multiple pieces are able to fork.
+        Perhaps the most common is a knight fork, which is possible with
+        \texttt{1.Ne7+}. The knight is attacking both the black rook on
+        \texttt{c8} and black king on \texttt{g8}, and black is unable to
+        capture the knight. After moving the king, black gives up the rook for
+        a knight -- an unfavourable exchange.\\~\\The double pawn advance
+        \text{1.b4} is also a fork. Black's knights are attacked and whilst
+        they are able to defend each other, Black cannot move both to safety.
+        One of them will be captured by the pawn.
+
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=r2qkbnr/ppp2ppp/2np4/4N3/2B1P3/2N4P/PPPP1PP1/R1BbK2R w KQkq - 0 7]
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \textbf{Attack On \texttt{f2}/\texttt{f7}}
+
+        The \texttt{f2} and \texttt{f7} squares are very vulnerable for White
+        and Black, respectively. At the beginning of the game, these squares
+        are defended only by the king. If neglected, a quick attack, or even a
+        sacrifice, can be devastating.\\~\\In this position, after sacrificing
+        the queen, White's bishop can capture the weak pawn on \texttt{f7},
+        leading to \texttt{1.Bxf7+ Ke7 2.Nd5\#}. 
+        
+
+    \end{minipage}
+\end{figure}
+
+
 \section{Related Work}
 
 \subsection{A Language For Encoding Piece Relationships}
 
-In ``A description language for chess'',\cite{chessLanguage} López-Michelone et
-al.\@ describe a language to search across chess positions. The main features
-of this language are descriptions for a chess piece attacking/defending
-another, attacking/defending a square, being located at a square, a square not
-being available for the enemy king, and the structure of white/black pawns on
-the board.
+In `A description language for chess',\cite{chessLanguage} L\'{o}pez-Michelone
+et al.\@ describe a language to search across chess positions. The main
+features of this language are descriptions for a chess piece
+attacking/defending another, attacking/defending a square, being located at a
+square, a square not being available for the enemy king, and the structure of
+white/black pawns on the board.
 
 With their novel language, they are able to search a chess database for a
 pre-determined pattern, such as the \emph{Greek gift sacrifice}, defined in the
-language as ``\texttt{kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5}''\footnote{This
-string corresponds to a black king on g8, black pawns on f7, g7, h7, a white
-bishop attacking h7, a white knight on f3 (ready to deliver a check with
+language as `\texttt{kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5}. With inspiration
+from the FEN notation, this string corresponds to a black king on g8
+(\texttt{kg8}), black pawns on f7, g7 a white bishop attacking a black pawn on
+h7 (\texttt{B(ph7)}), a white knight on f3 (ready to deliver a check with
 \texttt{Ng5+}, a common motif in \emph{Greek gift sacrifices}), a white queen
-on d1, and finally, a white pawn on e5 to dislodge the usual black knight on
-f6.}, which returns positions such as the one shown in Figure \ref{chess3}.
-After \texttt{16...Be7 17. O-O}, Black blundered with \texttt{17...Bxa3??},
-after which, the \emph{Greek gift sacrifice} (\texttt{18.Bxh7!!}, shown in
-Figure \ref{chess4}) was employed, eventually culminating in a win for White.
+on d1 (\texttt{Qd1}), and finally, a white pawn on e5 (\texttt{Pe5}),
+dislodging the usual black knight on f6.
+
+This returns positions such as the one shown in Figure \ref{chess3}. After
+\texttt{16...Be7 17. O-O}, Black blundered with \texttt{17...Bxa3??}, after
+which, a \emph{Greek gift sacrifice} (\texttt{18.Bxh7!}, shown in Figure
+\ref{chess4}) was made, eventually leading to a win for White.
 
 \begin{figure}[H]
     \begin{minipage}{0.475\textwidth}
@@ -204,9 +329,9 @@ the harmony of White's pieces leads to the same tactic in both games.
     \end{minipage}
 \end{figure}
 
-The work of López-Michelone et al.\@ is a promising proof of concept that shows
-the power of a language that allows to specify piece relationships on a more
-abstract level than previously possible. The biggest drawback of their
+The work of L\'{o}pez-Michelone et al.\@ is a promising proof of concept that
+shows the power of a language that allows to specify piece relationships on a
+more abstract level than previously possible. The biggest drawback of their
 solution, as mentioned by the authors, is the fact that this language still
 requires an expert with pre-existing extensive knowledge to encode the tactics
 into their language. The authors hypothesise that automatic recognition of
@@ -220,12 +345,22 @@ implementation of an advanced way to find chess positions in a given database.
 Since its inception in 2004, it has grown and is able to support very powerful,
 sometimes esoteric, queries to find predefined patterns.
 
-TODO: Show examples from
-\url{http://www.gadycosteff.com/cql/examples/smotheredmate.html} and
-\url{http://www.gadycosteff.com/cql/examples/turton.html}
+An example of such a query is provided on the CQL website,\cite{cqlSmothered}
+and is shown in Figure \ref{cql} for reference. In this query, \texttt{btm}
+means `black-to-move` and \texttt{mate} means checkmate is played. This
+language is incredibly powerful and terse, as it allows specifying complicated
+piece relationships and supports quality-of-life features such as matching
+mirror positions or reversed-colour positions.
 
-In addition to the Costeff's CQL, there is a from-scratch clone of CQL 6.1
-which includes extra features (TODO: list some) and supports other chess
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\linewidth]{background/img/cql.png}
+    \caption{A CQL query to find positions where smothered mate occured.}
+    \label{cql}
+\end{figure}
+
+In addition to the Costeff's CQL, there is a from-scratch clone of CQL6
+which includes extra features and supports other chess
 variants.\cite{cqli}
 
 \subsection{lichess.org Puzzle Database}
@@ -282,8 +417,8 @@ Some of these include an extra feature if the opponent is in check, specifying
 the squares controlled by a piece exerting a pin on a different piece, centre
 control, and vulnerable squares.\cite{chessCNN} These are well known
 heuristics that are often taught to beginner-intermediate chess players, and
-the author claims that these additional layers are ``extremely representative
-of the chess positions'', and cause the CNN to outperform a naive,
+the author claims that these additional layers are `extremely representative
+of the chess positions', and cause the CNN to outperform a naive,
 fully-connected neural network.
 
 This work is also a promising result, as it shows that these chess patterns,
