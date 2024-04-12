@@ -2,9 +2,9 @@
 
 The motivation behind solving chess puzzles, especially under time pressure, is
 to improve one's pattern recognition abilities. It has been shown
-\cite{thoughtAndChoice} that chess players do not have a square-by-square,
+\cite{thoughtAndChoice} that chess players do not have a square-by-square
 recollection of the chess board during play. Instead, they rely on
-interactions, and potential interactions, of pieces in a more abstract sense.
+interactions, and potential interactions of pieces in a more abstract sense.
 This is made strikingly clear by a chess player's drawing of a position from
 memory. (Figure \ref{deGrootFigure})
 
@@ -58,7 +58,8 @@ For many decades, the standard for chess notation has been the Algebraic
 System, where, generally speaking, moves are encoded by the piece abbreviation
 (\texttt{Q} for queen, \texttt{K} for king, \texttt{N} for kNight) and a
 reference to the destination square, which can be any letter \texttt{a-h} and
-any number \texttt{1-8}.\cite{fideNotation} We assume that the reader is familiarwith the basic chess rules.
+any number \texttt{1-8}.\cite{fideNotation} We assume that the reader is
+familiarwith the basic chess rules.
 
 When storing chess games and positions in a computer-readable format was
 required, many formats were proposed by various people, but Portable Game
@@ -71,7 +72,8 @@ from Section 2.3 of the PGN Standard \cite{pgnNotation} is shown below. Along
 with some metadata at the top of the file (player names, location, etc.\@), the
 chess moves are written in algebraic notation, with an incrementing move
 counter. In this example, Fischer played \texttt{e4} as his first move, with
-Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's 43rd move.
+Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's 43rd
+move.
 
 \begin{verbatim}
 [Event "F/S Return Match"]
@@ -387,7 +389,7 @@ Kub\'{a}t et al.\@ report their findings on a program \cite{middlegamePatterns}
 to identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{The
 phase of the chess game where most pieces are developed and the kings are
 positioned away from danger.}. They found success, partly thanks to their
-detailed representatioon of the board, where each square is represented by 71
+detailed representation of the board, where each square is represented by 71
 binary attribites \cite{middlegamePatterns} to encode the piece on the square
 and the possible squares which are reachable by this piece. 
 
