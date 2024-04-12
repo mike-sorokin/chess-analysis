@@ -1,6 +1,10 @@
 # Main report pdf
 report/main.pdf
 
+# Data files
+*.csv
+*.zst
+
 # LaTeX intermediate files
 *.aux
 *.bbl
