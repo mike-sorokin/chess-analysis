@@ -5,6 +5,9 @@ report/main.pdf
 *.csv
 *.zst
 
+# Pytorch checkpoints
+*.pth
+
 # LaTeX intermediate files
 *.aux
 *.bbl
