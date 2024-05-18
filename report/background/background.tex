@@ -141,6 +141,22 @@ unending source of confusion for beginner players.} file, number of halfmoves
 since the last pawn move or capture\footnote{Used for the fifty move draw
 rule.}, and the number of full moves played.
 
+\subsection{Bitboards}
+
+When implementing chess programs on a computer, neither PGN or FEN are applicable
+as they are difficult and slow to analyse. Instead, there are a number of various
+numerical approaches to storing a chess position, with bitboards being one of the
+bigger ones. One of the first mentions of Bitboards was in 
+Adel'son-Vel'skii et al.\@'s 1970 paper.\cite{bitboardsRussian} 
+
+Described informally, a bitboard is a collection of 12 64-bit integers, where
+each integer corresponds to a piece type and colour. The bits of that integer
+encode the position of a piece on the board: a piece on h1 activates the 1st
+(least-significant) bit. Since modern processors utilise 64 bits, this makes
+bitboards very fast -- especially when using other bitmaps to check for 
+piece attack maps and piece interactions. In fact, bitboards are used by
+Stockfish,\cite{stockfishBitboard} one of the strongest chess engines today.
+
 \section{Examples of Chess Puzzle Themes}
 
 In this section, we list a collection of common chess tactics which occur in
@@ -439,6 +455,43 @@ work shows that it may be possible to include these kernels in an CNN-based
 analysis of the chess position. It would be interesting to apply to the other
 CNN chess work (e.g. Sabatelli's thesis,\cite{chessCNN} discussed above) and
 analyse its effect on the success of the technique.
+
+\subsection{A Computational Model for Estimating the Difficulty of Chess
+Problems}
+
+Stoiljkovikj et al.\@ explore estimation of difficulty of chess problems in
+this paper.\cite{chessTrees} By using a powerful chess engine, they generate a
+tentative move tree of forcing or winning moves in a given position, mirroring
+the process of calculating a variation for a chess player. 
+
+By creating higher level metrics based off these trees (e.g. branching factor,
+piece variety, move distances) and applying standard statistical machinery, the
+authors are able to categorise the puzzles into various difficulty levels with
+some success.
+
+Their unique `meaningful search tree'\cite{chessTrees} approach to analysing
+chess puzzle moves is novel, and we believe it has more potential for this
+problem. Specifically, adding more chess-related metadata to the tree nodes (is
+the move a fork, skewer, etc.?\@) could improve the performance and allow
+better classification, and would be interesting to perform.
+
+\subsection{Chess2vec: Learning Vector Representations for Chess}
+
+In this paper, Kapicioglu et al.\@ investigate and report on their results in
+finding $d$-dimensional vector representations of the standard way to represent
+a chess board in machine learning -- a bitboard,\cite{chess2vec} which is
+equivalent to a $8\times8\times12$ binary tensor. 
+
+With this naive approach, the authors make the observation that each chess
+square is a 12-dimensional vector, which is independent of the board. By adding
+a board hash, they segregate the pieces, making their vector representations
+depend on the board state. With this method, the authors claim to predict
+$8.8\%$ of Stockfish moves correctly,\cite{chess2vec} which is an impressive
+statistic given no chess logic or ruleset was explicitly implemented.
+
+This is a promising result that suggests that vector representations of pieces
+on a chess board can have unexpected performance, and it would be interesting
+to build upon the authors' work.
 
 \section{Ethical discussion}
 

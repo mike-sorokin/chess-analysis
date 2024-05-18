@@ -1,74 +1,143 @@
-\chapter{Planning}
-Note: this section will be should be removed after the interim report!
-\section{Project plan}
+\chapter{Implementation}
 
-\subsection{Research more literature}
-There are still a number of papers that attempt to come up with new ways to
-algorithmically analyse chess positions and these should also be reviewed. There
-is also a very large amount of papers to do with psychology of professional chess
-players, and the biggest conclusion of these, the fact that chess players often
-analyse the piece patterns and links, not the squares \cite{thoughtAndChoice}, 
-has been the backbone of many papers. It's possible that there are still untapped
-findings that could be explored by this project. 
+\section{Lichess.org Puzzle Database}
 
-\subsection{Decide on deterministic/graph-based vs CNN approach (or both?)}
-So far, I have come across 2 main ways in which previous work has dealt with
-problems similar to this one. The first is a way to logically encode piece
-relationships \cite{chessPatterns}, \cite{bilalic2010mechanisms}, \cite{chessLanguage}, 
-\cite{cql}, \cite{lichessTagger}, which can prove to be difficult without manually
-encoding patterns. The second is a machine learning approach, usually with CNNs,
-since they tend to effectively `identify patterns' \cite{chessCNN}, \cite{chessKernel},
-\cite{middlegamePatterns}. Since my project concerts itself only with a stationary 
-position, without accounting for lookforward moves, it's possible that some sort
-of encoding can be use (in fact, there is a paper called Chess2Vec \cite{chess2vec}
-which has attempted to predict chess moves -- not analyse positions).
+\subsection{Overview}
 
+This project requires access to various examples of chess puzzles with
+pre-defined difficulties and themes. Fortunately, the lichess puzzle
+database,\cite{lichessPuzzles} which was also mentioned in the previous
+section, provides approximately 3.8 million chess puzzles which have been
+generated from user games played on lichess. These puzzles are stored in FEN
+format, with a reference to the game where they appeared. They also contain the
+solution as a string moves, the tactics tags,\cite{lichessXML} and the puzzle
+rating, along with other metadata.
 
-\subsection{Implement a prototype to categorise puzzles by lichess label and difficulty, using
-their puzzle tagger as a helper}
-A well written prototype should be created to implement the algorithm described.
-The implementation language depends on the algorithm chosen, but my initial guess
-is that any logical solution would lend itself to Haskell (or another FP language),
-whilst the most natural language for any machine learning approach is python (almost
-definitely with the pytorch library, as I have the most experience with it). 
+An example puzzle string is shown below. This puzzle is also shown in the two
+figures below, Figure \ref{puzzle1} and \ref{puzzle2}.
 
-A soft requirement for a language for this is to have a well-made chess library
-to analyse moves, pieces, etc. Implementing one from scratch is hopefully not
-too difficult, but reinventing the wheel is unnecessary.
+\begin{verbatim}
+q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17,
+e8d7 a2e6 d7d8 f7f8,1760,80,83,72,mate mateIn2 middlegame short,
+https://lichess.org/yyznGmXs/black#34,
+Italian_Game Italian_Game_Classical_Variation
+\end{verbatim}
 
-\subsection{Given a set of positions, attempt to cluster them into labels. The labels
-are either manual or automatic(?) or even absent(? unsupervised?)}
-This is part of the implementation and is in essence, using the output of the 
-written program to analyse a set of chess problems.
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17]
+        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move 17.}
+        \label{puzzle1}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1 18]
+        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move 18.
+        Checkmate is imminent with \texttt{18.Be6+ Kd8 19.Qf8\#}.}
+        \label{puzzle2}
+    \end{minipage}
+\end{figure}
 
-\subsection{Experiment with the other approach, contrast and compare}
-Time permitting, the other approach (either graph-based or CNN) could be analysed.
-The outputs, advantages, disadvantages, etc. of the 2 methods should be compared
-and contrasted here -- it's possible that one of them works much better than the other.
+Processing these is a trivial task with one small detail: the given FEN strings
+are the state of the game right before the critical blunder is played by the
+opposing site. This means the puzzle, as shown to the user, is the position
+after the first move has been played. Fortunately, processing this data is made
+simple with the python-chess library.\cite{pythonChess}
 
+\subsection{Data Exploration}
 
-\section{Evaluation plan}
-\subsection{Quantitative}
-The simplest metric to check if the solution is correct would be to compare
-against lichess's 3.6million database. It is possible there exist other
-chess position databases (this should be investigated) to compare to. For
-obvious reasons, this will be split into training/test (if the algorithm requires
-training on positions). Lichess's puzzle tags can be treated as a multi-label
-classification algorithm, and as long as the project produces a similar output,
-this can be used. The labels and difficulty can also be used to create a basic
-notion of distance based on lichess's classification, which should then be compared
-with the project's results.
+The lichess puzzle database has approximately 3.8 million rated and tagged
+chess puzzles. Initially, they were automatically
+processed,\cite{lichessTagger} but were then refined with user
+feedback\cite{lichessPuzzles}. This also allowed the puzzles to obtain a
+rating, which is indicative of its difficulty\cite{lichessPuzzles}.
 
-Some papers researched in the background section (and possibly ones that are yet
-to be read) have attempted a similar problem with chess position analysis. The
-results of this project can be then compared against their solution, hopefully
-on the same benchmark.
+Overall, there are 60 various puzzle themes.\cite{lichessXML}. Figure
+\ref{dataThemeCounts} shows the counts of each theme in all of the contained
+puzzles. It should be noted that some themes are mutually exclusive (a
+checkmate puzzle cannot be both \emph{mate-in-one} and \emph{mate-in-two}).
 
-\subsection{Qualitative}
-Multiple positions can be designed/retrieved from a database and analysed by a
-chess player. Of course, the player's skill dictates the complexity of positions
-which they are able to sufficiently analyse and compare, but with the help of
-modern chess engines, it should be possible for an intermediate player who is
-aware of tactic and puzzle classifications to draw conclusions. These could then
-be compared to the predictions of the program implemented by the project and 
-conclusions can then be drawn. 
+The most common puzzle themes are the most general ones -- specifically
+`short', `middlegame', and `endgame'. There is a lot of variation in how
+frequent the various patterns are, which is a natural consequence of the game.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{project/img/puzzle_theme_counts.png}
+    \caption{Frequency of puzzle themes in the lichess.org puzzle database.\cite{lichessPuzzles}}
+    \label{dataThemeCounts}
+\end{figure}
+
+Figure \ref{dataHistogram}, shown below, shows the distribution of ratings
+across the chess puzzles. It should be noted that these ratings are only
+appropriate within this dataset, and cannot be compared to ratings of puzzles
+on other chess websites. The puzzle ratings are quite symmetric about the mean,
+and this is of course a result of Glickman's Glicko2 rating
+system\cite{glicko}.
+
+When analysing the rating distribution by theme, an expected behaviour occurs.
+Some chess tactics patterns are considerably simpler to spot, meaning a weaker
+player is able to solve the puzzle with that theme. Therefore some puzzle
+themes, \emph{back-rank mate}, for example, have lower-rated puzzles when
+compared to puzzles featuring a \emph{trapped piece} or \emph{defensive
+move}\footnote{Notoriously difficult for humans, who are usually much better at
+aggression than defense.}.
+
+Shown in Figures \ref{puzzle3} and \ref{puzzle4} are examples of some puzzles
+with these themes.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/puzzle_histogram.png}
+        \caption{Distribution of lichess.org puzzle ratings.}
+        \label{dataHistogram}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/puzzle_theme_histograms.png}
+        \caption{Distribution of lichess.org puzzle ratings with a specific theme.}
+        \label{dataThemeHistogram}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0 22]
+        \caption{\textbf{Kenan2345 -- gandie}, lichess.org Blitz game, move 22. 
+        Black loses to \texttt{22.Rd8+}.}
+        \label{puzzle3}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b - - 0 31]
+        \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31. White loses his queen after \texttt{31...Re38}, as the queen has no safe squares to escape to.}
+
+        \label{puzzle4}
+    \end{minipage}
+\end{figure}
+
+\section{The Machine Learning Approach}
+
+In this section, we describe, analyse, and evaluate a novel approach to the
+specific problem of chess puzzle classification, inspired by the recent
+unstoppable advancements in the field of natural language processing.
+
+Earlier, we highlighted a number of papers which seek to find new ways to build
+on the naive bitboard representation, \cite{middlegamePatterns} \cite{chessCNN}
+\cite{chess2vec} by exploring new embeddings for chess pieces and chess board
+squares. All three of the publications make the crucial point that chess pieces
+influence each other on the board, and this has to be taken into account,
+whether it is by creating extra features to represent pins and central square
+control, \cite{chessCNN} open files and attack squares,
+\cite{middlegamePatterns} or the hash of the entire chess
+board.\cite{chess2vec}
+
+Continuing along the `chess board as a $N\times8\times8$ vector' path and,
+given how puzzle tactics rely on the interaction of pieces' locations and
+attack squares, it seems natural to explore whether the transformer architecture, as described in the infamous paper `Attention is All you Need',\cite{attention}
