@@ -51,10 +51,10 @@ simple with the python-chess library.\cite{pythonChess}
 The lichess puzzle database has approximately 3.8 million rated and tagged
 chess puzzles. Initially, they were automatically
 processed,\cite{lichessTagger} but were then refined with user
-feedback\cite{lichessPuzzles}. This also allowed the puzzles to obtain a
-rating, which is indicative of its difficulty\cite{lichessPuzzles}.
+feedback.\cite{lichessPuzzles} This also allowed the puzzles to obtain a
+rating, which is indicative of its difficulty.\cite{lichessPuzzles}
 
-Overall, there are 60 various puzzle themes.\cite{lichessXML}. Figure
+Overall, there are 60 various puzzle themes.\cite{lichessXML} Figure
 \ref{dataThemeCounts} shows the counts of each theme in all of the contained
 puzzles. It should be noted that some themes are mutually exclusive (a
 checkmate puzzle cannot be both \emph{mate-in-one} and \emph{mate-in-two}).
@@ -189,6 +189,16 @@ file $f \in \{a,b,c,d,e,f,g,h\}$.
 
 Given a dataset with $N$ distinct puzzle labels ($N=60$ for the Lichess puzzle
 database \cite{lichessPuzzles}), we assign each label an index $i$ and form a
-$N$-dimensional vector $x$ such that $x[i]=1$ iff the puzzle is labelled with
-that label. This is a common technique to reduce a multi-label classification
-into a more tractable problem.
+binary $N$-dimensional vector $x$ such that $x[i]=1$ iff the puzzle is labelled
+with that label. This is a common technique to reduce a multi-label
+classification into a more tractable problem.
+
+To make learning easier (and to decrease implementation complexity), we
+transform all chess positions to be from the perspective of White. This has
+negligible additional overhead, as it requires a simple mirror and has great
+benefits, as the model no longer needs to distinguish between white-to-move and
+black-to-move puzzles.
+
+\subsection{Model Architecture}
+
+
