@@ -493,6 +493,19 @@ This is a promising result that suggests that vector representations of pieces
 on a chess board can have unexpected performance, and it would be interesting
 to build upon the authors' work.
 
+\subsection{The Chess Transformer: Mastering Play using Generative Language Models}
+
+Noever et al.\@ demonstrate the ability of transformers to learn the rules of
+chess and complex gameplay by analysing PGN games with a fine-tuned GPT-2
+transformer.\cite{chessTransformer} By treating PGN games as a sequence of
+natural language words, the authors show successful results and are able to
+generate new games without specifying chess rules.
+
+A key downside of their work is that their model generates illegal moves, which
+have to be filtered manually using a chess library.\cite{chessTransformer} This
+`hallucination' effect is a downside of using transformers, and other
+generative techniques, in the topic of chess. 
+
 \section{Ethical discussion}
 
 This project has few, if any, ethical considerations that need to be made. The

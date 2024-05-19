@@ -75,7 +75,7 @@ across the chess puzzles. It should be noted that these ratings are only
 appropriate within this dataset, and cannot be compared to ratings of puzzles
 on other chess websites. The puzzle ratings are quite symmetric about the mean,
 and this is of course a result of Glickman's Glicko2 rating
-system\cite{glicko}.
+system.\cite{glicko}
 
 When analysing the rating distribution by theme, an expected behaviour occurs.
 Some chess tactics patterns are considerably simpler to spot, meaning a weaker
@@ -124,20 +124,71 @@ with these themes.
 
 \section{The Machine Learning Approach}
 
+\subsection{Introduction}
+
 In this section, we describe, analyse, and evaluate a novel approach to the
 specific problem of chess puzzle classification, inspired by the recent
 unstoppable advancements in the field of natural language processing.
 
 Earlier, we highlighted a number of papers which seek to find new ways to build
-on the naive bitboard representation, \cite{middlegamePatterns} \cite{chessCNN}
-\cite{chess2vec} by exploring new embeddings for chess pieces and chess board
-squares. All three of the publications make the crucial point that chess pieces
-influence each other on the board, and this has to be taken into account,
-whether it is by creating extra features to represent pins and central square
-control, \cite{chessCNN} open files and attack squares,
-\cite{middlegamePatterns} or the hash of the entire chess
-board.\cite{chess2vec}
+on the naive bitboard
+representation,\cite{middlegamePatterns}\cite{chessCNN}\cite{chess2vec} by
+exploring new embeddings for chess pieces and chess board squares. All three of
+the publications make the crucial point that chess pieces influence each other
+on the board, and this has to be taken into account, whether it is by creating
+extra features to represent pins and central square control,\cite{chessCNN}
+open files and attack squares,\cite{middlegamePatterns} or the hash of the
+entire chess board.\cite{chess2vec}
 
-Continuing along the `chess board as a $N\times8\times8$ vector' path and,
-given how puzzle tactics rely on the interaction of pieces' locations and
-attack squares, it seems natural to explore whether the transformer architecture, as described in the infamous paper `Attention is All you Need',\cite{attention}
+Continuing along the `chess board as a $N\times64$ vector' path and, given how
+puzzle tactics rely on the interaction of pieces' locations and attack squares,
+it seems natural to explore whether the transformer architecture, as described
+in the infamous paper `Attention is All you Need',\cite{attention} can help
+extract patterns from static chess positions, which can then be used in the
+downstream task of puzzle classification and difficulty rating. Figure
+\ref{attentionLinks}, taken from this paper, shows how words/tokens can
+influence each other in the transformer encoder. At a high level, chess pieces
+and squares interact in a similar way on the chess board -- see Figure
+\ref{chessPuzzleLinks} for an example.
+
+Applying transformers to chess has been done before,\cite{chessTransformer} but
+as far as we are aware, treating individual chess board squares as embeddings
+of tokens/words has not been previously explored.
+
+\begin{figure}[H]
+    \begin{minipage}{0.425\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/attention.png}
+        \caption{Example of attention mechanism in the encoder. Taken from `Attention is All you Need'.\cite{attention}}
+        \label{attentionLinks}
+    \end{minipage}
+   \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=r3r1n1/bp6/p2p2kp/3N4/2P3n1/1PQ3Pq/P4P2/4RRK1 w - - 0 1,
+                    pgfstyle=border,markfields={d5},
+                    pgfstyle=straightmove,markmoves={f4-g6,f4-h3,c7-a8,c7-e8,d5-c7,d5-f4},
+                    pgfstyle=color,opacity=0.5,color=blue,markfields={f4,c7},
+                    pgfstyle=color,opacity=0.5,color=red,markfields={h3,g6,a8,e8}]
+        \caption{Example of a relationship between chess pieces.}
+
+        \label{chessPuzzleLinks}
+    \end{minipage}
+\end{figure}
+
+\subsection{Data Preparation}
+
+We formulate the problem of chess puzzle analysis as a multi-label
+classification problem. Given a chess puzzle position in bitboard format,
+i.e.\@ a $12\times8\times8$ binary tensor, we aim to predict a binary indicator
+vector which encodes the labels of the puzzle themes. Slightly more formally,
+the element $B[p, r, f]$ of bitboard $B$ is $1$ iff there is a piece $z \in
+\{p,P,n,N,b,B,r,R,q,Q,k,K\}$\footnote{FEN-inspired -- white pieces are
+uppercase, black pieces are lowercase.} at rank $r \in \{1,2,3,4,5,6,7,8\}$,
+file $f \in \{a,b,c,d,e,f,g,h\}$.
+
+Given a dataset with $N$ distinct puzzle labels ($N=60$ for the Lichess puzzle
+database \cite{lichessPuzzles}), we assign each label an index $i$ and form a
+$N$-dimensional vector $x$ such that $x[i]=1$ iff the puzzle is labelled with
+that label. This is a common technique to reduce a multi-label classification
+into a more tractable problem.
