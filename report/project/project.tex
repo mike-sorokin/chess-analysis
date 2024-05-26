@@ -82,8 +82,8 @@ Some chess tactics patterns are considerably simpler to spot, meaning a weaker
 player is able to solve the puzzle with that theme. Therefore some puzzle
 themes, \emph{back-rank mate}, for example, have lower-rated puzzles when
 compared to puzzles featuring a \emph{trapped piece} or \emph{defensive
-move}\footnote{Notoriously difficult for humans, who are usually much better at
-aggression than defense.}.
+move}.\footnote{Notoriously difficult for humans, who are usually much better at
+aggression than defense.}
 
 Shown in Figures \ref{puzzle3} and \ref{puzzle4} are examples of some puzzles
 with these themes.
@@ -208,4 +208,101 @@ black-to-move puzzles.
         \label{MLDiagram}
 \end{figure}
 
+
+\section{The Graph-Based Approach}
+
+\subsection{Introduction}
+
+In this section, we propose a different novel approach to puzzle
+classification, focusing on unsupervised puzzle clustering and defining a
+distance function between various chess puzzles.
+
+This method seeks to combine and build upon two approaches seen in the above
+literature review: the tree-based puzzle difficulty classification
+\cite{chessTrees} covered in Section \ref{chessTreesOverview} and chess
+position similarity using dynamic features \cite{chessMotifs} covered in
+Section \ref{chessMotifsOverview}. We hypothesise that by combining these
+approaches to construct meaningful search trees with additional node labels,
+defining a distance function for individual chess moves, and applying a
+labelled tree edit distance function,\cite{editDistTrees} we would be able to
+calculate `closeness' of chess puzzles. This could also help refine the work of
+Stoiljkovikj et al.\@'s by finer segregating puzzles by difficulty level.
+
+\subsection{High-level overview}
+
+As explored by Stoiljkovikj et al.\@, `meaningful search trees' have predictive
+possibility of a puzzle's difficulty.\cite{chessTrees} These trees are
+constructed by analysing powerful moves that either gain, or at least do not
+worsen a side's position. 
+
+By additionally labelling these trees with move information, we hope to build
+upon this work. To demonstrate the intuition behind this idea, there are two
+labelled search trees shown below in Figures \ref{tree1}, \ref{tree2}. These
+are the search trees for positions in Figures \ref{chess5}, \ref{chess6} which
+feature a identical and complex tactical motif. 
+
+In the following trees, algebratic notation of the moves is shown, along with 4
+slash-delimited integers, which correspond to: pieces attacked, pieces
+defended, number of attackers, number of defenders.\footnote{As the moves must
+be legal, this means a king move will never have any attackers, and any
+check/mate will have at least 1 piece attacked -- the enemy king.} Whilst the 2
+trees do not look similar visually (their size being the main problem), the
+first 3 plies are very similar. 
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/trees/1.drawio.png}
+        \caption{Labelled search tree for game in \ref{chess5}}
+        \label{tree1}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/trees/2.drawio.png}
+        \caption{Labelled search tree for game in \ref{chess6}}
+        \label{tree2}
+    \end{minipage}
+\end{figure}
+
+Below, in Figures \ref{puzzle5}, \ref{puzzle6} are two chess puzzles from the
+paper `Automatic Recognition of Similar Chess Motifs'.\cite{chessMotifs}
+Despite their visual difference, these both feature a rook sacrifice, and an
+imminent queen checkmate helped by the powerful light-squared bishop. This
+similarity is not immediately obvious, but the search trees for these puzzles
+is almost identical, except for minor attacker/defender discrepancies. The
+trees are shown in Figures \ref{tree3}, \ref{tree4}. These puzzles were already
+successfully grouped by Bizjak et al.\@.\cite{chessMotifs}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - - 0 1]
+        \caption{Taken from `Automatic Recognition of Similar Chess Motifs'.\cite{chessMotifs} White mates in 3 (\texttt{1.Rh8+ Kxh8 2.Qh6+ Kg8 3.Qxg7#}).}
+        \label{puzzle5}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=r5k1/5pp1/8/3p3R/2q4P/PbB2P2/1P1Q2P1/K7 w q - 0 1]
+            \caption{Also taken from `Automatic Recognition of Similar Chess Motifs'.\cite{chessMotifs} White mates in 3 with the same moves as Figure \ref{puzzle5}.}
+        \label{puzzle6}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/trees/3.drawio.png}
+        \caption{Labelled search tree for game in \ref{puzzle5}}
+        \label{tree3}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{project/img/trees/4.drawio.png}
+        \caption{Labelled search tree for game in \ref{puzzle6}}
+        \label{tree4}
+    \end{minipage}
+\end{figure}
 

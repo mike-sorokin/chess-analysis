@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" modified="2024-05-19T18:58:49.732Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0" etag="nVhtEjtJxc1Qzy6x7Ffv" version="24.4.4" type="device">
+  <diagram name="Page-1" id="XL02Ip0AQlzXRbUtfJpO">
+    <mxGraphModel dx="746" dy="436" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" edge="1" parent="1" source="v_L1f3dkDZgrAzcISWoP-1" target="v_L1f3dkDZgrAzcISWoP-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" edge="1" parent="1" source="v_L1f3dkDZgrAzcISWoP-1" target="v_L1f3dkDZgrAzcISWoP-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-1" value="&lt;div style=&quot;font-size: 16px;&quot;&gt;Qh6+&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;2/1/2/0&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="360" y="80" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" edge="1" parent="1" source="v_L1f3dkDZgrAzcISWoP-2" target="v_L1f3dkDZgrAzcISWoP-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-2" value="&lt;div style=&quot;font-size: 16px;&quot;&gt;Kxh6&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;1/1/0/1&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="440" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" edge="1" parent="1" source="v_L1f3dkDZgrAzcISWoP-3" target="v_L1f3dkDZgrAzcISWoP-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-3" value="&lt;div style=&quot;font-size: 16px;&quot;&gt;gxh6&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;0/0/0/1&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="280" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-4" value="&lt;div style=&quot;font-size: 16px;&quot;&gt;Rxf7#&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;2/1/0/0&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="280" y="240" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v_L1f3dkDZgrAzcISWoP-5" value="&lt;div style=&quot;font-size: 16px;&quot;&gt;Rh8#&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;1/0/0/0&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontFamily=Times New Roman;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="440" y="240" width="80" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

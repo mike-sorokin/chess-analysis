@@ -402,9 +402,9 @@ input, or as a baseline to compare the results to.
 \subsection{Recognition of the \emph{Greek Gift Sacrifice} In Chess Games}
 
 Kub\'{a}t et al.\@ report their findings on a program \cite{middlegamePatterns}
-to identify the \emph{Greek gift sacrifice} in chess middlegames\footnote{The
+to identify the \emph{Greek gift sacrifice} in chess middlegames.\footnote{The
 phase of the chess game where most pieces are developed and the kings are
-positioned away from danger.}. They found success, partly thanks to their
+positioned away from danger.} They found success, partly thanks to their
 detailed representation of the board, where each square is represented by 71
 binary attribites \cite{middlegamePatterns} to encode the piece on the square
 and the possible squares which are reachable by this piece. 
@@ -457,7 +457,7 @@ CNN chess work (e.g. Sabatelli's thesis,\cite{chessCNN} discussed above) and
 analyse its effect on the success of the technique.
 
 \subsection{A Computational Model for Estimating the Difficulty of Chess
-Problems}
+Problems} \label{chessTreesOverview}
 
 Stoiljkovikj et al.\@ explore estimation of difficulty of chess problems in
 this paper.\cite{chessTrees} By using a powerful chess engine, they generate a
@@ -505,6 +505,27 @@ A key downside of their work is that their model generates illegal moves, which
 have to be filtered manually using a chess library.\cite{chessTransformer} This
 `hallucination' effect is a downside of using transformers, and other
 generative techniques, in the topic of chess. 
+
+\subsection{Automatic Recognition of Similar Chess Motifs} \label{chessMotifsOverview}
+
+In their thesis,\cite{chessMotifs} Bizjak et al.\@ develop a method to retrieve
+similar chess positions among a variety of tactically sharp examples. Building
+upon the naive `static' similarity (piece locations, pawn structure, etc.\@),
+they implement various `dynamic' similarity metrics (whether captures occur,
+attacks happen, sacrifices happen, etc.\@ in the optimal move chain). It is
+well known \cite{thoughtAndChoice}\cite{bilalic2010mechanisms} that chess
+players often think about positions in this dynamic way. This is further
+reinforced by an example given in the thesis, where a small static perturbation
+causes previously dynamically similar positions to have nothing in
+common.\cite{chessMotifs}
+
+This work is incredibly close to the goal of our project, and it has plenty of
+interesting approaches and ideas. Importantly, their results are successful:
+when a chess expert was asked to identify similar positions, they chose the
+same ones that Bizjak et al.\@'s program did.\cite{chessMotifs} Whilst this is
+not a faultless evaluation metric, it shows that there is potential within
+their approach.
+
 
 \section{Ethical discussion}
 
