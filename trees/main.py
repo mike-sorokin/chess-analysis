@@ -1,37 +1,40 @@
 import chess
+import zss
 import chess.engine
 
 class ChessTreeNode:
-    def __init__(self, node, children):
+    def __init__(self, node, children, depth=0):
         fen, move = node
         board = chess.Board(fen)
         board.push(move)
         src, dst = move.from_square, move.to_square
         self.move_attributes = {
+            "side": not board.turn,
             "piece": board.piece_at(dst).symbol().upper(),
+            "depth": depth,
             "from_file": chess.square_file(src),
             "from_rank": chess.square_rank(src),
             "from_diagonal_1": chess.square_file(src) + chess.square_rank(src),
             "from_diagonal_2": chess.square_file(src) + (8 - chess.square_rank(src)),
             "to_file": chess.square_file(dst),
             "to_rank": chess.square_rank(dst),
-            "from_diagonal_1": chess.square_file(dst) + chess.square_rank(dst),
-            "from_diagonal_2": chess.square_file(dst) + (8 - chess.square_rank(dst)),
+            "to_diagonal_1": chess.square_file(dst) + chess.square_rank(dst),
+            "to_diagonal_2": chess.square_file(dst) + (8 - chess.square_rank(dst)),
             "move_distance": chess.square_distance(src, dst),
             "check": board.is_check(),
             "mate": board.is_checkmate(),
             "num_attacks": sum(1 for _, p 
                 in board.piece_map(mask=int(board.attacks(dst))).items()
-                if p.color != board.turn
+                if p.color == board.turn
             ),
             "num_defenses": sum(1 for _, p 
                 in board.piece_map(mask=int(board.attacks(dst))).items()
-                if p.color == board.turn
+                if p.color != board.turn
             ),
-            "attacked_by_num": len(board.attackers(not board.turn, dst)),
-            "defended_by_num": len(board.attackers(board.turn, dst)),
+            "attacked_by_num": len(board.attackers(board.turn, dst)),
+            "defended_by_num": len(board.attackers(not board.turn, dst)),
         }
-        self.children = [ChessTreeNode(*c) for c in children]
+        self.children = [ChessTreeNode(*c, depth=depth+1) for c in children]
         board.pop()
         self.board = board
         self.mv = move
@@ -52,7 +55,71 @@ class ChessTreeNode:
     
     @staticmethod
     def compare(a, b):
-        pass
+        # Adding/removing node
+        # This depends on depth
+        if a == "" or b == "":
+            # Swap if needed
+            if a == "":
+                a, b = b, a
+            depth_dict = {
+                0: 2000,
+                1: 1000,
+                2: 250,
+                3: 100,
+                4: 50,
+                5: 25
+            }
+            return depth_dict.get(a["depth"], 5000)
+        # Compare 2 move attribute dictionaries.
+        d = 0
+        
+        # Compare sides
+        if a["side"] != b["side"]:
+            d += 9999999999
+        
+        # Pieces
+        if (p1 := a["piece"]) == (p2 := b["piece"]):
+            pass
+        elif {p1, p2} == {"R", "Q"}:
+            d += 10
+        elif {p1, p2} == {"B", "Q"}:
+            d += 20
+        else:
+            d += 50
+        
+        # Squares
+        if a["from_file"] != b["from_file"]:
+            d += 5
+        if a["from_rank"] != b["from_rank"]:
+            d += 5
+        if a["from_diagonal_1"] != b["from_diagonal_1"]:
+            d += 5
+        if a["from_diagonal_2"] != b["from_diagonal_2"]:
+            d += 5
+
+        if a["to_file"] != b["to_file"]:
+            d += 5
+        if a["to_rank"] != b["to_rank"]:
+            d += 5
+        if a["to_diagonal_1"] != b["to_diagonal_1"]:
+            d += 5
+        if a["to_diagonal_2"] != b["to_diagonal_2"]:
+            d += 5
+
+        d += abs(a["move_distance"] - b["move_distance"])
+
+        if a["check"] != b["check"]:
+            d += 10
+ 
+        if a["mate"] != b["mate"]:
+            d += 15
+        
+        d += 2 * abs(a["num_attacks"] - b["num_attacks"])
+        d += 2 * abs(a["num_defenses"] - b["num_defenses"])
+        d += 2 * abs(a["attacked_by_num"] - b["attacked_by_num"])
+        d += 2 * abs(a["defended_by_num"] - b["defended_by_num"])
+
+        return d
 
 def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=100, depth=0):
     print(fen, move)
@@ -94,21 +161,29 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
     return [(node, expand_tree(*node, engine, not can_terminate_on_equal_moves, 200 - eval_threshold, depth=depth+1))
         for node in node_children]
 
-
-def print_tree(t, ind=0):
-    for (b, m), st in t:
-        print("    "*ind + chess.Board(b).san(m))
-        print_tree(st, ind+1)
-
 def main():
-    simple_br = "4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - - 0 1"
     magnus = "2R5/4bppk/1p1p4/5R1P/4PQ2/5P2/r4q1P/7K w - - 5 50"
-    simple = "2k2br1/pp1r4/2n5/4p1B1/P1NpP1qp/3P1R2/1P2Q2P/7K w - - 0 1"
+    magnus2 = "5R2/bp4pk/2n3p1/P7/P1q3bP/6P1/3Q3K/1R6 w - - 1 32"
+    motif1 = "4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - - 0 1"
+    motif2 = "r5k1/5pp1/8/3p3R/2q4P/PbB2P2/1P1Q2P1/K7 w q - 0 1"
 
     stockfish = chess.engine.SimpleEngine.popen_uci("stockfish-ubuntu-x86-64-avx2/stockfish/stockfish-ubuntu-x86-64-avx2")
-    tree = expand_tree(simple, chess.Move.null(), stockfish, True)
-    ChessTreeNode(*tree[0])._print()
+    tree1 = ChessTreeNode(*expand_tree(magnus, chess.Move.null(), stockfish, True)[0])
+    tree2 = ChessTreeNode(*expand_tree(magnus2, chess.Move.null(), stockfish, True)[0])
+    tree3 = ChessTreeNode(*expand_tree(motif1, chess.Move.null(), stockfish, True)[0])
+    tree4 = ChessTreeNode(*expand_tree(motif2, chess.Move.null(), stockfish, True)[0])
     stockfish.quit()
+
+    for i, x in enumerate([tree1, tree2, tree3, tree4]):
+        for j, y in enumerate([tree1, tree2, tree3, tree4]):
+            dist = zss.simple_distance(x, y, 
+                ChessTreeNode.get_children,
+                ChessTreeNode.get_label,
+                ChessTreeNode.compare)
+            print(f"{i},{j}: {dist}")
+        print()
+
+
 
 if __name__ == "__main__":
     main()
