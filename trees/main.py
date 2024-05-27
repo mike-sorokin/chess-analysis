@@ -75,7 +75,9 @@ class ChessTreeNode:
             d += 9999999999
         
         # Pieces
-        if (p1 := a["piece"]) == (p2 := b["piece"]):
+        p1 = a["piece"]
+        p2 = b["piece"]
+        if p1 == p2:
             pass
         elif {p1, p2} == {"R", "Q"}:
             d += 10
