@@ -11,5 +11,4 @@ log 		= condor/log
 
 arguments	= condor/fens/puzzles_$(Process).csv
 
-# queue 1917
-queue 1
+queue 1917
