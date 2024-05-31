@@ -162,7 +162,7 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
         for node in node_children]
 
 def main():
-    stockfish = chess.engine.SimpleEngine.popen_uci(sys.argv[1])
+    stockfish = chess.engine.SimpleEngine.popen_uci(sys.argv[1], timeout=None)
     df = pd.read_csv(sys.argv[2])
 
     puzzles = {}
