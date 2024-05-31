@@ -1,12 +1,15 @@
 universe	= vanilla
-executable	= venv/bin/python
+executable	= install_and_run.sh
+
+should_transfer_files	= IF_NEEDED
+transfer_input_files	= requirements.txt, condor/fens/puzzles_$(Process).csv, main.py, stockfish
 
 output		= condor/out/$(Process)
 stream_output	= True
 error		= condor/err/$(Process)
 log 		= condor/log
 
-arguments	= main.py ./stockfish condor/fens/puzzles_$(Process).csv
+arguments	= condor/fens/puzzles_$(Process).csv
 
 # queue 1917
 queue 1
