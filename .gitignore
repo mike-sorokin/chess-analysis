@@ -8,9 +8,10 @@ trees/condor
 # Data files
 *.csv
 *.zst
+trees/all_trees
 
-# HTCondor output
-trees/condor
+# Python pickle
+*.pkl
 
 # Pytorch checkpoints
 *.pth
