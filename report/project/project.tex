@@ -26,15 +26,19 @@ Italian_Game Italian_Game_Classical_Variation
 \begin{figure}[H]
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move 17.}
+        \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k -
+        0 17]
+        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
+        17.}
         \label{puzzle1}
     \end{minipage}
     \hspace{0.05\textwidth}
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1 18]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move 18.
+        \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1
+        18]
+        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
+        18.
         Checkmate is imminent with \texttt{18.Be6+ Kd8 19.Qf8\#}.}
         \label{puzzle2}
     \end{minipage}
@@ -66,7 +70,8 @@ frequent the various patterns are, which is a natural consequence of the game.
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{project/img/puzzle_theme_counts.png}
-    \caption{Frequency of puzzle themes in the lichess.org puzzle database.\cite{lichessPuzzles}}
+    \caption{Frequency of puzzle themes in the lichess.org puzzle
+    database.\cite{lichessPuzzles}}
     \label{dataThemeCounts}
 \end{figure}
 
@@ -97,7 +102,8 @@ these themes.
     \hspace{0.05\textwidth}
     \begin{minipage}{0.475\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{project/img/puzzle_theme_histograms.png}
+        \includegraphics[width=\textwidth]
+            {project/img/puzzle_theme_histograms.png}
         \caption{Distribution of Lichess puzzle ratings with a specific theme.}
         \label{dataThemeHistogram}
     \end{minipage}
@@ -106,7 +112,8 @@ these themes.
 \begin{figure}[H]
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0 22]
+        \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0
+        22]
         \caption{\textbf{Kenan2345 -- gandie}, lichess.org Blitz game, move 22. 
         Black loses to \texttt{22.Rd8+}.}
         \label{puzzle3}
@@ -114,8 +121,11 @@ these themes.
     \hspace{0.05\textwidth}
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b - - 0 31]
-        \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31. White loses his queen after \texttt{31...Re38}, as the queen has no safe squares to escape to.}
+        \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b -
+        - 0 31]
+        \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31.
+        White loses his queen after \texttt{31...Re38}, as the queen has no
+        safe squares to escape to.}
 
         \label{puzzle4}
     \end{minipage}
@@ -158,17 +168,22 @@ board squares as embeddings of tokens/words has not been previously explored.
     \begin{minipage}{0.425\textwidth}
         \centering
         \includegraphics[width=\textwidth]{project/img/attention.png}
-        \caption{Example of attention mechanism in the encoder. Taken from `Attention Is All You Need' \citep{attention}.}
+        \caption{Example of attention mechanism in the encoder. Taken from
+        `Attention Is All You Need' \citep{attention}.}
         \label{attentionLinks}
     \end{minipage}
    \hspace{0.05\textwidth}
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen=r3r1n1/bp6/p2p2kp/3N4/2P3n1/1PQ3Pq/P4P2/4RRK1 w - - 0 1,
+        \chessboard[setfen=r3r1n1/bp6/p2p2kp/3N4/2P3n1/1PQ3Pq/P4P2/4RRK1 w - -
+        0 1,
                     pgfstyle=border,markfields={d5},
-                    pgfstyle=straightmove,markmoves={f4-g6,f4-h3,c7-a8,c7-e8,d5-c7,d5-f4},
-                    pgfstyle=color,opacity=0.5,color=blue,markfields={f4,c7},
-                    pgfstyle=color,opacity=0.5,color=red,markfields={h3,g6,a8,e8}]
+                    pgfstyle=straightmove,
+                    markmoves={f4-g6,f4-h3,c7-a8,c7-e8,d5-c7,d5-f4},
+                    pgfstyle=color,opacity=0.5,
+                    color=blue,markfields={f4,c7},
+                    pgfstyle=color,opacity=0.5,
+                    color=red,markfields={h3,g6,a8,e8}]
         \caption{Example of a relationship between chess pieces.}
 
         \label{chessPuzzleLinks}
@@ -184,7 +199,7 @@ vector which encodes the labels of the puzzle themes. Slightly more formally,
 the element $B[z, x, y]$ of bitboard $B$ is $1$ iff there is a piece $z \in
 \{\texttt{p}, \texttt{P}, \texttt{n}, \texttt{N}, \texttt{b}, \texttt{B},
 \texttt{r}, \texttt{R}, \texttt{q}, \texttt{Q}, \texttt{k},
-\texttt{K}\}$\footnote{FEN-inspired -- white pieces are uppercas\texttt{e},
+\texttt{K}\}$\footnote{FEN-inspired -- white pieces are uppercase,
 black pieces are lowercase.} at rank $x \in \{\texttt{1}, \texttt{2},
 \texttt{3}, \texttt{4}, \texttt{5}, \texttt{6}, \texttt{7}, \texttt{8}\}$},
 file $y \in \{\texttt{a}, \texttt{b}, \texttt{c}, \texttt{d}, \texttt{e},
@@ -207,7 +222,9 @@ black-to-move puzzles.
 \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{project/img/ml_diagram.png}
-        \caption{High-level overview of the model architecture. Transformer encoder diagram taken from `Attention Is All You Need' \citep{attention}.}
+        \caption{High-level overview of the model architecture. Transformer
+        encoder diagram taken from `Attention Is All You Need'
+        \citep{attention}.}
         \label{MLDiagram}
 \end{figure}
 
@@ -231,7 +248,7 @@ labelled tree edit distance function \citep{editDistTrees}, we would be able to
 calculate `closeness' of chess puzzles. This could also help refine the work of
 \citet{chessTrees} by finer segregating puzzles by difficulty level.
 
-\subsection{High-level overview}
+\subsection{High-Level Overview}
 
 As explored by \citet{chessTrees}, `meaningful search trees' have predictive
 possibility of a puzzle's difficulty. These trees are constructed by analysing
@@ -313,3 +330,78 @@ successfully grouped by \citet{chessMotifs}.
     \end{minipage}
 \end{figure}
 
+\subsection{Meaningful Tree Generation}\label{treeGenSection}
+
+Similar to the work of \citet{chessTrees}, Stockfish was used to generate
+meaningful trees of a maximum depth of 5 ply. Each level of the tree has a
+maximum of 3 possible moves that are within 100 centipawns (arbitrarily chosen)
+of the best move. If all 3 moves for the side solving the puzzle are within
+this range, then the puzzle is considered solved; \citet{chessTrees} writes:
+``This means that the position is already so strong that it no longer matters
+what move the player chooses because almost everything wins.''. Finally, a
+checkmate naturally indicates that the puzzle is solved. 
+
+This analysis is continued until either every branch of the puzzle is
+exhausted, whether because it has solved the puzzle, or ran out of the maximum
+depth of 5.
+
+Whilst generating the tree nodes, each move is annotated with a list of
+attributes describing the properties of these move. The exhaustive list of the
+attributes we consider is as follows:
+
+\begin{itemize}
+    \item Colour of the piece
+    \item Piece name (queen, rook, etc.\@)
+    \item Depth of the node
+    \item File, rank, diagonals (2 types: parallel to \texttt{a1-h8} or
+        \texttt{a8-h1}) of the source square
+    \item File, rank, diagonals of the target square
+    \item Chebyshev distance (number of king moves) between source and target
+        squares     
+    \item Delivers check or not
+    \item Delivers mate or not
+    \item Number of enemy pieces attacked after the move
+    \item Number of friendly pieces defended after the move
+    \item Number of enemy attackers after the move
+    \item Number of friendly defenders after the move
+\end{itemize}
+
+In total, we generated 3.7 million game trees which took about 1000 hours of
+CPU time. This was done with the help of the Department of Computing's HTCondor
+cluster.
+
+\subsection{What Makes Chess Moves Similar?}
+
+Given the list in Section \ref{treeGenSection}, we define a distance function
+between two given lists of attributes. All of the parameters are completely
+arbitrary and were devised by an intermediate chess player. In the list below,
+the `penalties' for each discrepancy is listed. The final distance between two
+nodes is the sum of all of the per-item distances.
+
+The depth of the node is only taken into consideration when a node needs to be
+added or removed to transform one move tree into another. In this case, the
+penalties for are: $2000, 1000, 250, 100, 50, 25$ at depths $0, 1, 2, 3, 4, 5$
+respectively. The justification for this is that initial moves in a puzzle are
+critical, whilst the follow up can sometimes vary.
+
+\begin{center}
+    \begin{tabular}{|c|r|l|}
+        \hline
+        Condition & Penalty & Note \\
+        \hline \hline
+        Different colour & $\infty$ & Implementation detail \\
+        Different piece type & $50$ & \\
+        Pieces: queen/rook & $-40$ & Heavy pieces are used similarly \\
+        Pieces: queen/bishop & $-30$ & Both can attack diagonally \\
+        Differing source rank/file/diagonal & $5$ each & \\
+        Differing target rank/file/diagonal & $5$ each & \\
+        Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often not important \\
+        Checking and non-checking & $25$ & \\
+        Mate and non-mate & $50$ & \\
+        Number of enemies attacked, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+        Number of allies defended, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+        Number of attackers, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+        Number of defenders, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+        \hline
+    \end{tabular}
+\end{center}
