@@ -5,6 +5,9 @@ report/main.pdf
 *.csv
 *.zst
 
+# HTCondor output
+trees/condor
+
 # Pytorch checkpoints
 *.pth
 
