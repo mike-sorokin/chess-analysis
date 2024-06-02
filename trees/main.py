@@ -108,15 +108,15 @@ class ChessTreeNode:
         d += abs(int(a["move_distance"]) - int(b["move_distance"]))
 
         if a["check"] != b["check"]:
-            d += 10
+            d += 25
  
         if a["mate"] != b["mate"]:
-            d += 15
+            d += 50
         
-        d += 2 * abs(int(a["num_attacks"]) - int(b["num_attacks"]))
-        d += 2 * abs(int(a["num_defenses"]) - int(b["num_defenses"]))
-        d += 2 * abs(int(a["attacked_by_num"]) - int(b["attacked_by_num"]))
-        d += 2 * abs(int(a["defended_by_num"]) - int(b["defended_by_num"]))
+        d += 3 * abs(int(a["num_attacks"]) - int(b["num_attacks"]))
+        d += 3 * abs(int(a["num_defenses"]) - int(b["num_defenses"]))
+        d += 3 * abs(int(a["attacked_by_num"]) - int(b["attacked_by_num"]))
+        d += 3 * abs(int(a["defended_by_num"]) - int(b["defended_by_num"]))
 
         return d
 
