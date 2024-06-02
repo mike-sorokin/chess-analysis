@@ -1,6 +1,10 @@
 # Main report pdf
 report/main.pdf
 
+# HTCondor files
+trees/condor
+!trees/condor/generate_fens.cmd
+
 # Data files
 *.csv
 *.zst

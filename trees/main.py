@@ -155,12 +155,14 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
         # This means the position could be completely winning (all moves are good)
         if can_terminate_on_equal_moves and depth != 0:
             return []
-
-    return [(node, expand_tree(*node, engine, not can_terminate_on_equal_moves, eval_threshold, depth=depth+1))
+    
+    return [(node, expand_tree(*node, engine=engine,
+        can_terminate_on_equal_moves=not can_terminate_on_equal_moves,
+        eval_threshold=eval_threshold, depth=depth+1))
         for node in node_children]
 
 def main():
-    stockfish = chess.engine.SimpleEngine.popen_uci(sys.argv[1])
+    stockfish = chess.engine.SimpleEngine.popen_uci(sys.argv[1], timeout=None)
     df = pd.read_csv(sys.argv[2])
 
     puzzles = {}
