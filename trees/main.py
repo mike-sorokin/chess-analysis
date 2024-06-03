@@ -44,9 +44,11 @@ class ChessTreeNode:
         }
         self.children = [ChessTreeNode(*c, depth=depth+1) for c in children]
 
-    def flip_san(self):
+    def flip_san(self, flip=True):
         # This purely has a cosmetic effect and is used for printing purposes only
         # Yes, it's hacky :(
+        if not flip:
+            return self
         self.move_attributes["san"] = "".join(
             str(9-int(s)) if s.isnumeric() else s for s in self.move_attributes["san"] 
         )

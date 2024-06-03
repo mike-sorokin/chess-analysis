@@ -332,14 +332,19 @@ successfully grouped by \citet{chessMotifs}.
 
 \subsection{Meaningful Tree Generation}\label{treeGenSection}
 
-Similar to the work of \citet{chessTrees}, Stockfish was used to generate
-meaningful trees of a maximum depth of 5 ply. Each level of the tree has a
-maximum of 3 possible moves that are within 100 centipawns (arbitrarily chosen)
-of the best move. If all 3 moves for the side solving the puzzle are within
-this range, then the puzzle is considered solved; \citet{chessTrees} writes:
-``This means that the position is already so strong that it no longer matters
-what move the player chooses because almost everything wins.''. Finally, a
-checkmate naturally indicates that the puzzle is solved. 
+Similar to the work of \citet{chessTrees}, Stockfish (depth=20) was used to
+generate meaningful trees of a maximum depth of 5 ply. Each level of the tree
+has a maximum of 4 possible moves that are within 100 centipawns (arbitrarily
+chosen) of the best move.
+
+\citet{chessTrees} writes: ``[A high branching factor] means that the position
+is already so strong that it no longer matters what move the player chooses
+because almost everything wins.''; the tree search is terminated if the best 4
+moves for the losing side are within 100 centipawns. While this differs from
+the quote above, it causes trees to terminate when the puzzle is completed (any
+move for the losing side is equally bad), as opposed to one move before (any
+move for the winning side is equally good). Finally, a checkmate naturally
+indicates that the puzzle is solved. 
 
 This analysis is continued until either every branch of the puzzle is
 exhausted, whether because it has solved the puzzle, or ran out of the maximum
