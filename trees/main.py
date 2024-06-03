@@ -137,7 +137,7 @@ class ChessTreeNode:
 
         return d
 
-def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=100, depth=0):
+def expand_tree(fen, move, engine, eval_threshold=100, depth=0):
     board = chess.Board(fen)
     # skip null moves
     if move:
@@ -147,8 +147,8 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
     if depth > 5:
         return []
 
-    results = engine.analyse(board, limit=chess.engine.Limit(depth=15), multipv=5)
-    best_score = results[0]["score"].relative.score(mate_score=100000)
+    results = engine.analyse(board, limit=chess.engine.Limit(depth=20), multipv=4)
+    best_score = abs(results[0]["score"].relative.score(mate_score=100000))
     # Checkmate is on the board
     if results[0]["score"].relative.mate() == 0:
         return []
@@ -165,8 +165,7 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
     node_children = [(board.fen(), best_move)]
 
     for result in results[1:]:
-        diff = best_score - result["score"].relative.score(mate_score=100000)
-        if result["score"].relative.score(mate_score=100000) > score_cutoff:
+        if abs(result["score"].relative.score(mate_score=100000)) > score_cutoff:
             move = result["pv"][0].uci()
             node_children.append((board.fen(), move))
         else:
@@ -174,13 +173,16 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
             break
     else:
         # break was not called, therefore we added ALL moves.
-        # This means the position could be completely winning (all moves are good)
-        # Make sure that we did actually add 5 moves also.
-        if depth != 0 and len(node_children) == 5:
+        # This means the position is completely lost for black
+        # (all moves are equally bad - no further complications/tricks)
+        # Make sure that we did actually add 4 moves and it's not too early
+        if depth > 1 and len(node_children) == 4 and board.turn == chess.BLACK:
             return []
     
+    # Play the best move if we are white (puzzle player)
+    if board.turn == chess.WHITE:
+        node_children = node_children[:1]
     return [(node, expand_tree(*node, engine=engine,
-        can_terminate_on_equal_moves=not can_terminate_on_equal_moves,
         eval_threshold=eval_threshold, depth=depth+1))
         for node in node_children]
 
@@ -191,7 +193,7 @@ def main():
     puzzles = {}
     for _, row in df.iterrows():
         fen = row["white_to_play_FEN"]
-        print(json.dumps([row["PuzzleId"], expand_tree(fen, chess.Move.null(), stockfish, True)]))
+        print(json.dumps([row["PuzzleId"], expand_tree(fen, chess.Move.null(), stockfish)]))
     stockfish.quit()
 
 if __name__ == "__main__":
