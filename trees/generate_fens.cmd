@@ -2,7 +2,7 @@ universe	= vanilla
 executable	= install_and_run.sh
 
 # Run only on lab machines
-requirements	= regexp("^(ash|beech|cedar|curve|edge|gpu|maple|oak|pixel|ray|texel|vertex|willow)[0-9]{2}", TARGET.Machine)
+requirements	= regexp("^(ash|beech|cedar|curve|edge|maple|oak|pixel|ray|texel|vertex|willow)[0-9]{2}", TARGET.Machine)
 
 should_transfer_files	= IF_NEEDED
 transfer_input_files	= requirements.txt, condor/fens/puzzles_$(Process).csv, main.py, stockfish
