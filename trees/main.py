@@ -12,9 +12,11 @@ class ChessTreeNode:
         fen, move = node
         board = chess.Board(fen)
         move = board.parse_uci(move)
+        move_san = board.san(move)
         board.push(move)
         src, dst = move.from_square, move.to_square
         self.move_attributes = {
+            "san": move_san,
             "side": not board.turn,
             "piece": board.piece_at(dst).symbol().upper(),
             "depth": depth,
@@ -41,6 +43,21 @@ class ChessTreeNode:
             "defended_by_num": len(board.attackers(not board.turn, dst)),
         }
         self.children = [ChessTreeNode(*c, depth=depth+1) for c in children]
+
+    def flip_san(self):
+        # This purely has a cosmetic effect and is used for printing purposes only
+        # Yes, it's hacky :(
+        self.move_attributes["san"] = "".join(
+            str(9-int(s)) if s.isnumeric() else s for s in self.move_attributes["san"] 
+        )
+        return self
+
+    def __str__(self):
+        d = self.move_attributes["depth"]
+        san = self.move_attributes["san"]
+        num_info = "/".join(str(self.move_attributes[x]) for x in 
+            ["num_attacks", "num_defenses", "attacked_by_num", "defended_by_num"])
+        return ("  " * d) + san + f" {num_info}\n" + "".join(map(str, self.children))
 
     @staticmethod
     def get_label(node):
@@ -130,7 +147,7 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
     if depth > 5:
         return []
 
-    results = engine.analyse(board, limit=chess.engine.Limit(depth=15), multipv=3)
+    results = engine.analyse(board, limit=chess.engine.Limit(depth=15), multipv=5)
     best_score = results[0]["score"].relative.score(mate_score=100000)
     # Checkmate is on the board
     if results[0]["score"].relative.mate() == 0:
@@ -138,6 +155,11 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
 
     # Only keep moves that are within eval_threshold
     # Mates are always kept
+
+    # Some defensive programming because this broke sometimes
+    if "pv" not in results[0]:
+        return []
+
     best_move = results[0]["pv"][0].uci()
     score_cutoff = best_score - eval_threshold
     node_children = [(board.fen(), best_move)]
@@ -153,7 +175,8 @@ def expand_tree(fen, move, engine, can_terminate_on_equal_moves, eval_threshold=
     else:
         # break was not called, therefore we added ALL moves.
         # This means the position could be completely winning (all moves are good)
-        if can_terminate_on_equal_moves and depth != 0:
+        # Make sure that we did actually add 5 moves also.
+        if depth != 0 and len(node_children) == 5:
             return []
     
     return [(node, expand_tree(*node, engine=engine,
