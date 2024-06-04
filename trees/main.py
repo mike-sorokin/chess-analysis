@@ -93,6 +93,9 @@ class ChessTreeNode:
         if a["side"] != b["side"]:
             d += 9999999999
         
+        if a["depth"] != b["depth"]:
+            d += 2000
+        
         # Pieces
         p1 = a["piece"]
         p2 = b["piece"]
