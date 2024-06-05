@@ -5,4 +5,5 @@ lichess/*.csv
 lichess/lichess_db_puzzles.csv.zst
 
 # Condor generated files
-condor
+trees/condor/out/*
+trees/condor/all
