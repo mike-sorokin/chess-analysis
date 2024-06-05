@@ -1,9 +1,10 @@
-# Downloaded csv files
-lichess/*.csv
-
-# Puzzle archive file
-lichess/lichess_db_puzzles.csv.zst
+# Downloaded lichess files
+lichess/
 
 # Condor generated files
 trees/condor/out/*
 trees/condor/all
+
+# Puzzle splits for condor
+condor/puzzle*
+
