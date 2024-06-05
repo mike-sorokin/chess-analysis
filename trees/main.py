@@ -71,61 +71,65 @@ class ChessTreeNode:
     
     @staticmethod
     def compare(a, b):
+        depth_multiplier = {
+            0: 4,
+            1: 2,
+            2: 1,
+            3: 0.5,
+            4: 0.25,
+            5: 0.1,
+        }
+
+
         # Adding/removing node
         # This depends on depth
         if a == "" or b == "":
-            # Swap if needed
             if a == "":
                 a, b = b, a
-            depth_dict = {
-                0: 2000,
-                1: 1000,
-                2: 250,
-                3: 100,
-                4: 50,
-                5: 25
-            }
-            return depth_dict.get(a["depth"], 5000)
-        # Compare 2 move attribute dictionaries.
-        d = 0
-        
+            mult = depth_multiplier[a["depth"]]
+            return 250 * mult
+
         # Compare sides
         if a["side"] != b["side"]:
-            d += 9999999999
+            return 9999999
         
         if a["depth"] != b["depth"]:
-            d += 2000
-        
+            return 9999999
+
+        mult = depth_multiplier[a["depth"]]
+
+        # Compare 2 move attribute dictionaries.
+        d = 0
         # Pieces
         p1 = a["piece"]
         p2 = b["piece"]
         if p1 == p2:
             pass
         elif {p1, p2} == {"R", "Q"}:
-            d += 10
+            d += 25
         elif {p1, p2} == {"B", "Q"}:
-            d += 20
-        else:
             d += 50
+        else:
+            d += 100
         
         # Squares
         if a["from_file"] != b["from_file"]:
-            d += 5
+            d += 3
         if a["from_rank"] != b["from_rank"]:
-            d += 5
+            d += 3
         if a["from_diagonal_1"] != b["from_diagonal_1"]:
-            d += 5
+            d += 3
         if a["from_diagonal_2"] != b["from_diagonal_2"]:
-            d += 5
+            d += 3
 
         if a["to_file"] != b["to_file"]:
-            d += 5
+            d += 3
         if a["to_rank"] != b["to_rank"]:
-            d += 5
+            d += 3
         if a["to_diagonal_1"] != b["to_diagonal_1"]:
-            d += 5
+            d += 3
         if a["to_diagonal_2"] != b["to_diagonal_2"]:
-            d += 5
+            d += 3
 
         d += abs(int(a["move_distance"]) - int(b["move_distance"]))
 
@@ -140,7 +144,7 @@ class ChessTreeNode:
         d += 3 * abs(int(a["attacked_by_num"]) - int(b["attacked_by_num"]))
         d += 3 * abs(int(a["defended_by_num"]) - int(b["defended_by_num"]))
 
-        return d
+        return d * mult
 
 def expand_tree(fen, move, engine, eval_threshold=100, depth=0):
     board = chess.Board(fen)
