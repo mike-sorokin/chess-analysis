@@ -1,0 +1,8 @@
+# Downloaded csv files
+lichess/*.csv
+
+# Puzzle archive file
+lichess/lichess_db_puzzles.csv.zst
+
+# Condor generated files
+condor
