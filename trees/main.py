@@ -13,8 +13,10 @@ class ChessTreeNode:
         board = chess.Board(fen)
         move = board.parse_uci(move)
         move_san = board.san(move)
-        board.push(move)
         src, dst = move.from_square, move.to_square
+        is_capture = str(board.piece_at(dst)).upper()
+
+        board.push(move)
         self.move_attributes = {
             "san": move_san,
             "side": not board.turn,
@@ -29,6 +31,7 @@ class ChessTreeNode:
             "to_diagonal_1": chess.square_file(dst) + chess.square_rank(dst),
             "to_diagonal_2": chess.square_file(dst) + (8 - chess.square_rank(dst)),
             "move_distance": chess.square_distance(src, dst),
+            "capture": is_capture,
             "check": board.is_check(),
             "mate": board.is_checkmate(),
             "num_attacks": sum(1 for _, p 
