@@ -136,11 +136,21 @@ class ChessTreeNode:
 
         d += abs(int(a["move_distance"]) - int(b["move_distance"]))
 
+
+        if a["capture"] == b["capture"]:
+            pass
+        elif a["capture"] == "NONE" or b["capture"] == "NONE":
+            # One is capture, the other isn't
+            d += 50
+        else:
+            # Both captures, but different pieces
+            d += 10
+
         if a["check"] != b["check"]:
-            d += 25
+            d += 50
  
         if a["mate"] != b["mate"]:
-            d += 50
+            d += 100
         
         d += 3 * abs(int(a["num_attacks"]) - int(b["num_attacks"]))
         d += 2 * abs(int(a["num_defenses"]) - int(b["num_defenses"]))
