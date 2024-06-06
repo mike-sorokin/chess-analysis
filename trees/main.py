@@ -73,11 +73,11 @@ class ChessTreeNode:
     def compare(a, b):
         depth_multiplier = {
             0: 4,
-            1: 2,
-            2: 1,
-            3: 0.5,
-            4: 0.25,
-            5: 0.1,
+            1: 1,
+            2: 0.5,
+            3: 0.25,
+            4: 0.1,
+            5: 0.05,
         }
 
 
@@ -140,9 +140,9 @@ class ChessTreeNode:
             d += 50
         
         d += 3 * abs(int(a["num_attacks"]) - int(b["num_attacks"]))
-        d += 3 * abs(int(a["num_defenses"]) - int(b["num_defenses"]))
+        d += 2 * abs(int(a["num_defenses"]) - int(b["num_defenses"]))
         d += 3 * abs(int(a["attacked_by_num"]) - int(b["attacked_by_num"]))
-        d += 3 * abs(int(a["defended_by_num"]) - int(b["defended_by_num"]))
+        d += 2 * abs(int(a["defended_by_num"]) - int(b["defended_by_num"]))
 
         return d * mult
 
