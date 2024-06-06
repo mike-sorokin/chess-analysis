@@ -62,7 +62,7 @@ class ChessTreeNode:
         san = self.move_attributes["san"]
         num_info = "/".join(str(self.move_attributes[x]) for x in 
             ["num_attacks", "num_defenses", "attacked_by_num", "defended_by_num"])
-        return ("  " * d) + san + f" {num_info}\n" + "".join(map(str, self.children))
+        return ("  " * d) + san + f" {id(self)} {num_info}\n" + "".join(map(str, self.children))
 
     @staticmethod
     def get_label(node):
@@ -86,8 +86,8 @@ class ChessTreeNode:
 
         # Adding/removing node
         # This depends on depth
-        if a == "" or b == "":
-            if a == "":
+        if a == None or b == None:
+            if a == None:
                 a, b = b, a
             mult = depth_multiplier[a["depth"]]
             return 250 * mult
