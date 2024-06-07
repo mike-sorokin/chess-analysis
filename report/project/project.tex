@@ -378,9 +378,9 @@ cluster.
 
 Given the list in Section \ref{treeGenSection}, we define a distance function
 between two given lists of attributes. All of the parameters are completely
-arbitrary and were devised by an intermediate chess player. In the list below,
-the `penalties' for each discrepancy is listed. The final distance between two
-nodes is the sum of all of the per-item distances.
+arbitrary and were devised by an intermediate chess player. In Table
+\ref{distanceTable}, the `penalties' for each discrepancy is listed. The final
+distance between two nodes is the sum of all of the per-item distances.
 
 The depth of the node affects the final scaling for the distance. The reasoning
 behind this is that an initial move is much more important when comparing two
@@ -389,34 +389,57 @@ usually a lot of differences later in the move tree, and harshly penalising led
 to worse results, from early experiments. The depth multipliers are: $4, 1,
 0.5, 0.25, 0.1, 0.05$ for depths $0$ through to $5$, respectively.
 
-\begin{center}
-    \begin{tabular}{|c|r|l|}
-        \hline
-        Condition & Penalty & Note \\
-        \hline \hline
-        Different colour & $\infty$ & Implementation detail \\
-        \hline
-        Pieces are queen/rook & $25$ & Heavy pieces are used similarly \\
-        Pieces are queen/bishop& $50$ & Both can attack diagonally \\
-        Pieces are different and not QR/QB& $100$ & \\
-        \hline
-        Differing source rank/file/diagonal & $3$ each & \\
-        Differing target rank/file/diagonal & $3$ each & \\
-        Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
-        not important \\
-        \hline
-        Capture and non-capture & $50$ & \\
-        Capture of different pieces & $10$ & \\
-        Checking and non-checking & $25$ & \\
-        Mate and non-mate & $50$ & \\
-        \hline
-        Number of enemies attacked, $n_1, n_2$ & $3|n_1-n_2|$ & \\
-        Number of allies defended, $n_1, n_2$ & $2|n_1-n_2|$ & \\
-        Number of attackers, $n_1, n_2$ & $3|n_1-n_2|$ & \\
-        Number of defenders, $n_1, n_2$ & $2|n_1-n_2|$ & \\
-        \hline
-    \end{tabular}
-\end{center}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lrl}
+      Condition & Penalty & Note \\
+      \hline
+      Different colour & $\infty$ & Implementation detail \\
+      &&\\
+      Pieces are queen/rook & $25$ & Heavy pieces are used similarly \\
+      Pieces are queen/bishop& $50$ & Both can attack diagonally \\
+      Pieces are different and not QR/QB& $100$ & \\
+      &&\\
+      Differing source rank/file/diagonal & $3$ each & \\
+      Differing target rank/file/diagonal & $3$ each & \\
+      Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
+      not important \\
+      &&\\
+      Capture and non-capture & $50$ & \\
+      Capture of different pieces & $10$ & \\
+      Checking and non-checking & $25$ & \\
+      Mate and non-mate & $50$ & \\
+      &&\\
+      Number of enemies attacked, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+      Number of allies defended, $n_1, n_2$ & $2|n_1-n_2|$ & \\
+      Number of attackers, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+      Number of defenders, $n_1, n_2$ & $2|n_1-n_2|$ & \\
+  \end{tabular}
+  \caption{Breakdown of the node distance function for meaningful move trees}
+  \label{distanceTable}
+\end{table}
 
+This distance function defines a distance between nodes of move trees. Together
+with the unordered labelled tree edit distance algorithm \citep{editDistTrees},
+we can now compare any two chess puzzles. As an example, Table
+\ref{distanceComparisons} shows the distances between the puzzles in Figures
+\ref{chess1}, \ref{chess2} (back-rank mate in 1), \ref{puzzle5}, \ref{puzzle6}
+(rook sacrifice, mate in 3) and \ref{chess5}, \ref{chess6} (complex mating sequence).
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{r|cccccc}
+    Figure & \ref{chess1}&\ref{chess2}&\ref{puzzle5}&\ref{puzzle6}&\ref{chess5}&\ref{chess6} \\
+    \hline
+    \ref{chess1} & $0$ & $232$ & $978.5$ & $982.5$ & $1422$ & $1714$ \\ 
+    \ref{chess2} & $232$ & $0$ & $1086.5$ & $1082.5$ & $1278$ & $1586$ \\
+    \ref{puzzle5} & $978.5$ & $1086.5$ & $0$ & $46.5$ & $789$ & $1033.15$ \\
+    \ref{puzzle6} & $982.5$ & $1082.5$ & $46.5$ & $0$ & $795$ & $1035.15$ \\
+    \ref{chess5} & $1422$ & $1278$ & $789$ & $795$ & $0$ & $417$ \\
+    \ref{chess6} & $1714$ & $1586$ & $1033.15$ & $1035.15$ & $417$ & $0$ \\
+  \end{tabular}
+  \caption{Distance matrix for a few chess puzzles.}
+  \label{distanceComparisons}
+\end{table}
 
 
