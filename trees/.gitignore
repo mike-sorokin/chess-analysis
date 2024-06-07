@@ -1,3 +1,6 @@
 # Stockfish files
 stockfish/
 stockfish-ubuntu-x86-64-avx2.tar
+
+# Numpy data files
+*.npy
