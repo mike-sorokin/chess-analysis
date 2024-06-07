@@ -1,4 +1,4 @@
-\chapter{Implementation}
+\chapter{Implementation}\label{implementationChapter}
 
 \section{Lichess.org Puzzle Database}
 
@@ -131,7 +131,7 @@ these themes.
     \end{minipage}
 \end{figure}
 
-\section{The Machine Learning Approach}
+\section{The Machine Learning Approach}\label{transformersSection}
 
 \subsection{Introduction}
 
@@ -227,7 +227,7 @@ black-to-move puzzles.
 \end{figure}
 
 
-\section{The Graph-Based Approach}
+\section{The Graph-Based Approach}\label{treesSection}
 
 \subsection{Introduction}
 
@@ -370,7 +370,7 @@ attributes we consider is as follows:
     \item Number of friendly defenders after the move
 \end{itemize}
 
-In total, we generated 3.7 million game trees which took about 1000 hours of
+In total, we generated 3.7 million game trees which took about 10000 hours of
 CPU time. This was done with the help of the Department of Computing's HTCondor
 cluster.
 
@@ -417,4 +417,6 @@ to worse results, from early experiments. The depth multipliers are: $4, 1,
         \hline
     \end{tabular}
 \end{center}
+
+
 
