@@ -424,12 +424,15 @@ with the unordered labelled tree edit distance algorithm \citep{editDistTrees},
 we can now compare any two chess puzzles. As an example, Table
 \ref{distanceComparisons} shows the distances between the puzzles in Figures
 \ref{chess1}, \ref{chess2} (back-rank mate in 1), \ref{puzzle5}, \ref{puzzle6}
-(rook sacrifice, mate in 3) and \ref{chess5}, \ref{chess6} (complex mating sequence).
+(rook sacrifice, mate in 3) and \ref{chess5}, \ref{chess6} (complex mating
+sequence).
 
 \begin{table}[H]
   \centering
   \begin{tabular}{r|cccccc}
-    Figure & \ref{chess1}&\ref{chess2}&\ref{puzzle5}&\ref{puzzle6}&\ref{chess5}&\ref{chess6} \\
+    Figure &
+    \ref{chess1}&\ref{chess2}&\ref{puzzle5}&\ref{puzzle6}&\ref{chess5}&\ref{chess6}
+    \\
     \hline
     \ref{chess1} & $0$ & $232$ & $978.5$ & $982.5$ & $1422$ & $1714$ \\ 
     \ref{chess2} & $232$ & $0$ & $1086.5$ & $1082.5$ & $1278$ & $1586$ \\
@@ -442,4 +445,75 @@ we can now compare any two chess puzzles. As an example, Table
   \label{distanceComparisons}
 \end{table}
 
+\subsection{Finding Similar Positions Given a Puzzle}
+
+Generating the distance matrix in Table \ref{distanceComparisons} is
+prohibitively expensive, as it scales quadratically with the number of
+positions -- calculating this for the whole Lichess database is difficult. By
+extracting one row, however, we can rank puzzles in order of similarity to a
+given puzzle.
+
+For a simple back-rank mate in 1 puzzle, this is incredibly effective. Given
+the puzzle in Figure \ref{chess1}, we are able to find positions like the ones
+in Figures \ref{m11} and \ref{m22}. These positions are arguably more complex
+as there are more pieces on the board, making it harder to find the winning
+move.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen= 6k1/pr4pR/2p2pP1/2Pp4/5N2/P1r2P2/3RP3/3K4 b - - 1
+        28]
+        \caption{Distance $40$ to Figure \ref{chess1}. Solution:
+        \texttt{1...Rb1\#}}
+        \label{m11}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=1r4k1/6p1/p1R1p2p/8/P6P/3R4/2P2rP1/3K4 b - - 0 30]
+        \caption{Distance $0$ to Figure \ref{chess1}. Solution:
+        \texttt{1...Rb1\#}}
+        \label{m22}
+    \end{minipage}
+\end{figure}
+
+With a more complex position, such as the mate in two in Figure \ref{chess5},
+this method returns the positions in Figures \ref{mag1} and \ref{mag2}. These
+do not feature exactly the same tactic, but they are nonetheless similar,
+featuring a rook sacrifice on \texttt{h3} and different mating squares
+depending on White's response.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=2k3r1/p1p4p/8/pP1QR3/P2P3P/2P3r1/5RPK/3q4 b - - 2 30]
+        \caption{Distance $255$ to Figure \ref{chess5}. Solution:
+        \texttt{1...Rh3+ (2.Kxh3 Qh1\#) (2.gxh3 Qg1\#)}}
+        \label{mag1}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=6rk/pR6/2p4p/8/4PP2/P2P2r1/P2Q1RPK/q7 b - - 4 35]
+        \caption{Distance $259$ to Figure \ref{chess5}. Solution identical to
+        puzzle on the left.}
+        \label{mag2}
+    \end{minipage}
+\end{figure}
+
+\subsection{Unsupervised Clustering on Puzzle Distances}
+
+To take this further, a distance matrix was constructed for a random sample of
+10000 puzzles from the Lichess puzzle database. A few labelled puzzles were
+added to help with analysis of the results. A selection of unsupervised
+clustering algorithms were ran on this matrix to identify clusters of puzzles
+which are all similar to each other. Many of the standard clustering algorithms
+were not available due to the nature of the problem -- there is no obvious
+vector space representing the search trees, ruling out algorithms like K-means
+\citep{lloyd1982least} or Mean Shift \citep{fukunaga1975estimation}.
+
+We attempted Agglomerative Clustering (average, single, complete)
+\citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, OPTICS \citep{optics},
+and HDBSCAN \citep{hdbscan} on this subset of the database. The 
 
