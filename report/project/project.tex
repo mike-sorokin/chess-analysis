@@ -514,6 +514,102 @@ vector space representing the search trees, ruling out algorithms like K-means
 \citep{lloyd1982least} or Mean Shift \citep{fukunaga1975estimation}.
 
 We attempted Agglomerative Clustering (average, single, complete)
-\citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, OPTICS \citep{optics},
-and HDBSCAN \citep{hdbscan} on this subset of the database. The 
+\citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and HDBSCAN
+\citep{hdbscan} on this subset of the database. The results are shown in Tables
+\ref{tabAC}, \ref{tabDBSCAN} and \ref{tabHDBSCAN}.
 
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+  \begin{tabular}{lr|rccccrrrrrrr}
+    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster} &&
+    \multicolumn{6}{c}{Cluster size statistics} \\
+
+    Linkage&Distance threshold&Number of clusters&\rotatebox{90}{Backrank M1} &
+    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+
+    \hline
+    average&100&16973&Y&Y&Y&Y&0&1.18&1&1&1&1&177\\
+    average&250&13725&Y&Y&Y&Y&0&1.46&1&1&1&1&1000\\
+    average&500&8468&Y&Y&Y&Y&0&2.36&1&1&1&1&1863\\
+    complete&100&17224&Y&Y&Y&Y&0&1.16&1&1&1&1&85\\
+    complete&250&13983&Y&Y&Y&Y&0&1.43&1&1&1&1&611\\
+    complete&500&9063&Y&Y&Y&Y&0&2.21&1&1&1&1&1000\\
+    single&100&16732&Y&Y&Y&Y&0&1.2&1&1&1&1&611\\
+    single&250&13389&Y&Y&Y&Y&0&1.49&1&1&1&1&2652\\
+    single&500&7196&Y&Y&Y&Y&0&2.78&1&1&1&1&10057\\
+
+  \end{tabular}
+  \end{adjustbox}
+  \caption{Results of Agglomerative Clustering}
+  \label{tabAC}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+  \begin{tabular}{rr|rccccrrrrrrr}
+    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster} &&
+    \multicolumn{6}{c}{Cluster size statistics} \\
+
+    Epsilon&Minimum samples&Number of clusters&\rotatebox{90}{Backrank M1} &
+    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+
+    \hline
+  50&3&51& & & & &92.52&29.35&3&8&13&27&375\\
+  50&5&46& & & & &92.61&32.15&5&9&15&29&375\\
+  50&7&44& & & & &92.67&33.32&7&10&15&29&375\\
+  100&3&52&Y& & &Y&83.26&64.4&3&9&15&35&1000\\
+  100&5&48&Y& & &Y&83.33&69.48&5&11&19&41&1000\\
+  100&7&43&Y& & &Y&83.49&76.79&7&11&21&45&1000\\
+  250&3&38&Y& &Y&Y&66.71&175.26&4&10&21&79&2652\\
+  250&5&36&Y& &Y&Y&66.75&184.78&5&12&25&88&2652\\
+  250&7&36&Y& &Y&Y&66.79&184.56&7&13&25&88&2652\\
+  500&3&6&Y&Y&Y&Y&35.88&2137.67&7&86&346&1630&10068\\
+  500&5&6&Y&Y&Y&Y&35.88&2137.67&7&86&346&1630&10068\\
+  500&7&6&Y&Y&Y&Y&35.89&2137.33&7&86&346&1630&10067\\
+
+  \end{tabular}
+  \end{adjustbox}
+  \caption{Results of DBSCAN}
+  \label{tabDBSCAN}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+  \begin{tabular}{rr|rccccrrrrrrr}
+    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster} &&
+    \multicolumn{6}{c}{Cluster size statistics} \\
+
+    Min cluster size&Cluster selection $\epsilon$&Number of clusters&\rotatebox{90}{Backrank M1} &
+    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+
+    \hline
+    0&3&1176&Y&Y&Y&Y&46.36&9.12&3&3&6&9&303\\
+    0&5&735& &Y& &Y&50.76&13.4&5&6&8&12&351\\
+    0&7&522& &Y& &Y&54.33&17.5&7&8&10&15&345\\
+    25&3&1229&Y&Y& &Y&45.37&8.89&3&4&5&9&327\\
+    25&5&707& &Y& &Y&49.43&14.31&5&6&8&13&404\\
+    25&7&524&Y&Y& &Y&55.00&17.18&7&8&10&16&339\\
+    50&3&1221&Y&Y& &Y&42.99&9.34&3&3&5&9&367\\
+    50&5&700& &Y& &Y&49.48&14.44&5&6&8&12&373\\
+    50&7&468& &Y& &Y&53.28&19.97&7&8&10&16&375\\
+    100&3&1127&Y&Y&Y&Y&40.35&10.59&3&3&5&8&1000\\
+    100&5&627&Y&Y& &Y&45.91&17.26&5&6&8&11&1000\\
+    100&7&420&Y&Y& &Y&52.08&22.82&7&8&10&14&1000\\
+    /
+  \end{tabular}
+  \end{adjustbox}
+  \caption{Results of HDBSCAN}
+  \label{tabDBSCAN}
+\end{table}
