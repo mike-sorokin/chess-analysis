@@ -1,4 +1,4 @@
-\chapter{The Machine Learning Approach}\label{mlChapter}
+\chapter{The Deep Learning Approach}\label{mlChapter}
 
 In this section, we describe, analyse, and evaluate a novel approach to the
 specific problem of chess puzzle classification, inspired by the recent
@@ -102,6 +102,17 @@ In this section, we propose a different novel approach to puzzle
 classification, focusing on unsupervised puzzle clustering and defining a
 distance function between various chess puzzles.
 
+Section \ref{treeS1} gives a bird's eye view of the logic and design of the
+algorithm. Subsection \ref{treeS11} introduces labelled search trees;
+subsections \ref{treeS12}, \ref{treeS13} explain how to create them.
+
+Section \ref{treeS2} looks at the outcomes of these trees, with subsection
+\ref{treeS21} exploring how they can be used for finding similar chess
+problems, and subsections \ref{treeS22}, \ref{treeS23} exploring unsupervised
+puzzle clustering.
+
+\section{Overview}\label{treeS1}
+
 This method seeks to combine and build upon two approaches seen in the above
 literature review: the tree-based puzzle difficulty classification
 \citep{chessTrees} covered in Section \ref{chessTreesOverview} and chess
@@ -113,9 +124,7 @@ labelled tree edit distance function \citep{editDistTrees}, we would be able to
 calculate `closeness' of chess puzzles. This could also help refine the work of
 \citet{chessTrees} by finer segregating puzzles by difficulty level.
 
-\section{Overview}
-
-\subsection{Representing Puzzles With Labelled Trees}
+\subsection{Representing Puzzles With Labelled Trees}\label{treeS11}
 
 As explored by \citet{chessTrees}, `meaningful search trees' have predictive
 possibility of a puzzle's difficulty. These trees are constructed by analysing
@@ -197,7 +206,7 @@ successfully grouped by \citet{chessMotifs}.
     \end{minipage}
 \end{figure}
 
-\subsection{Meaningful Tree Generation}\label{treeGenSection}
+\subsection{Meaningful Tree Generation}\label{treeS12}
 
 Similar to the work of \citet{chessTrees}, Stockfish (depth=20) was used to
 generate meaningful trees of a maximum depth of 5 ply. Each level of the tree
@@ -243,9 +252,9 @@ In total, we generated 3.7 million game trees which took about 10000 hours of
 CPU time. This was done with the help of the Department of Computing's HTCondor
 cluster.
 
-\subsection{What Makes Chess Moves Similar?}
+\subsection{What Makes Chess Moves Similar?}\label{treeS13}
 
-Given the list in Section \ref{treeGenSection}, we define a distance function
+Given the list in Section \ref{treeS12}, we define a distance function
 between two given lists of attributes. All of the parameters are completely
 arbitrary and were devised by an intermediate chess player. In Table
 \ref{distanceTable}, the `penalties' for each discrepancy is listed. The final
@@ -314,9 +323,9 @@ sequence).
   \label{distanceComparisons}
 \end{table}
 
-\section{Applications}
+\section{Applications}\label{treeS2}
 
-\subsection{Finding Similar Positions Given a Puzzle}
+\subsection{Finding Similar Positions Given a Puzzle}\label{treeS21}
 
 Generating the distance matrix in Table \ref{distanceComparisons} is
 prohibitively expensive, as it scales quadratically with the number of
@@ -373,7 +382,7 @@ depending on White's response.
     \end{minipage}
 \end{figure}
 
-\subsection{Unsupervised Clustering on Puzzle Distances}
+\subsection{Unsupervised Clustering on Puzzle Distances}\label{treeS22}
 
 To take this further, a distance matrix was constructed for a random sample of
 10000 puzzles from the Lichess puzzle database. A few labelled puzzles were
@@ -388,7 +397,7 @@ We attempted Agglomerative Clustering (average, single, complete)
 \citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and HDBSCAN
 \citep{hdbscan} on this subset of the database. The results are shown in Tables
 \ref{tabAC}, \ref{tabDBSCAN} and \ref{tabHDBSCAN}. Visualisations of the
-highlighted rows can be seen in Section \ref{tsneVis}.
+highlighted rows can be seen in Section \ref{treeS23}.
 
 \begin{table}[H]
   \centering
@@ -581,7 +590,7 @@ considered noise. This number hovers at around 50\% for HDBSCAN (Table
 Unfortunately, the lowest percentage happens when DBSCAN identifies 2 clusters,
 which is far too few to draw meaningful conclusions from.
 
-\subsection{Visualisations of Puzzle Clusters}\label{tsneVis}
+\subsection{Visualisations of Puzzle Clusters}\label{treeS23}
 
 To illustrate what these clusters look like, we use t-distributed Stochastic
 Neighbor Embedding (t-SNE), a method to visualise high dimensional data in two
@@ -649,8 +658,10 @@ this is solved with HDBSCAN.
     \hspace{0.05\textwidth}
     \begin{minipage}{0.475\textwidth}
         \centering
-        \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b kq - 4 13]
-        \caption{Same cluster as Figure \ref{chess11}. Solution: \texttt{1...Qxh3\#}}
+        \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b
+        kq - 4 13]
+        \caption{Same cluster as Figure \ref{chess11}. Solution:
+        \texttt{1...Qxh3\#}}
         \label{dbscanCluster12}
     \end{minipage}
 \end{figure}
@@ -688,7 +699,8 @@ tagged with `short' and 15 with `fork'. Figures \ref{hCl1} and \ref{hCl2} are
 examples from this cluster. Interestingly, the puzzle in Figure \ref{hCl2} is
 not tagged as a `fork' , even though it undeniably forks the king and bishop.
 The remaining puzzles with no `fork' tag in this cluster have been manually
-checked and are indeed knight forks.
+checked and are indeed knight forks. This is a good result, as it shows that
+this method can pick up on themes that the Lichess puzzle database missed.
 
 \begin{figure}[H]
   \centering
@@ -710,7 +722,8 @@ checked and are indeed knight forks.
         \centering
         \chessboard[setfen=
         rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
-        \caption{Fork cluster puzzle. White wins a bishop after \texttt{1.Nxe5+}}
+        \caption{Fork cluster puzzle. White wins a bishop after
+        \texttt{1.Nxe5+}}
         \label{hCl2}
     \end{minipage}
 \end{figure}
