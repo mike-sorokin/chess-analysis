@@ -1,139 +1,4 @@
-\chapter{Implementation}\label{implementationChapter}
-
-\section{Lichess.org Puzzle Database}
-
-\subsection{Overview}
-
-This project requires access to various examples of chess puzzles with
-pre-defined difficulties and themes. Fortunately, the \citet{lichessPuzzles}
-puzzle database, which was mentioned in Section \ref{lichessPuzzlesSection},
-provides approximately 3.8 million chess puzzles which have been generated from
-user games played on Lichess. These puzzles are stored in FEN format, with a
-reference to the game where they appeared. They also contain the solution as a
-string moves, the tactics tags \citep{lichessXML}, and the puzzle rating, along
-with other metadata.
-
-An example puzzle string is shown below. This puzzle is also shown visually in
-Figures \ref{puzzle1} and \ref{puzzle2}.
-
-\begin{verbatim}
-q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17,
-e8d7 a2e6 d7d8 f7f8,1760,80,83,72,mate mateIn2 middlegame short,
-https://lichess.org/yyznGmXs/black#34,
-Italian_Game Italian_Game_Classical_Variation
-\end{verbatim}
-
-\begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k -
-        0 17]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
-        17.}
-        \label{puzzle1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1
-        18]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
-        18.
-        Checkmate is imminent with \texttt{18.Be6+ Kd8 19.Qf8\#}.}
-        \label{puzzle2}
-    \end{minipage}
-\end{figure}
-
-Processing these is a trivial task with one small detail: the given FEN strings
-are the state of the game right before the critical blunder is played by the
-opposing site. This means the puzzle, as shown to the user, is the position
-after the first move has been played. Fortunately, processing this data is made
-simple with the python-chess library \citep{pythonChess}.
-
-\subsection{Data Exploration}
-
-The lichess puzzle database has approximately 3.8 million rated and tagged
-chess puzzles. Initially, they were automatically processed
-\citep{lichessTagger}, but were then refined with user feedback
-\citep{lichessPuzzles}. This also allowed the puzzles to obtain a rating, which
-is indicative of its difficulty \citep{lichessPuzzles}.
-
-Overall, there are 60 various puzzle themes \citep{lichessXML}. Figure
-\ref{dataThemeCounts} shows the counts of each theme in all of the contained
-puzzles. It should be noted that some themes are mutually exclusive (a
-checkmate puzzle cannot be both \emph{mate-in-one} and \emph{mate-in-two}).
-
-The most common puzzle themes are the most general ones -- specifically
-`short', `middlegame', and `endgame'. There is a lot of variation in how
-frequent the various patterns are, which is a natural consequence of the game.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{project/img/puzzle_theme_counts.png}
-    \caption{Frequency of puzzle themes in the lichess.org puzzle
-    database.\cite{lichessPuzzles}}
-    \label{dataThemeCounts}
-\end{figure}
-
-Figure \ref{dataHistogram} shows the distribution of ratings across the chess
-puzzles. It should be noted that these ratings are only appropriate within this
-dataset, and cannot be compared to ratings of puzzles on other chess websites.
-The puzzle ratings are quite symmetric about the mean, and this is of course a
-result of the Glicko2 rating system, developed by \citet{glicko}.
-
-When analysing the rating distribution by theme, an expected behaviour occurs.
-Some chess tactics patterns are considerably simpler to spot, meaning a weaker
-player is able to solve the puzzle with that theme. Therefore some puzzle
-themes, \emph{back-rank mate}, for example, have lower-rated puzzles when
-compared to puzzles featuring a \emph{trapped piece} or \emph{defensive
-move}.\footnote{Notoriously difficult for humans, who are usually much better
-at aggression than defense.\footnotemark}\footnotetext{In chess.}
-
-Figures \ref{puzzle3} and \ref{puzzle4} show examples of some puzzles with
-these themes.
-
-\begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/puzzle_histogram.png}
-        \caption{Distribution of Lichess puzzle ratings.}
-        \label{dataHistogram}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]
-            {project/img/puzzle_theme_histograms.png}
-        \caption{Distribution of Lichess puzzle ratings with a specific theme.}
-        \label{dataThemeHistogram}
-    \end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0
-        22]
-        \caption{\textbf{Kenan2345 -- gandie}, lichess.org Blitz game, move 22. 
-        Black loses to \texttt{22.Rd8+}.}
-        \label{puzzle3}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b -
-        - 0 31]
-        \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31.
-        White loses his queen after \texttt{31...Re38}, as the queen has no
-        safe squares to escape to.}
-
-        \label{puzzle4}
-    \end{minipage}
-\end{figure}
-
-\section{The Machine Learning Approach}\label{transformersSection}
-
-\subsection{Introduction}
+\chapter{The Machine Learning Approach}\label{mlChapter}
 
 In this section, we describe, analyse, and evaluate a novel approach to the
 specific problem of chess puzzle classification, inspired by the recent
@@ -190,7 +55,7 @@ board squares as embeddings of tokens/words has not been previously explored.
     \end{minipage}
 \end{figure}
 
-\subsection{Data Preparation}
+\section{Data Preparation}
 
 We formulate the problem of chess puzzle analysis as a multi-label
 classification problem. Given a chess puzzle position in bitboard format,
@@ -217,7 +82,7 @@ negligible additional overhead, as it requires a simple mirror and has great
 benefits, as the model no longer needs to distinguish between white-to-move and
 black-to-move puzzles.
 
-\subsection{Model Architecture}
+\section{Model Architecture}
 
 \begin{figure}[H]
         \centering
@@ -227,9 +92,11 @@ black-to-move puzzles.
 \end{figure}
 
 
-\section{The Graph-Based Approach}\label{treesSection}
 
-\subsection{Introduction}
+
+
+
+\chapter{The Tree-Based Approach}\label{treeChapter}
 
 In this section, we propose a different novel approach to puzzle
 classification, focusing on unsupervised puzzle clustering and defining a
@@ -246,7 +113,9 @@ labelled tree edit distance function \citep{editDistTrees}, we would be able to
 calculate `closeness' of chess puzzles. This could also help refine the work of
 \citet{chessTrees} by finer segregating puzzles by difficulty level.
 
-\subsection{High-Level Overview}
+\section{Overview}
+
+\subsection{Representing Puzzles With Labelled Trees}
 
 As explored by \citet{chessTrees}, `meaningful search trees' have predictive
 possibility of a puzzle's difficulty. These trees are constructed by analysing
@@ -444,6 +313,8 @@ sequence).
   \caption{Distance matrix for a few chess puzzles.}
   \label{distanceComparisons}
 \end{table}
+
+\section{Applications}
 
 \subsection{Finding Similar Positions Given a Puzzle}
 

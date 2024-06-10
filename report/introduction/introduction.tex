@@ -26,7 +26,7 @@ selectively train to detect those.
 It is surprising that this categorisation is most often done manually, be it
 via community voting \citep{lichessPuzzles}, or a list of rules that the puzzle
 must satisfy to be classed one way or another \citep{lichessTagger}. This,
-along with the infamous saying that `chess is 99\% tactics', suggests that
+along with Teichmann's infamous saying `chess is 99\% tactics', suggests that
 there is a need to explore this problem and provide in-depth categorisation of
 puzzles (beyond what is currently the norm).
 
@@ -39,10 +39,10 @@ The goal of this project is to explore novel ways to design and implement chess
 puzzle classifiers. It should improve upon existing solutions by
 
 \begin{enumerate}
-    \item Better analysing the tactical themes which occur in the puzzle
+    \item Better analysing the tactical themes which occur in the puzzle.
     \item Creating a way to calculate a `distance' between chess puzzles to 
-    group puzzles by theme and difficulty similarity
-    \item Calculating the overall difficulty of a problem
+    group puzzles by theme and difficulty similarity.
+    \item Calculating the overall difficulty of a problem.
 \end{enumerate}
 
 \section{Contributions}
@@ -53,10 +53,14 @@ puzzle classifiers. It should improve upon existing solutions by
 
 In Chapter \ref{backgroundChapter}, we cover some of the background of chess
 programming, including notation and programmatic representation. Some
-pre-existing work is covered. 
+pre-existing work is covered, including the Lichess puzzle database.
 
-Chapter \ref{implementationChapter} covers the ideas and implementations of the
-two distinct approaches that this project explores: a transformer-based deep
-learning approach in Section \ref{transformersSection} and a tree
-comparison-based distance appraoch in Section \ref{treesSection}.
+Chapter \ref{mlChapter} views the problem in the context of deep learning. By
+treating individual chess squares as tokens and applying the infamous
+transformer, a model to predict puzzle labels is designed and trained.
+
+Chapter \ref{treeChapter} takes a different route. With the help of search
+trees, we attempt to capture how a human might compare puzzles. This leads to a
+notion of distance between puzzles and lends itself to unsupervised clustering.
+
 
