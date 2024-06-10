@@ -587,7 +587,8 @@ We attempted Agglomerative Clustering (average, single, complete)
   \centering
   \begin{adjustbox}{width=\textwidth}
   \begin{tabular}{rr|rccccrrrrrrr}
-    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster} &&
+    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
+    &&
     \multicolumn{6}{c}{Cluster size statistics} \\
 
     Cluster selection $\epsilon$&Min cluster size&Number of
@@ -616,5 +617,64 @@ We attempted Agglomerative Clustering (average, single, complete)
   \caption{Results of HDBSCAN}
   \label{tabHDBSCAN}
 \end{table}
+
+From these tables, it is easy to identify the methods that really struggle to
+create meaningful clusters out of the given chess puzzles. Namely, all variants
+of Agglomerative Clustering produced results with at least 7000 clusters,
+which, for a subset of 20000 puzzles, is too many. It is not obvious what an
+appropriate cluster count result is; the Lichess database has approximately 60
+unique themes, which gives a very rough target. However, the Lichess database
+themes are not mutually exclusive, unlike the cluster membership produced by
+these algorithms. 
+
+A different heuristic used as a sign that a method is inappropriate is whether
+it assigns a cluster to 4 simple chess puzzles. These are shown below. These
+puzzles were selected as their tactical pattern is relatively common,
+especially Figures \ref{chess11} and \ref{chess12}. This means that a
+clustering method that fails to assign these a cluster (labelling them an
+`outlier') is unlikely to be effective overall.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
+        \caption{Backrank M1: \texttt{1.Rb8\#}}
+        \label{chess11}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
+        \caption{Knight forks rook and king with \texttt{1...Nxc4+}}
+        \label{chess12}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=
+        r1bq1rk1/pp2nppp/1bn1p3/1N1pP3/1P6/P2B1N2/2P2PPP/R1BQK2R w KQ - 3 11]
+        \caption{Greek gift sacrifice: \texttt{1.Bxh7+ Kxh7 2.Ng5+}}
+        \label{chess13}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
+        0 1]
+        \caption{Rook sacrificed for mate in three: \texttt{1.Rh8+ Kxh8 2.Qh6+
+        Kg8 3.Qxg7\#}}
+        \label{chess14}
+    \end{minipage}
+\end{figure}
+
+This allowed some parameter combinations of DBSCAN to be disqualified,
+specifically the lower epsilon ones. Epsilon is the distance at which points
+are considered to be in one neighbourhood \citep{dbscan}, and setting this too
+low means similar puzzles are not given the same cluster. The distance matrix
+in Table \ref{distanceComparisons} shows that puzzles which are similar to a
+human can have a distance of 417, and this is by no means an upper limit.
 
 
