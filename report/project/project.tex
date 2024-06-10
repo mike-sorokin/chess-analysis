@@ -516,7 +516,8 @@ vector space representing the search trees, ruling out algorithms like K-means
 We attempted Agglomerative Clustering (average, single, complete)
 \citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and HDBSCAN
 \citep{hdbscan} on this subset of the database. The results are shown in Tables
-\ref{tabAC}, \ref{tabDBSCAN} and \ref{tabHDBSCAN}.
+\ref{tabAC}, \ref{tabDBSCAN} and \ref{tabHDBSCAN}. Visualisations of the
+highlighted rows can be seen in Section \ref{tsneVis}.
 
 \begin{table}[H]
   \centering
@@ -541,7 +542,8 @@ We attempted Agglomerative Clustering (average, single, complete)
     complete&500&9063&Y&Y&Y&Y&0&2.21&1&1&1&1&1000\\
     single&100&16732&Y&Y&Y&Y&0&1.2&1&1&1&1&611\\
     single&250&13389&Y&Y&Y&Y&0&1.49&1&1&1&1&2652\\
-    single&500&7196&Y&Y&Y&Y&0&2.78&1&1&1&1&10057\\
+    \rowcolor{lightgray} single&500&7196&Y&Y&Y&Y&0&2.78&1&1&1&1&10057\\
+
 
   \end{tabular}
   \end{adjustbox}
@@ -575,7 +577,7 @@ We attempted Agglomerative Clustering (average, single, complete)
   250&7&36&Y& &Y&Y&66.79&184.56&7&13&25&88&2652\\
   500&3&6&Y&Y&Y&Y&35.88&2137.67&7&86&346&1630&10068\\
   500&5&6&Y&Y&Y&Y&35.88&2137.67&7&86&346&1630&10068\\
-  500&7&6&Y&Y&Y&Y&35.89&2137.33&7&86&346&1630&10067\\
+  \rowcolor{lightgray} 500&7&6&Y&Y&Y&Y&35.89&2137.33&7&86&346&1630&10067\\
 
   \end{tabular}
   \end{adjustbox}
@@ -676,5 +678,105 @@ are considered to be in one neighbourhood \citep{dbscan}, and setting this too
 low means similar puzzles are not given the same cluster. The distance matrix
 in Table \ref{distanceComparisons} shows that puzzles which are similar to a
 human can have a distance of 417, and this is by no means an upper limit.
+
+Another interesting result is the percentage of outliers -- puzzles which have
+so little neighbours around them that they are not given a cluster and
+considered noise. This number hovers at around 50\% for HDBSCAN (Table
+\ref{tabHDBSCAN}), and drops to about 35\% for DBSCAN (Table \ref{tabDBSCAN}).
+Unfortunately, the lowest percentage happens when DBSCAN identifies 6 clusters,
+which is far too few to draw meaningful conclusions from.
+
+\subsection{Visualisations of Puzzle Clusters}\label{tsneVis}
+
+To illustrate what these clusters look like, we use t-distributed Stochastic
+Neighbor Embedding (t-SNE), a method to visualise high dimensional data in two
+or three dimensions, developed by \citet{tsne}. It should be noted that these
+visualisations can be quite misleading \citep{wattenberg2016how}, but they are
+nonetheless helpful for developing some sense of the structure and clustering.
+
+In the following diagrams, vibrant points denote the clusters of the puzzles
+above. Faintly coloured crosses are clusters which do not contain any of those
+puzzles. Faintly coloured black points are outliers.
+
+Figure \ref{tsne1} shows a t-SNE visualisation of the low-performing
+Agglomerative Clustering. There are no outliers in this method, and every
+puzzle is part of a cluster, causing multicoloured blobs. The biggest cluster,
+containing just over half of the puzzles, is the cyan one, spanning multiple
+t-SNE blobs. This megacluster contains all but one of the puzzles: the
+back-rank mate in one in Figure \ref{chess11}. This visualisation clearly shows
+that this method is not applicable.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{project/img/tsne/ac_25.png}
+  \caption{Agglomerative Clustering (single linkage, distance threshold $500$)}
+  \label{tsne1}
+\end{figure}
+
+A similar behaviour is seen with some of the DBSCAN attempts. Figure
+\ref{tsne2} shows one of these, and whilst this also creates a megacluster, it
+marks many puzzles as outliers. This method creates only 6 clusters, and we can
+see the big orange and blue clusters in-between the red and cyan.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{project/img/tsne/dbscan_500_25.png}
+  \caption{DBSCAN, $\epsilon=500$, minimum samples $7$.}
+  \label{tsne2}
+\end{figure}
+
+Taking samples from cluster 1 reveals that this method likely grouped all mate
+in 1 puzzles into one cluster. Along with the puzzle in Figure \ref{chess11},
+this cluster contains the puzzles in Figures \ref{dbscanCluster11} and
+\ref{dbscanCluster12}. 
+
+A more interesting result lies in sampling puzzles from a different cluster,
+which does not feature any of the known puzzles. One such cluster, as
+identified by DBSCAN, appears to capture endgames. Out of its 415 puzzles, 413
+(99.5\%) are tagged on Lichess as `endgame', 196 (47.2\%) as `pawn endgame',
+and 102 (24.6\%) as either `rook endgame', `knight endgame', or `bishop
+endgame'. Figures \ref{dbscanCluster13} and \ref{dbscanCluster14} show some of
+the example puzzles in this cluster.
+
+This is already a promising result, but since the clustering is so coarse, it
+is no surprise that one of them captures the broad theme of endgames. Luckily,
+this is solved with HDBSCAN.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen= 2rr2k1/ppb3pp/8/3p1q2/1P1Qn2P/P2KP2p/1B6/2RR4 w - -
+        2 32]
+        \caption{Puzzle sharing the cluster with Figure \ref{chess11}. Solution:
+        \texttt{1.Qxg7\#}}
+        \label{dbscanCluster11}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b kq - 4 13]
+        \caption{Same cluster as Figure \ref{chess11}. Solution: \texttt{1...Qxh3\#}}
+        \label{dbscanCluster12}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=8/8/1p3k2/p6p/P3K1pP/1P4P1/8/8 w - - 5 46]
+        \caption{Puzzle from the endgame cluster. Both sides' pawns are frozen,
+        and White wins with \texttt{1.Kf4}, shouldering the black king away
+        from the \texttt{h5} pawn.}
+        \label{dbscanCluster13}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=5k2/1N3ppp/n3p3/P7/5P2/6P1/7P/6K1 b - - 0 33]
+        \caption{Puzzle from the endgame cluster. \texttt{1...Ke7} traps the
+        knight(!), which is lost a few moves later.}
+        \label{dbscanCluster14}
+    \end{minipage}
+\end{figure}
 
 
