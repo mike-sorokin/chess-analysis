@@ -728,3 +728,32 @@ this method can pick up on themes that the Lichess puzzle database missed.
     \end{minipage}
 \end{figure}
 
+Exploring clusters further, we observe that there exists a cluster of 61
+puzzles, 56 of which are tagged as `endgame', a further 37 as `rook endgame',
+and none are tagged with any sort of `mate'. This cluster appears to contain
+various rook and pawn endgames, where the opposing side offers a rook trade.
+Accepting the trade is the only winning move for the side solving the puzzle,
+and this cluster encapsulates this. Figure \ref{chess15} contains an easy
+puzzle from this cluster, and Figure \ref{chess16} contains a more complex
+puzzle.
+
+\begin{figure}[H]
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=8/8/k5r1/p5R1/5K2/P7/8/8 b - - 1 51]
+        \caption{Rook trade cluster. After \texttt{1...Rxg5 2.Kxg5 Kb5}, Black
+        wins the remaining pawn and shoulders the white king for a victory.}
+        \label{chess15}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \chessboard[setfen=8/2p4p/1k4p1/p1r5/2R4P/1P2K3/P4P2/8 b - - 3 47]
+        \caption{Rook trade cluster. \texttt{1...Re5+} is tempting, and was
+        played in the game where this position occured. This, however, loses
+        the advantage. \texttt{1...Rxc4 2.bxc4} leads to a victory, despite the
+        material balance.}
+        \label{chess16}
+    \end{minipage}
+\end{figure}
+
