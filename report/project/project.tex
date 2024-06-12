@@ -224,6 +224,41 @@ combinations of hyperparameters. Specifically, these are:
   \label{tabHyperparam}
 \end{table}
 
+The other hyperparameters were fixed. These are shown in Table
+\ref{tabFixedparam}.
+
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{l|rl}
+
+      Hyperparameter & Value & Notes \\
+      \hline
+
+      Epochs & 5 & Time constraints during hyperparameter search \\
+
+      Embedding activation function & ReLU & \\
+
+      Transformer encoder layers & 8 & Good balance between size and training
+      time \\
+
+      Transformer dropout & 0.1 & Default from `Attention Is All You Need' by
+      \citet{attention}\\
+
+      Transformer activation & ReLU & Default from `Attention Is All You Need'
+      by \citet{attention} \\
+
+      Optimiser & Adam & As described by \citet{kingma2014adam}. Default
+      $\beta_1$, $\beta_2$ \\
+
+      Optimiser learning rate & $1\times10^{-5}$ &
+
+    \end{tabular}
+  \end{adjustbox}
+  \caption{Fixed hyperparameters.}
+  \label{tabFixedparam}
+\end{table}
+
 \subsection{Training Infrastructure}\label{mlS23}
 
 The model was trained on the Department of Computing's GPU Slurm Cluster,
