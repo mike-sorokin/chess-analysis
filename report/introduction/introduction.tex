@@ -45,27 +45,27 @@ puzzle classifiers. It should improve upon existing solutions by
     \item Calculating the overall difficulty of a problem.
 \end{enumerate}
 
-\section{Contributions}
-
-(This section is empty ... for now)
-
 \section{Report Structure}
 
-In Chapter \ref{backgroundChapter}, we cover some of the background of chess
-programming, including notation and programmatic representation. Some
-pre-existing work is covered, including the Lichess puzzle database.
+Initially, the background of chess programming is covered
+(Chapter~\ref{backgroundChapter}), including notation and programmatic
+representation of chess. Some pre-existing work is touched upon
+(Section~\ref{relatedWorkSection}), including the Lichess puzzle database.
 
-Chapter \ref{mlChapter} views the problem in the context of deep learning. By
-treating individual chess squares as tokens and applying the infamous
-transformer, a model to predict puzzle labels is designed and trained.
+The problem is first tackled in the context of deep learning
+(Chapter~\ref{mlChapter}). By treating individual chess squares as tokens and
+applying the infamous transformer, a model to predict puzzle labels is designed
+and trained.
 
-Chapter \ref{treeChapter} takes a different route. With the help of search
-trees, we attempt to capture how a human might compare puzzles. This leads to a
-notion of distance between puzzles and lends itself to unsupervised clustering.
+Following this, a different approach is taken. With the help of search trees
+(Chapter~\ref{treeChapter}), the project attempts to capture how a human might
+compare puzzles. This leads to a notion of distance between puzzles and lends
+itself to unsupervised clustering.
 
-Chapter \ref{evalChapter} compares, contrasts, and evaluates both of these
-methods.
+Both of these methods are then compared, contrasted, and evaluated against a
+common metric (Chapter~\ref{evalChapter}). Advantages and disadvantages of each
+are highlighted.
 
-Finally, Chapter \ref{concChapter} brings everything together and highlights
-some related work to this project, to which this project is compared.
-
+The project concludes (Chapter~\ref{concChapter}) with a summary of the
+technical achievements, challenges, and possible future directions. Comparisons
+are drawn between the findings of this project and existing work in the field.
