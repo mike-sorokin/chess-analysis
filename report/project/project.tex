@@ -536,7 +536,7 @@ depending on White's response.
 \subsection{Unsupervised Clustering on Puzzle Distances}\label{treeS22}
 
 To take this further, a distance matrix was constructed for a random sample of
-10000 puzzles from the Lichess puzzle database. A few labelled puzzles were
+20,000 puzzles from the Lichess puzzle database. A few labelled puzzles were
 added to help with analysis of the results. A selection of unsupervised
 clustering algorithms were ran on this matrix to identify clusters of puzzles
 which are all similar to each other. Many of the standard clustering algorithms
@@ -920,16 +920,50 @@ If a larger distance matrix can be constructed, it is likely that the
 clustering method will improve more, and allow finer categorisation of puzzles.
 The resource and time committment to do this unfortunately prohibited this.
 
-\section{$k$-Nearest Neighbours}
+\section{$k$-Nearest Neighbours}\label{treeS3}
 
 
-Since the clustering method described in Subsections \ref{treeS22} produces too
-many outliers to be useful for inference, we can use a classic $k$-nearest
-neighbours approach \citep{fix1985discriminatory} for both classification of
-puzzle themes and regression of puzzle Elo difficulty.
+Since the unsupervised clustering method (\Cref{treeS2}) produces too many
+outliers to be useful for inference, a classic $k$-nearest neighbours ($k$-NN) approach
+\citep{fix1985discriminatory} can be used both for classification of puzzle
+themes and regression of puzzle difficulty rating.
 
-We have shown that the novel distance function, as described in Subsection
-\ref{treeS13}, has promising results for finding similar positions to a puzzle
-(Subsection \ref{treeS21}).
+It has been shown that the novel distance function (\Cref{treeS13}) has
+promising results for finding similar positions to a given puzzle
+(\Cref{treeS21}).
 
-\subsection{Search for the Best $k$)
+\subsection{Label Prediction and Difficulty Regression with $k$-NN}
+
+The process of predicting a label and difficulty for an unseen chess puzzle is
+straightforward. Given a puzzle, its $k$ nearest neighbours in the known
+(training) dataset are found. If half or more of the neighbours are tagged with
+a certain tactic label, the puzzle is predicted to have that label. The puzzle
+difficulty is the mean of the difficulty of the neighbours.
+
+\subsection{Search for the Best $k$}\label{treeS31}
+
+One of the downsides of $k$-NN is the slow inference performance. This makes
+tuning the parameter $k$ difficult, as the running time is roughtly
+proportional to the multiple of the training set size and validation set size.
+To address this, random subsets of the training and validation sets
+(\Cref{mlS12}) of size 20,000 each were used. This amount showed acceptable
+clustering performance (\Cref{treeS22}), so it will provide a reasonable
+starting point for this approach.
+
+Paramater $k$ was varied from $1$-$100$. The results (\Cref{knn}) show that
+$k=24$ is optimal for label prediction, with an average of $2.8011$ incorrect
+labels (includes both false positives and false negatives). For difficulty
+regression, $k=22$ is best, with an average mean squared difficulty rating
+error of $\sim\!434.0^2$. 
+
+Even though different $k$ values for the two tasks are possible, $k=24$ was
+chosen for both, as it simplifies implementation and increases difficulty
+regression error to $\sim\!434.3^2$ -- a negligible difference. 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{project/img/knn.png}
+  \caption{Effect of $k$ on label prediction and difficulty regression performance.}
+  \label{knn}
+\end{figure}
+
