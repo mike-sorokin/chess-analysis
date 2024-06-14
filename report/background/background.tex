@@ -5,30 +5,30 @@ to improve one's pattern recognition abilities. \citet{thoughtAndChoice} showed
 that chess players do not have a square-by-square recollection of the chess
 board during play. Instead, they rely on interactions, and potential
 interactions of pieces in a more abstract sense. This is made strikingly clear
-by a chess player's drawing of a position from memory, shown in Figure
-\ref{deGrootFigure}.
+by a professional chess player's drawing of a position from memory
+(\Cref{deGrootFigure}).
 
-\citet{thoughtAndChoice} writes, `the pieces themselves do not appear in the
-drawing: rather the lines of force that go out from them'. This heuristic
+\citet{thoughtAndChoice} writes, ``the pieces themselves do not appear in the
+drawing: rather the lines of force that go out from them''. This heuristic
 allows expert human players to quickly hone in on the correct moves
-\citep{bilalic2010mechanisms}, and significantly reduces their search space,
+\citep{bilalic2010mechanisms} and significantly reduces their search space,
 when compared to a naive brute-force search, which is the most common strategy
 for chess engines. When analysing positions, even the most basic chess engines
 are able to calculate the most accurate line (except some pathological cases),
 but they are unable to draw similarities between different positions.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{background/img/deGroot.png}
-    \caption{Taken from `Thought And Choice In Chess'
-    \citep{thoughtAndChoice}.}
-    \label{deGrootFigure}
+  \centering
+  \includegraphics[width=0.9\linewidth]{background/img/deGroot.png}
+  \caption{Taken from `Thought And Choice In Chess'
+  \citep{thoughtAndChoice}.}
+  \label{deGrootFigure}
 \end{figure}
 
-In Figures \ref{chess1} and \ref{chess2}, 2 chess positions are shown,
-featuring \emph{back-rank checkmates} -- one of the first tactical patterns
-that a beginner might learn. A castled king is forced to stay on the back-rank
-due to the configuration of his men, and an opposing heavy piece exploits this
+Two sample chess positions are shown (\Cref{chess1,chess2}), featuring
+\emph{back-rank checkmates} -- one of the first tactical patterns that a
+beginner might learn. A castled king is forced to stay on the back-rank due to
+the configuration of his men, and an opposing heavy piece exploits this
 weakness by delivering checkmate. It is already non-trivial to programmatically
 identify this type of tactic, as a checkmate delivered to a king on the back
 rank is not necessarily a \emph{back-rank checkmate}.
@@ -38,20 +38,20 @@ between the abstract relations of the heavy piece, king, and vulnerable back
 rank?
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-        \caption{A trivial back-rank checkmate, white mates with
-        \texttt{Rb8\#}.}
-        \label{chess1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/1p1Q4/p3p1B1/Pn4P1/1q6/1Pr4P/K6R w - - 1 2]
-        \caption{White mates with \texttt{Qd8\#}.}
-        \label{chess2}
-    \end{minipage}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
+    \caption{A trivial back-rank checkmate, White mates with
+    \texttt{1.Rb8\#}.}
+    \label{chess1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/1p1Q4/p3p1B1/Pn4P1/1q6/1Pr4P/K6R w - - 1 2]
+    \caption{White mates with \texttt{1.Qd8\#}.}
+    \label{chess2}
+  \end{minipage}
 \end{figure}
 
 \section{Chess Notation}
@@ -60,8 +60,8 @@ For many decades, the standard for chess notation has been the Algebraic
 System, where, generally speaking, moves are encoded by the piece abbreviation
 (\texttt{Q} for queen, \texttt{K} for king, \texttt{N} for kNight) and a
 reference to the destination square, which can be any letter \texttt{a-h} and
-any number \texttt{1-8} \citep{fideNotation}. We assume that the reader is
-familiar with the basic chess rules.
+any number \texttt{1-8} \citep{fideNotation}. This project assumes that the
+reader is familiar with the basic chess rules such as piece movement patterns.
 
 When storing chess games and positions in a computer-readable format was
 required, many formats were proposed by various people, but Portable Game
@@ -74,8 +74,8 @@ from Section 2.3 of the PGN Standard \citep{pgnNotation} is shown below. Along
 with some metadata at the top of the file (player names, location, etc.\@), the
 chess moves are written in algebraic notation, with an incrementing move
 counter. In this example, Fischer played \texttt{e4} as his first move, with
-Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's 43rd
-move.
+Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's
+\nth{43} move.
 
 \begin{verbatim}
 
@@ -108,238 +108,225 @@ by tracing the moves of the game from the start.
 
 An alternative notation used for static chess positions is FEN. This is much
 more compact than PGN, as no metadata about the game is stored other than the
-state of the board. Below is an example FEN string for the board in Figure
-\ref{chessKGA}.
+state of the board. The following FEN string encodes a standard position
+arising from a King's Gambit.\footnote{An incredibly aggressive, all-or-nothing
+opening for White. Also the authors' weapon of choice.} The board is also shown
+in \Cref{chessKGA}.
 
 \begin{verbatim}
 rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq - 1 3
 \end{verbatim}
 
 \begin{figure}[H]
-    \centering
-    \chessboard[setfen=rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq -
-    1 3]
-    \caption{King's Gambit Accepted}
-    \label{chessKGA}
+  \centering
+  \chessboard[setfen=rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq -
+  1 3]
+  \caption{King's Gambit Accepted, King's Knight Gambit.}
+  \label{chessKGA}
 \end{figure}
 
 In FEN, pieces have their standard one-letter names, but pawns are explicitly
 referred to with \texttt{P} or \texttt{p}. The number of consecutive empty
-squares is denoted by an integer between \texttt{1} and \texttt{8}. The case of
-the letter dictates what colour the chessman is: uppercase for white, and
-lowercase for black. The arrangement of pieces is stored per rank,
+squares on a rank is denoted by an integer between \texttt{1} and \texttt{8}.
+The case of the letter dictates what colour the piece is: uppercase for white,
+and lowercase for black. The arrangement of pieces is stored per rank,
 left-to-right, with the first appearing rank in the string corresponding to
 rank 8 on the board, and forward slashes delimiting the ranks. In the given
-example, the 6th rank is stored as \texttt{8}, meaning there are 8 consecutive
-empty squares on this rank. The 4th rank is stored as \texttt{4Pp2}, meaning
-there are 4 empty squares, followed by a white pawn, then a black pawn, then 2
-more empty squares.
+example, the \nth{6} rank is stored as \texttt{8}, meaning there are 8
+consecutive empty squares on this rank. The \nth{4} rank is stored as
+\texttt{4Pp2}, meaning there are 4 empty squares, followed by a white pawn,
+then a black pawn, then 2 more empty squares.
 
 The remaining characters store other information about the board. The single
 \texttt{b} means it is Black to move; the string \texttt{KQkq} means White can
 castle kingside (\texttt{K}) and queenside (\texttt{Q}), and Black can castle
 both ways too (\texttt{kq}). If castling was not possible, this would be
-denoted as \texttt{-}. The final 3 characters are en passant\footnote{French
-for `in passing'. A special move where a pawn that advanced two squares can be
-captured by an enemy pawn as if it was on the square behind. This is an
-unending source of confusion for beginner players.} file, number of halfmoves
-since the last pawn move or capture\footnote{Used for the fifty move draw
-rule.}, and the number of full moves played.
+denoted as \texttt{-}. The final 3 characters are the en
+passant\footnote{French for `in passing'. A special move where a pawn that
+advanced two squares can be captured by an enemy pawn as if it was on the
+square behind. This is an unending source of confusion for beginner players.}
+file, number of halfmoves since the last pawn move or capture\footnote{Used for
+the fifty move draw rule.}, and the number of full moves played.
 
 \subsection{Bitboards}
 
 When implementing chess programs on a computer, neither PGN or FEN are
-applicable as they are difficult and slow to analyse. Instead, there are a
-number of various numerical approaches to storing a chess position, with
-bitboards being one of the bigger ones. One of the first mentions of Bitboards
-was by \citet{bitboardsRussian}.
+applicable as they are difficult and slow to analyse, being string-based.
+Instead, there are a number of various numerical approaches to storing a chess
+position, with bitboards being one of the bigger ones. One of the first
+mentions of bitboards was by \citet{bitboardsRussian}.
 
 Described informally, a bitboard is a collection of 12 64-bit integers, where
 each integer corresponds to a piece type and colour. The bits of that integer
 encode the position of a piece on the board: a piece on \texttt{h1} activates
-the 1st (least-significant) bit. Since modern processors utilise 64 bits, this
-makes bitboards very fast -- especially when using other bitmaps to check for
-piece attack maps and piece interactions. In fact, bitboards are used by
+the \nth{1} (least-significant) bit. Since modern processors utilise 64 bits,
+this makes bitboards very fast -- especially when using other bitmaps to check
+for piece attack maps and piece interactions. In fact, bitboards are used by
 \citet{stockfishBitboard}, one of the strongest chess engines today.
 
 \section{Examples of Chess Puzzle Themes}
 
-In this section, we list a collection of common chess tactics which occur in
-puzzles, and on a wider scale, games. Some of the positions are taken from
-\citet{chesscomTactics}.
+Some of the following positions are taken from \citet{chesscomTactics}.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=5r1k/4q1pp/3n2B1/1R5Q/8/7P/6P1/7K w - - 0 1]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Mate In One}
-        
-        White wins in one move with \texttt{1.Qxh7\#}. There are many variants
-        of simple checkmates, some of which are covered below.
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=5r1k/4q1pp/3n2B1/1R5Q/8/7P/6P1/7K w - - 0 1]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Mate In One}White wins in one move with \texttt{1.Qxh7\#}. There
+    are many variants of simple checkmates, some of which are covered below.
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/3r4/8/8/3q4/5PPP/R2B2K1 b - - 0 1]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Back-Rank Mate}
-        
-        Black wins with \texttt{1...Qxd1+ 2.Rxd1 Rxd1\#}. These positions occur
-        very often when a king is castled, and the pawns surrounding the king
-        on the 2nd/7th rank are preventing his escape to a different rank. A
-        heavy piece\footnote{Rook or queen.} delivers the checkmate
-        single-handedly.
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/3r4/8/8/3q4/5PPP/R2B2K1 b - - 0 1]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Back-Rank Mate}Black wins with \texttt{1...Qxd1+ 2.Rxd1 Rxd1\#}.
+    These positions occur very often when a king is castled, and the pawns
+    surrounding the king on the \nth{2}/\nth{7} rank are preventing his escape
+    to a different rank. A rook or queen delivers the checkmate
+    single-handedly.
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=q2r3k/6pp/8/3Q2N1/8/8/5PPP/6K1 w - - 0 1]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Smothered Mate}
-        
-        After \texttt{1.Nf7+ Kg8}, White delivers a \emph{double check} with
-        \texttt{2.Nh6+}. Since Black is unable to remove both attacks on his
-        king in one move, he is forced to move his king. \texttt{2...Kf8} leads
-        to immediate mate with \texttt{3.Qf7\#}, so Black runs to the corner
-        with \texttt{2...Kh8}. The white queen is sacrificed with
-        \texttt{3.Qg8+ Rxg8}, entombing the black king in the corner. The white
-        knight delivers checkmate with \texttt{4.Nf7\#}.
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=q2r3k/6pp/8/3Q2N1/8/8/5PPP/6K1 w - - 0 1]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Smothered Mate}After \texttt{1.Nf7+ Kg8}, White wins by
+    delivering a \emph{double~check} with \texttt{2.Nh6+}. Since Black is
+    unable to remove both attacks on his king in one move, he is forced to move
+    his king. \texttt{2...Kf8} leads to immediate mate with \texttt{3.Qf7\#},
+    so Black runs to the corner with \texttt{2...Kh8}. The white queen is
+    sacrificed with \texttt{3.Qg8+ Rxg8}, entombing the black king. The white
+    knight delivers checkmate with \texttt{4.Nf7\#}.
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=
-        r2qk1nr/ppp2ppp/2np4/4p3/1b2P1b1/2NPBN2/PPP2PPP/R2QKB1R
-        w KQkq - 2 6]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Absolute and Relative Pins}
-        
-        In this position, Black's bishops are pinning White's knights on
-        \texttt{c3} and \texttt{f3}. The white knight on \texttt{c3} is under
-        an \emph{absolute pin} from the black bishop on \texttt{b4}, as moving
-        it is illegal. The white knight on \texttt{f3} is under a
-        \emph{relative pin} from the other black bishop on \texttt{g4}. Whilst
-        moving this knight is legal, it is rarely done, as the bishop is then
-        able to capture the white queen on \texttt{d1}.
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= r2qk1nr/ppp2ppp/2np4/4p3/1b2P1b1/2NPBN2/PPP2PPP/R2QKB1R
+    w KQkq - 2 6]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Absolute and Relative Pins}In this position, Black's bishops are
+    pinning White's knights on \texttt{c3} and \texttt{f3}. The white knight on
+    \texttt{c3} is under an \emph{absolute~pin} from the black bishop on
+    \texttt{b4}, as moving it is illegal. The white knight on \texttt{f3} is
+    under a \emph{relative~pin} from the other black bishop on \texttt{g4}.
+    While moving this knight is legal, it is rarely done, as the bishop is then
+    able to capture the white queen on \texttt{d1}.
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=2r3k1/8/8/n1n2N2/8/8/1P6/6K1 w - - 0 1]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Fork}
-        
-        Forks come in multiple flavours, as multiple pieces are able to fork.
-        Perhaps the most common is the knight fork, an example of which is
-        possible on the board with \texttt{1.Ne7+}. The knight is attacking
-        both the black rook on \texttt{c8} and black king on \texttt{g8}, and
-        black is unable to capture the knight. After moving the king, black
-        gives up the rook for a knight -- an unfavourable exchange.\\~\\The
-        double pawn advance \text{1.b4} is also a fork. Black's knights are
-        attacked and whilst they are able to defend each other, Black cannot
-        move both to safety. One of them will be captured by the pawn.
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=2r3k1/8/8/n1n2N2/8/8/1P6/6K1 w - - 0 1]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Fork}\emph{Fork}s are a type of \emph{double attack} and they
+    come in multiple flavours, as all pieces can attack simulatenously. Perhaps
+    the most common is the \emph{knight~fork}, an example of which is possible
+    on the board with \texttt{1.Ne7+}, attacking both the black rook on
+    \texttt{c8} and black king on \texttt{g8}. After moving the king, Black
+    gives up the rook for a knight -- an unfavourable exchange.
+    \\~\\
+    The double pawn advance \text{1.b4} is also a \emph{fork}. Black's knights
+    are attacked and even though they are able to defend each other, Black
+    cannot move both to safety. One of them will be captured by the pawn.
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=r2qkbnr/ppp2ppp/2np4/4N3/2B1P3/2N4P/PPPP1PP1/R1BbK2R
-        w KQkq - 0 7]
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \textbf{Attack On \texttt{f2}/\texttt{f7}}
-
-        The \texttt{f2} and \texttt{f7} squares are very vulnerable for White
-        and Black, respectively. At the beginning of the game, these squares
-        are defended only by the king. If neglected, a quick attack, or even a
-        sacrifice, can be devastating.\\~\\In this position, after sacrificing
-        the queen, White's bishop can capture the weak pawn on \texttt{f7},
-        leading to \texttt{1.Bxf7+ Ke7 2.Nd5\#}. 
-        
-
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=r2qkbnr/ppp2ppp/2np4/4N3/2B1P3/2N4P/PPPP1PP1/R1BbK2R w
+    KQkq - 0 7]
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \paragraph{Attack On \texttt{f2}/\texttt{f7}}The \texttt{f2} and
+    \texttt{f7} squares are very vulnerable for White and Black, respectively.
+    At the beginning of the game, these squares are defended only by the king.
+    If neglected, a quick attack, or even a \emph{sacrifice}, can be fatal.
+    \\~\\
+    In this position, after sacrificing the queen, White's bishop can capture
+    the weak pawn on \texttt{f7}, leading to \texttt{1.Bxf7+ Ke7 2.Nd5\#}. 
+  \end{minipage}
 \end{figure}
 
 
-\section{Related Work}\label{relatedWorkSection}
+\section{Existing Work}\label{relatedWorkSection}
 
-\subsection{Recognition of the \emph{Greek Gift Sacrifice} In Chess Games}
+\subsection{Chess Board Representation}
 
-\citet{middleGamePatterns} report their findings on a program to identify the
-\emph{Greek gift sacrifice} tactic in chess middlegames.\footnote{The phase of
-the chess game where most pieces are developed and the kings are positioned
-away from danger.} They found success, partly thanks to their detailed
-representation of the board, where each square is represented by 71 binary
-attribites \citep{middleGamePatterns} to encode the piece on the square and the
-possible squares which are reachable by this piece. 
+\paragraph{CNNs For Identifying Winning Positions}\citet{chessCNN} explores
+the effectiveness of neural networks to analyse whether a chess position is
+winning or losing, without creating specific look-ahead algorithms. This is a
+very challenging task, but as part of the analysis, the author proposed
+manually encoded features to a convolutional neural network (CNN) to help
+identify strong patterns within the position. 
 
-These attributes were also supplemented by 59 other binary attribites which
-were devised by expert chess players, and represent the more complex, but still
-quantifiable relationships \citep{middleGamePatterns}. These include open
-files, control of vulnerable squares, piece activity, among others.
-
-\citet{middleGamePatterns} achieved an 87.7\% classification performance on
-detecting whether a position features a successful \emph{Greek gift sacrifice}
-on relatively small (<200 positions) datasets. This work is promising, but more
-investigation is needed given their analysis of only one pattern with a
-decision tree algorithm. Also, their program still relied on predetermined
-chess patterns, which introduces bias and might miss intricate similarities
-between positions.
-
-\subsection{A Novel Chess Board Representation For Convolutional Neural
-Networks}\label{chessCNNSection}
-
-\citet{chessCNN} explores the effectiveness of neural networks to analyse
-whether a chess position is winning or losing, without creating specific
-look-ahead algorithms. This is a very challenging task, but as part of the
-analysis, the author proposed manually encoded features to a convolutional
-neural network (CNN) to help identify strong patterns within the position. 
-
-Some of these include an extra feature if the opponent is in check, specifying
+Some of these include extra features if the opponent is in check, specifying
 the squares controlled by a piece exerting a pin on a different piece, centre
 control, and vulnerable squares \citep{chessCNN}. These are well known
 heuristics that are often taught to beginner-intermediate chess players, and
-the author claims that these additional layers are `extremely representative of
-the chess positions', and cause the CNN to outperform a naive, fully-connected
-neural network.
+the author claims that these additional layers are ``extremely representative
+of the chess positions'', and cause the CNN to outperform a naive,
+fully-connected neural network.
 
-This work is also a promising result, as it shows that these chess patterns,
-albeit manually quantified, are valuable for an algorithm when analysing a
-given chess position.
+\paragraph{Automatic Embedding}\citet{chess2vec} investigate and report on
+their results in finding $d$-dimensional vector representations of the standard
+way to represent a chess board in machine learning -- a bitboard, which is
+equivalent to a $8\times8\times12$ binary tensor. 
 
-\subsection{A Computational Model for Estimating the Difficulty of Chess
-Problems} \label{chessTreesOverview}
+The authors make the observation that this represents each chess square as a
+12-dimensional vector, which has no information about the rest of the board. By
+adding a board hash, they modify the piece layers, making their vector
+representations depend on the board state. With this method, \citet{chess2vec}
+claim to predict $8.8\%$ of Stockfish moves correctly, which is an impressive
+statistic given no chess logic or ruleset was explicitly implemented.
 
-\citet{chessTrees} explore estimation of difficulty of chess problems in this
-paper. By using a powerful chess engine, they generate a tentative move tree of
-forcing or winning moves in a given position, mirroring the process of
-calculating a variation for a chess player. 
+The results of these works served as initial inspiration for the design of the
+deep learning model (\Cref{mlS21}).
+
+\subsection{Puzzle Type and Difficulty Prediction}
+
+\paragraph{Detecting Whether a Successful Tactic
+Exists}\citet{middleGamePatterns} report their findings on a program to
+identify the \emph{Greek gift sacrifice} tactic in chess
+middlegames.\footnote{The phase of the chess game where most pieces are
+developed and the kings are positioned away from danger.} They found success,
+partly thanks to their detailed representation of the board, where each square
+is represented by 71 binary attribites \citep{middleGamePatterns} to encode the
+piece on the square and the possible squares which are reachable by this piece. 
+
+These attributes were also supplemented by 59 other binary attribites which
+were devised by expert chess players, and represent the more complex, but still
+quantifiable relationships. These include open files, control of vulnerable
+squares, and piece activity, among others.
+
+\citet{middleGamePatterns} achieved an 87.7\% classification performance on
+detecting whether a position features a successful \emph{Greek gift sacrifice}
+on relatively small ($<200$ positions) datasets. 
+
+\paragraph{Meaningful Search Trees}\citet{chessTrees} explore estimation of
+difficulty of chess problems in this paper. By using a powerful chess engine,
+they generate a tentative move tree of forcing or winning moves in a given
+position, mirroring the process of calculating a variation for a chess player. 
 
 By creating higher level metrics based off these trees (e.g. branching factor,
 piece variety, move distances) and applying standard statistical machinery, the
@@ -347,48 +334,25 @@ authors are able to categorise the puzzles into various difficulty levels with
 some success.
 
 Their unique `meaningful search tree' \citep{chessTrees} approach to analysing
-chess puzzle moves is novel, and we believe it has more potential for this
-problem. Specifically, adding more chess-related metadata to the tree nodes (is
-the move a fork, skewer, etc.?\@) could improve the performance and allow
-better classification, and would be interesting to perform.
+chess puzzle moves is full of potential, and is this is built upon and explored
+further with the tree-based approach (\Cref{treeS12}).
 
-\subsection{Chess2vec: Learning Vector Representations for Chess}
+\paragraph{Static and Dynamic Similarity}In their thesis, \citet{chessMotifs}
+develop a method to retrieve similar chess positions among a variety of
+tactically sharp examples. Building upon the naive `static' similarity (piece
+locations, pawn structure, etc.\@), they implement various `dynamic' similarity
+metrics (whether captures occur, attacks happen, sacrifices happen, etc.\@ in
+the optimal move chain). It is well known \citep{thoughtAndChoice,
+bilalic2010mechanisms} that chess players often think about positions in this
+dynamic way. This is further reinforced by an example given in the thesis,
+where a small static perturbation causes previously dynamically similar
+positions to have nothing in common \citep{chessMotifs}.
 
-In this paper, \citet{chess2vec} investigate and report on their results in
-finding $d$-dimensional vector representations of the standard way to represent
-a chess board in machine learning -- a bitboard, which is equivalent to a
-$8\times8\times12$ binary tensor. 
-
-With this naive approach, the authors make the observation that each chess
-square is a 12-dimensional vector, which is independent of the board. By adding
-a board hash, they segregate the pieces, making their vector representations
-depend on the board state. With this method, \cite{chess2vec} claim to predict
-$8.8\%$ of Stockfish moves correctly, which is an impressive statistic given no
-chess logic or ruleset was explicitly implemented.
-
-This is a promising result that suggests that vector representations of pieces
-on a chess board can have unexpected performance, and it would be interesting
-to build upon the authors' work.
-
-\subsection{Automatic Recognition of Similar Chess Motifs}
-\label{chessMotifsOverview}
-
-In their thesis, \citet{chessMotifs} develop a method to retrieve similar chess
-positions among a variety of tactically sharp examples. Building upon the naive
-`static' similarity (piece locations, pawn structure, etc.\@), they implement
-various `dynamic' similarity metrics (whether captures occur, attacks happen,
-sacrifices happen, etc.\@ in the optimal move chain). It is well known
-\citep{thoughtAndChoice, bilalic2010mechanisms} that chess players often think
-about positions in this dynamic way. This is further reinforced by an example
-given in the thesis, where a small static perturbation causes previously
-dynamically similar positions to have nothing in common \citep{chessMotifs}.
-
-This work is incredibly close to the goal of this project, and it has plenty of
-interesting approaches and ideas. Importantly, their results are successful:
-when a chess expert was asked to identify similar positions, they chose the
-same ones that the program of \cite{chessMotifs} did. Whilst this is not a
-faultless evaluation metric, it shows that there is potential within their
-approach.
+Importantly, their results are successful: when a chess expert was asked to
+identify similar positions, they chose the same ones that the program of
+\cite{chessMotifs} did. While this is not a faultless evaluation metric, it
+shows that this approach works. The ideas of this thesis are the foundation of
+the distance function used in the tree-based approach (\Cref{treeS13}).
 
 \section{Lichess Puzzle Database}\label{lichessPuzzlesSection}
 
@@ -398,9 +362,8 @@ levels on it. As part of this, Lichess has published over 3.6 million rated and
 tagged puzzle positions \citep{lichessPuzzles}. To generate these, 300 million
 games were analysed with a powerful chess engine to find critical positions in
 which a move must be played to capitalise on the opponent's mistake. These
-puzzles were initially tagged to 60 manually created themes
-\citep{lichessXML}, which were identified by a python implementation
-\citep{lichessTagger}.
+puzzles were initially tagged to 60 manually created themes \citep{lichessXML},
+which were identified by a Python script \citep{lichessTagger}.
 
 As various users of the site solved the puzzles, and manually highlighted the
 themes that they thought occured in the puzzle, the ratings and tags of the
@@ -409,11 +372,11 @@ puzzle database evolved until their current state.
 \subsection{Format}
 
 These puzzles are stored in FEN format, with a reference to the game where they
-appeared. They also contain the solution as a string moves, the tactics tags
-\citep{lichessXML}, and the puzzle rating, along with other metadata.
+appeared. They also contain the solution as a sequence of moves, the tactics
+tags \citep{lichessXML}, and the puzzle rating, along with other metadata.
 
 An example puzzle string is shown below. This puzzle is also shown visually in
-Figures \ref{puzzle1} and \ref{puzzle2}.
+\Cref{puzzle1,puzzle2}.
 
 \begin{verbatim}
 q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17,
@@ -423,110 +386,108 @@ Italian_Game Italian_Game_Classical_Variation
 \end{verbatim}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k -
-        0 17]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
-        17.}
-        \label{puzzle1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1
-        18]
-        \caption{\textbf{ZensAlviani -- desso2b}, lichess.org Blitz game, move
-        18.
-        Checkmate is imminent with \texttt{18.Be6+ Kd8 19.Qf8\#}.}
-        \label{puzzle2}
-    \end{minipage}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k -
+    0 17]
+    \caption{Position given by the FEN string above.}
+    \label{puzzle1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=q5nr/1ppknQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 w - - 1
+    18]
+    \caption{Black blunders: \texttt{17...Kd7}. This position is given to
+    the end user as a puzzle to be solved with forcing moves. Checkmate is
+    imminent with \texttt{18.Be6+ Kd8 19.Qf8\#}.}
+    \label{puzzle2}
+  \end{minipage}
 \end{figure}
 
 Processing these is a trivial task with one small detail: the given FEN strings
 are the state of the game right before the critical blunder is played by the
 opposing site. This means the puzzle, as shown to the user, is the position
 after the first move has been played. Fortunately, processing this data is made
-simple with the python-chess library \citep{pythonChess}.
+simple with the \texttt{python-chess} library \citep{pythonChess}.
 
 \subsection{Data Exploration}
 
-The lichess puzzle database has approximately 3.8 million rated and tagged
+The Lichess puzzle database has approximately 3.8 million rated and tagged
 chess puzzles. Initially, they were automatically processed
 \citep{lichessTagger}, but were then refined with user feedback
 \citep{lichessPuzzles}. This also allowed the puzzles to obtain a rating, which
 is indicative of its difficulty \citep{lichessPuzzles}.
 
-Overall, there are 60 various puzzle themes \citep{lichessXML}. Figure
-\ref{dataThemeCounts} shows the counts of each theme in all of the contained
+Overall, there are 60 various puzzle themes \citep{lichessXML}.
+\Cref{dataThemeCounts} shows the counts of each theme in all of the contained
 puzzles. It should be noted that some themes are mutually exclusive (a
 checkmate puzzle cannot be both \emph{mate-in-one} and \emph{mate-in-two}).
 
 The most common puzzle themes are the most general ones -- specifically
-`short', `middlegame', and `endgame'. There is a lot of variation in how
-frequent the various patterns are, which is a natural consequence of the game.
+\texttt{short}, \texttt{middlegame}, and \texttt{endgame}. There is a lot of
+variation in how frequent the various patterns are, which is a natural
+consequence of the game.
 
 \begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{project/img/puzzle_theme_counts.png}
-    \caption{Frequency of puzzle themes in the lichess.org puzzle
-    database \citep{lichessPuzzles}.}
-    \label{dataThemeCounts}
+  \centering
+  \includegraphics[width=0.9\linewidth]{project/img/puzzle_theme_counts.png}
+  \caption{Frequency of puzzle themes in the Lichess puzzle database
+  \citep{lichessPuzzles}.}
+  \label{dataThemeCounts}
 \end{figure}
 
-Figure \ref{dataHistogram} shows the distribution of ratings across the chess
-puzzles. It should be noted that these ratings are only appropriate within this
-dataset, and cannot be compared to ratings of puzzles on other chess websites.
-The puzzle ratings are quite symmetric about the mean, and this is of course a
-result of the Glicko2 rating system, developed by \citet{glicko}.
+\Cref{dataHistogram} shows the distribution of ratings across the chess
+puzzles. These ratings are only appropriate within this dataset, and cannot be
+compared to ratings of puzzles on other chess websites. The puzzle ratings are
+symmetric about the mean, and this is of course a result of the Glicko2 rating
+system, developed by \citet{glicko}.
 
 When analysing the rating distribution by theme, an expected behaviour occurs.
 Some chess tactics patterns are considerably simpler to spot, meaning a weaker
 player is able to solve the puzzle with that theme. Therefore some puzzle
-themes, \emph{back-rank mate}, for example, have lower-rated puzzles when
-compared to puzzles featuring a \emph{trapped piece} or \emph{defensive
-move}.\footnote{Notoriously difficult for humans, who are usually much better
-at aggression than defense.\footnotemark}\footnotetext{In chess.}
-
-Figures \ref{puzzle3} and \ref{puzzle4} show examples of some puzzles with
-these themes.
+themes, \emph{back-rank mate} (\Cref{puzzle3}), for example, have lower-rated
+puzzles when compared to puzzles featuring a \emph{trapped piece}
+(\Cref{puzzle4}) or \emph{defensive move}.\footnote{Notoriously difficult for
+humans, who are usually much better at aggression than
+defense.\footnotemark}\footnotetext{In chess.}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/puzzle_histogram.png}
-        \caption{Distribution of Lichess puzzle ratings.}
-        \label{dataHistogram}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]
-            {project/img/puzzle_theme_histograms.png}
-        \caption{Distribution of Lichess puzzle ratings with a specific theme.}
-        \label{dataThemeHistogram}
-    \end{minipage}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/puzzle_histogram.png}
+    \caption{Distribution of Lichess puzzle ratings.}
+    \label{dataHistogram}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]
+    {project/img/puzzle_theme_histograms.png}
+    \caption{Distribution of Lichess puzzle ratings with a specific theme.}
+    \label{dataThemeHistogram}
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0
-        22]
-        \caption{\textbf{Kenan2345 -- gandie}, lichess.org Blitz game, move 22. 
-        Black loses to \texttt{22.Rd8+}.}
-        \label{puzzle3}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b -
-        - 0 31]
-        \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31.
-        White loses his queen after \texttt{31...Re8}, as the queen has no
-        safe squares to escape to.}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/r1p5/p1n1rP2/8/2P2N1P/2P3P1/3R2K1 w - - 0
+    22]
+    \caption{\textbf{Kenan2345 -- gandie}, lichess.org Blitz game, move 22. 
+    Black loses to \texttt{22.Rd8+}.}
+    \label{puzzle3}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=2rq1rk1/7p/1n4pb/1R2Q3/pPpP1P2/P1B5/3N2PP/2R3K1 b -
+    - 0 31]
+    \caption{\textbf{mhabib -- Sarg0n}, lichess.org Blitz game, move 31.
+    White loses his queen after \texttt{31...Re8}, as the queen has no
+    safe squares to escape to.}
 
-        \label{puzzle4}
-    \end{minipage}
+    \label{puzzle4}
+  \end{minipage}
 \end{figure}
 

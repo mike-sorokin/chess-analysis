@@ -9,19 +9,22 @@
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
-\usepackage{amsmath}
-\usepackage{graphicx}
 \usepackage{adjustbox}
-\usepackage{url}
-\usepackage{xskak}
+\usepackage{amsmath}
+\usepackage{colortbl}
 \usepackage{fancyhdr}
 \usepackage{float}
-\usepackage{colortbl}
+\usepackage{graphicx}
 \usepackage{listings}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{xskak}
+\usepackage[super]{nth}
 \usepackage[square]{natbib}
 \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 \title{Chess Puzzle Analysis}
 \author{Mihhail Sorokin}
@@ -33,6 +36,18 @@
   \fancyhead[L]{\nouppercase{\leftmark}}
   \fancyhead[R]{\thepage}
 }
+
+\definecolor[named]{ACMPurple}{cmyk}{0.55,1,0,0.15}
+\definecolor[named]{ACMDarkBlue}{cmyk}{1,0.58,0,0.21}
+\hypersetup{colorlinks,
+linkcolor=ACMPurple,
+citecolor=ACMPurple,
+urlcolor=ACMDarkBlue,
+filecolor=ACMDarkBlue
+}
+
+\widowpenalty10000
+\clubpenalty10000
 
 \pagestyle{thesis}
 
