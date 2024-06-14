@@ -403,26 +403,8 @@ exhausted, whether because it has solved the puzzle, or ran out of the maximum
 depth of 5.
 
 Whilst generating the tree nodes, each move is annotated with a list of
-attributes describing the properties of these move. The exhaustive list of the
-attributes we consider is as follows:
-
-\begin{itemize}
-    \item Colour of the piece
-    \item Piece name (queen, rook, etc.\@)
-    \item Depth of the node
-    \item File, rank, diagonals (2 types: parallel to \texttt{a1-h8} or
-        \texttt{a8-h1}) of the source square
-    \item File, rank, diagonals of the target square
-    \item Chebyshev distance (number of king moves) between source and target
-        squares     
-    \item Which piece is captured (if any)
-    \item Delivers check or not
-    \item Delivers mate or not
-    \item Number of enemy pieces attacked after the move
-    \item Number of friendly pieces defended after the move
-    \item Number of enemy attackers after the move
-    \item Number of friendly defenders after the move
-\end{itemize}
+attributes describing the properties of these move, such as the name of the
+piece, whether it delivers check, and how many pieces it is defended by.
 
 In total, we generated 3.7 million game trees which took about 10000 hours of
 CPU time. This was done with the help of the Department of Computing's HTCondor
