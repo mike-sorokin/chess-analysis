@@ -1,5 +1,20 @@
 \chapter{Background}\label{backgroundChapter}
 
+After some brief motivation (\Cref{bg1}), this chapter covers some prerequisite
+knowledge of chess concepts and important work in this topic.
+
+The major chess notation formats are described (\Cref{bg2}), along with some
+example puzzle themes (\Cref{bg3}) afterwards.
+
+Closely related work that is critical to this project is also covered
+(\Cref{bg4}). Related, but more distant work can be found at the end of the
+report (\Cref{concWork}).
+
+The Lichess puzzle database is introduced (\Cref{bg5}) and some initial data
+exploration is performed to get a deeper understanding of this database.
+
+\section{Importance of Puzzle Solving}\label{bg1}
+
 The motivation behind solving chess puzzles, especially under time pressure, is
 to improve one's pattern recognition abilities. \citet{thoughtAndChoice} showed
 that chess players do not have a square-by-square recollection of the chess
@@ -7,6 +22,14 @@ board during play. Instead, they rely on interactions, and potential
 interactions of pieces in a more abstract sense. This is made strikingly clear
 by a professional chess player's drawing of a position from memory
 (\Cref{deGrootFigure}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{background/img/deGroot.png}
+  \caption{Taken from `Thought And Choice In Chess'
+  \citep{thoughtAndChoice}.}
+  \label{deGrootFigure}
+\end{figure}
 
 \citet{thoughtAndChoice} writes, ``the pieces themselves do not appear in the
 drawing: rather the lines of force that go out from them''. This heuristic
@@ -16,14 +39,6 @@ when compared to a naive brute-force search, which is the most common strategy
 for chess engines. When analysing positions, even the most basic chess engines
 are able to calculate the most accurate line (except some pathological cases),
 but they are unable to draw similarities between different positions.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\linewidth]{background/img/deGroot.png}
-  \caption{Taken from `Thought And Choice In Chess'
-  \citep{thoughtAndChoice}.}
-  \label{deGrootFigure}
-\end{figure}
 
 Two sample chess positions are shown (\Cref{chess1,chess2}), featuring
 \emph{back-rank checkmates} -- one of the first tactical patterns that a
@@ -54,7 +69,7 @@ rank?
   \end{minipage}
 \end{figure}
 
-\section{Chess Notation}
+\section{Chess Notation}\label{bg2}
 
 For many decades, the standard for chess notation has been the Algebraic
 System, where, generally speaking, moves are encoded by the piece abbreviation
@@ -164,7 +179,7 @@ this makes bitboards very fast -- especially when using other bitmaps to check
 for piece attack maps and piece interactions. In fact, bitboards are used by
 \citet{stockfishBitboard}, one of the strongest chess engines today.
 
-\section{Examples of Chess Puzzle Themes}
+\section{Examples of Chess Puzzle Themes}\label{bg3}
 
 Some of the following positions are taken from \citet{chesscomTactics}.
 
@@ -269,7 +284,7 @@ Some of the following positions are taken from \citet{chesscomTactics}.
 \end{figure}
 
 
-\section{Existing Work}\label{relatedWorkSection}
+\section{Existing Work}\label{relatedWorkSection}\label{bg4}
 
 \subsection{Chess Board Representation}
 
@@ -354,7 +369,7 @@ identify similar positions, they chose the same ones that the program of
 shows that this approach works. The ideas of this thesis are the foundation of
 the distance function used in the tree-based approach (\Cref{treeS13}).
 
-\section{Lichess Puzzle Database}\label{lichessPuzzlesSection}
+\section{Lichess Puzzle Database}\label{lichessPuzzlesSection}\label{bg5}
 
 Lichess (\url{https://lichess.org}) is a popular, open-source chess website
 which often publishes the games that have been played by players of all skill

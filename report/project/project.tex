@@ -1,20 +1,18 @@
 \chapter{The Deep Learning Approach}\label{mlChapter}
 
-In this section, we describe, analyse, and evaluate a novel approach to the
-specific problem of chess puzzle classification, inspired by the recent
-unstoppable advancements in the field of natural language processing.
+This chapter describes and analyses a novel approach to the specific problem of
+chess puzzle classification, inspired by the recent unstoppable advancements in
+the field of natural language processing.
 
-Section \ref{mlS0} outlines the justification for why transformers may work for
-this problem and defines a slightly more formal problem statement.
+The justification for why transformers may work, along with a slightly more
+formal problem statement, is outlined (\Cref{mlS0}).
 
-Section \ref{mlS1} describes the general data pipeline of the model. Subsection
-\ref{mlS11} defines how bitboard encoding is used to encode chess positions,
-and Subsection \ref{mlS12} describes the training, validation, and testing data
-splits.
+The data pipeline is then discussed (\Cref{mlS1}), starting with the bitboard
+encoding (\Cref{mlS1}) and ending with the training, validation, and testing
+splits (\Cref{mlS12}).
 
-Section \ref{mlS2} dives deeper into the model architecture, with a diagram in
-Subsection \ref{mlS21}. Subsection \ref{mlS22} defines the hyperparameters of
-the model, including a grid search.
+The model is then described in detail (\Cref{mlS2}), with a high-level diagram
+(\Cref{mlS21}), hyperparameter selection (\Cref{mlS22}).
 
 \section{Overview}\label{mlS0}
 
@@ -127,10 +125,10 @@ to get an estimate of the model's performance on unseen data.
 \subsection{Architecture}\label{mlS21}
 
 \begin{figure}[H]
-        \centering
-        \includegraphics[width=\textwidth]{project/img/ml_diagram.png}
-        \caption{High-level overview of the model architecture.}
-        \label{MLDiagram}
+  \centering
+  \includegraphics[width=\textwidth]{project/img/ml_diagram.png}
+  \caption{High-level overview of the model architecture.}
+  \label{MLDiagram}
 \end{figure}
 
 \subsection{Hyperparameters}\label{mlS22}
@@ -185,35 +183,35 @@ combinations of hyperparameters. Specifically, these are:
       $[64, 128, 256, 512 ]$& $64$ & $4096$ & && \\
       $[64, 128, 256, 512 ]$& $64$ & $8192$ & && \\
       $[64, 128, 256, 512 ]$& $64$ & $16384$ & && \\[0.1cm]
-      
+
       $[64, 128, 256, 512 ]$& $128$ & $4096$ & && \\
       $[64, 128, 256, 512 ]$& $128$ & $8192$ & && \\
       $[64, 128, 256, 512 ]$& $128$ & $16384$ & && \\[0.5cm]
 
-      
+
 
       $[32, 64, 128, 256 ]$& $32$ & $4096$ & 8,846,844 & 0.09416 & 0.09942 \\
       $[32, 64, 128, 256 ]$& $32$ & $8192$ & 8,846,844 & 0.09452 & 0.09991 \\
       $[32, 64, 128, 256 ]$& $32$ & $16384$ & 8,846,844 & 0.09442 & 0.09990 \\[0.1cm]
-      
+
       $[32, 64, 128, 256 ]$& $64$ & $4096$ & 8,978,172 & 0.09424 & 0.09987 \\
       $[32, 64, 128, 256 ]$& $64$ & $8192$ & 8,978,172 & 0.09395 & 0.09990 \\
       $[32, 64, 128, 256 ]$& $64$ & $16384$ & 8,978,172 & 0.09425 & 0.1001 \\[0.1cm]
-      
+
       $[32, 64, 128, 256 ]$& $128$ & $4096$ & 9,240,828 & 0.09351 & 0.09918 \\
       $[32, 64, 128, 256 ]$& $128$ & $8192$ & 9,240,828 & 0.09341 & 0.09953 \\
       $[32, 64, 128, 256 ]$& $128$ & $16384$ & 9,240,828 & 0.09387 & 0.09914 \\[0.5cm]
 
-      
+
 
       $[64, 128, 256 ]$& $32$ & $4096$ & 8,779,452  && \\
       $[64, 128, 256 ]$& $32$ & $8192$ & 8,779,452 && \\
       $[64, 128, 256 ]$& $32$ & $16384$ & 8,779,452 && \\[0.1cm]
-      
+
       $[64, 128, 256 ]$& $64$ & $4096$ & && \\
       $[64, 128, 256 ]$& $64$ & $8192$ & && \\
       $[64, 128, 256 ]$& $64$ & $16384$ & && \\[0.1cm]
-      
+
       $[64, 128, 256 ]$& $128$  & $4096$ & && \\
       $[64, 128, 256 ]$& $128$ & $8192$ & && \\
       $[64, 128, 256 ]$& $128$ & $16384$ & && \\
@@ -268,23 +266,18 @@ depending on resource availability and hyperparameter combination.
 
 \chapter{The Tree-Based Approach}\label{treeChapter}
 
-In this section, we propose a different novel approach to puzzle
-classification, focusing on unsupervised puzzle clustering and defining a
-distance function between various chess puzzles.
+In this chapter, a different novel approach to puzzle classification is
+proposed, focusing on the applications of a custom distance function defined
+between chess puzzles' meaningful search trees.
 
-Section \ref{treeS1} gives a bird's eye view of the logic and design of the
-algorithm. Subsection \ref{treeS11} introduces labelled search trees;
-subsections \ref{treeS12}, \ref{treeS13} explain how to create them. Subsection
-\ref{treeS21} introduces the concept of puzzle similarity by using the puzzle
-distance function.
+Initially, the concept of labelled search trees and distance is introduced
+(\Cref{treeS1}). This includes a high-level description of how to create these
+trees (\Cref{treeS12,treeS13}) and how to measure distance between them
+(\Cref{treeS21}).
 
-Section \ref{treeS2} looks at unsupervised clustering of puzzles by this
-distance, with Subsection \ref{treeS22} showing the results and Subsection
-\ref{treeS23} showing concrete examples and visualisations of results.
-
-Finally, Section \ref{treeS3} uses the distance function in a more standard
-approach: $k$-nearest neighbours for puzzle label classification and puzzle
-difficulty regression.
+Unsupervised clustering (\Cref{treeS2}) naturally follows these concepts. The
+results of this are shown (\Cref{treeS22}), along with concrete examples and
+visualisations (\Cref{treeS23}).
 
 \section{Overview}\label{treeS1}
 
@@ -320,19 +313,19 @@ trees do not look similar visually (their size being the main problem), the
 first 3 plies are very similar. 
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/trees/1.drawio.png}
-        \caption{Labelled search tree for game in \ref{chess5}}
-        \label{tree1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/trees/2.drawio.png}
-        \caption{Labelled search tree for game in \ref{chess6}}
-        \label{tree2}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/1.drawio.png}
+    \caption{Labelled search tree for game in \ref{chess5}}
+    \label{tree1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/2.drawio.png}
+    \caption{Labelled search tree for game in \ref{chess6}}
+    \label{tree2}
+  \end{minipage}
 \end{figure}
 
 In Figures \ref{puzzle5}, \ref{puzzle6} are two chess puzzles from the paper
@@ -345,40 +338,40 @@ shown in Figures \ref{tree3}, \ref{tree4}. These puzzles were already
 successfully grouped by \citet{chessMotifs}.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
-        0 1]
-        \caption{Taken from `Automatic Recognition of Similar Chess Motifs'
-        \citep{chessMotifs}. White mates in 3 (\texttt{1.Rh8+ Kxh8 2.Qh6+ Kg8
-        3.Qxg7#}).}
-        \label{puzzle5}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=r5k1/5pp1/8/3p3R/2q4P/PbB2P2/1P1Q2P1/K7 w q - 0 1]
-            \caption{Also taken from `Automatic Recognition of Similar Chess
-            Motifs' \citep{chessMotifs}. White mates in 3 with the same moves
-            as the puzzle on the left.}
-        \label{puzzle6}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
+    0 1]
+    \caption{Taken from `Automatic Recognition of Similar Chess Motifs'
+    \citep{chessMotifs}. White mates in 3 (\texttt{1.Rh8+ Kxh8 2.Qh6+ Kg8
+    3.Qxg7#}).}
+    \label{puzzle5}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=r5k1/5pp1/8/3p3R/2q4P/PbB2P2/1P1Q2P1/K7 w q - 0 1]
+    \caption{Also taken from `Automatic Recognition of Similar Chess
+    Motifs' \citep{chessMotifs}. White mates in 3 with the same moves
+    as the puzzle on the left.}
+    \label{puzzle6}
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/trees/3.drawio.png}
-        \caption{Labelled search tree for game in Figure \ref{puzzle5}.}
-        \label{tree3}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{project/img/trees/4.drawio.png}
-        \caption{Labelled search tree for game in Figure \ref{puzzle6}.}
-        \label{tree4}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/3.drawio.png}
+    \caption{Labelled search tree for game in Figure \ref{puzzle5}.}
+    \label{tree3}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/4.drawio.png}
+    \caption{Labelled search tree for game in Figure \ref{puzzle6}.}
+    \label{tree4}
+  \end{minipage}
 \end{figure}
 
 \subsection{Meaningful Tree Generation}\label{treeS12}
@@ -428,28 +421,28 @@ to worse results, from early experiments. The depth multipliers are: $4, 1,
 \begin{table}[H]
   \centering
   \begin{tabular}{lrl}
-      Condition & Penalty & Note \\
-      \hline
-      Different colour & $\infty$ & Implementation detail \\
-      &&\\
-      Pieces are queen/rook & $25$ & Heavy pieces are used similarly \\
-      Pieces are queen/bishop& $50$ & Both can attack diagonally \\
-      Pieces are different and not QR/QB& $100$ & \\
-      &&\\
-      Differing source rank/file/diagonal & $3$ each & \\
-      Differing target rank/file/diagonal & $3$ each & \\
-      Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
-      not important \\
-      &&\\
-      Capture and non-capture & $50$ & \\
-      Capture of different pieces & $10$ & \\
-      Checking and non-checking & $25$ & \\
-      Mate and non-mate & $50$ & \\
-      &&\\
-      Number of enemies attacked, $n_1, n_2$ & $3|n_1-n_2|$ & \\
-      Number of allies defended, $n_1, n_2$ & $2|n_1-n_2|$ & \\
-      Number of attackers, $n_1, n_2$ & $3|n_1-n_2|$ & \\
-      Number of defenders, $n_1, n_2$ & $2|n_1-n_2|$ & \\
+    Condition & Penalty & Note \\
+    \hline
+    Different colour & $\infty$ & Implementation detail \\
+    &&\\
+    Pieces are queen/rook & $25$ & Heavy pieces are used similarly \\
+    Pieces are queen/bishop& $50$ & Both can attack diagonally \\
+    Pieces are different and not QR/QB& $100$ & \\
+    &&\\
+    Differing source rank/file/diagonal & $3$ each & \\
+    Differing target rank/file/diagonal & $3$ each & \\
+    Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
+    not important \\
+    &&\\
+    Capture and non-capture & $50$ & \\
+    Capture of different pieces & $10$ & \\
+    Checking and non-checking & $25$ & \\
+    Mate and non-mate & $50$ & \\
+    &&\\
+    Number of enemies attacked, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+    Number of allies defended, $n_1, n_2$ & $2|n_1-n_2|$ & \\
+    Number of attackers, $n_1, n_2$ & $3|n_1-n_2|$ & \\
+    Number of defenders, $n_1, n_2$ & $2|n_1-n_2|$ & \\
   \end{tabular}
   \caption{Breakdown of the node distance function for meaningful move trees}
   \label{distanceTable}
@@ -496,22 +489,22 @@ as there are more pieces on the board, making it harder to find the winning
 move.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen= 6k1/pr4pR/2p2pP1/2Pp4/5N2/P1r2P2/3RP3/3K4 b - - 1
-        28]
-        \caption{Distance $40$ to Figure \ref{chess1}. Solution:
-        \texttt{1...Rb1\#}}
-        \label{m11}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=1r4k1/6p1/p1R1p2p/8/P6P/3R4/2P2rP1/3K4 b - - 0 30]
-        \caption{Distance $0$ to Figure \ref{chess1}. Solution:
-        \texttt{1...Rb1\#}}
-        \label{m22}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= 6k1/pr4pR/2p2pP1/2Pp4/5N2/P1r2P2/3RP3/3K4 b - - 1
+    28]
+    \caption{Distance $40$ to Figure \ref{chess1}. Solution:
+    \texttt{1...Rb1\#}}
+    \label{m11}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=1r4k1/6p1/p1R1p2p/8/P6P/3R4/2P2rP1/3K4 b - - 0 30]
+    \caption{Distance $0$ to Figure \ref{chess1}. Solution:
+    \texttt{1...Rb1\#}}
+    \label{m22}
+  \end{minipage}
 \end{figure}
 
 With a more complex position, such as the mate in two in Figure \ref{chess5},
@@ -521,21 +514,21 @@ featuring a rook sacrifice on \texttt{h3} and different mating squares
 depending on White's response.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=2k3r1/p1p4p/8/pP1QR3/P2P3P/2P3r1/5RPK/3q4 b - - 2 30]
-        \caption{Distance $255$ to Figure \ref{chess5}. Solution:
-        \texttt{1...Rh3+ (2.Kxh3 Qh1\#) (2.gxh3 Qg1\#)}}
-        \label{mag1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6rk/pR6/2p4p/8/4PP2/P2P2r1/P2Q1RPK/q7 b - - 4 35]
-        \caption{Distance $259$ to Figure \ref{chess5}. Solution identical to
-        puzzle on the left.}
-        \label{mag2}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=2k3r1/p1p4p/8/pP1QR3/P2P3P/2P3r1/5RPK/3q4 b - - 2 30]
+    \caption{Distance $255$ to Figure \ref{chess5}. Solution:
+    \texttt{1...Rh3+ (2.Kxh3 Qh1\#) (2.gxh3 Qg1\#)}}
+    \label{mag1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6rk/pR6/2p4p/8/4PP2/P2P2r1/P2Q1RPK/q7 b - - 4 35]
+    \caption{Distance $259$ to Figure \ref{chess5}. Solution identical to
+    puzzle on the left.}
+    \label{mag2}
+  \end{minipage}
 \end{figure}
 
 \section{Clustering}\label{treeS2}
@@ -560,36 +553,36 @@ highlighted rows can be seen in Section \ref{treeS23}.
 \begin{table}[H]
   \centering
   \begin{adjustbox}{width=\textwidth}
-  \begin{tabular}{lr|rccccrrrrrrr}
-    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
-    &&
-    \multicolumn{6}{c}{Cluster size statistics} \\
+    \begin{tabular}{lr|rccccrrrrrrr}
+      \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
+      &&
+      \multicolumn{6}{c}{Cluster size statistics} \\
 
-    Linkage&Distance threshold&Number of clusters&\rotatebox{90}{Backrank M1} &
-    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
-    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
-    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
-    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+      Linkage&Distance threshold&Number of clusters&\rotatebox{90}{Backrank M1} &
+      \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+      \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+      \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+      \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
 
-    \hline
-    average&100&17040&Y&Y&Y&Y&0.0&1.17&1&1&1&1&178\\
-    average&250&13812&Y&Y&Y&Y&0.0&1.45&1&1&1&1&1000\\
-    average&500&8600&Y&Y&Y&Y&0.0&2.33&1&1&1&1&1863\\
-    average&750&2759&Y&Y&Y&Y&0.0&7.25&1&1&1&2&2879\\
-    average&1000&687&Y&Y&Y&Y&0.0&29.12&1&1&2&4&4069\\
-    complete&100&17263&Y&Y&Y&Y&0.0&1.16&1&1&1&1&85\\
-    complete&250&14064&Y&Y&Y&Y&0.0&1.42&1&1&1&1&611\\
-    complete&500&9197&Y&Y&Y&Y&0.0&2.18&1&1&1&1&1000\\
-    complete&750&3826&Y&Y&Y&Y&0.0&5.23&1&1&1&4&1780\\
-    complete&1000&1404&Y&Y&Y&Y&0.0&14.25&1&2&3&8&2039\\
-    single&100&16809&Y&Y&Y&Y&0.0&1.19&1&1&1&1&611\\
-    single&250&13513&Y&Y&Y&Y&0.0&1.48&1&1&1&1&2642\\
-    \rowcolor{lightgray} single&500&7418&Y&Y&Y&Y&0.0&2.7&1&1&1&1&9888\\
-    single&750&1743&Y&Y&Y&Y&0.0&11.48&1&1&1&1&16224\\
-    single&1000&231&Y&Y&Y&Y&0.0&86.6&1&1&1&1&19774\\
+      \hline
+      average&100&17040&Y&Y&Y&Y&0.0&1.17&1&1&1&1&178\\
+      average&250&13812&Y&Y&Y&Y&0.0&1.45&1&1&1&1&1000\\
+      average&500&8600&Y&Y&Y&Y&0.0&2.33&1&1&1&1&1863\\
+      average&750&2759&Y&Y&Y&Y&0.0&7.25&1&1&1&2&2879\\
+      average&1000&687&Y&Y&Y&Y&0.0&29.12&1&1&2&4&4069\\
+      complete&100&17263&Y&Y&Y&Y&0.0&1.16&1&1&1&1&85\\
+      complete&250&14064&Y&Y&Y&Y&0.0&1.42&1&1&1&1&611\\
+      complete&500&9197&Y&Y&Y&Y&0.0&2.18&1&1&1&1&1000\\
+      complete&750&3826&Y&Y&Y&Y&0.0&5.23&1&1&1&4&1780\\
+      complete&1000&1404&Y&Y&Y&Y&0.0&14.25&1&2&3&8&2039\\
+      single&100&16809&Y&Y&Y&Y&0.0&1.19&1&1&1&1&611\\
+      single&250&13513&Y&Y&Y&Y&0.0&1.48&1&1&1&1&2642\\
+      \rowcolor{lightgray} single&500&7418&Y&Y&Y&Y&0.0&2.7&1&1&1&1&9888\\
+      single&750&1743&Y&Y&Y&Y&0.0&11.48&1&1&1&1&16224\\
+      single&1000&231&Y&Y&Y&Y&0.0&86.6&1&1&1&1&19774\\
 
 
-  \end{tabular}
+    \end{tabular}
   \end{adjustbox}
   \caption{Results of Agglomerative Clustering}
   \label{tabAC}
@@ -598,40 +591,40 @@ highlighted rows can be seen in Section \ref{treeS23}.
 \begin{table}[H]
   \centering
   \begin{adjustbox}{width=\textwidth}
-  \begin{tabular}{rr|rccccrrrrrrr}
-    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
-    &&
-    \multicolumn{6}{c}{Cluster size statistics} \\
+    \begin{tabular}{rr|rccccrrrrrrr}
+      \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
+      &&
+      \multicolumn{6}{c}{Cluster size statistics} \\
 
-    Epsilon&Minimum samples&Number of clusters&\rotatebox{90}{Backrank M1} &
-    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
-    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
-    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
-    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+      Epsilon&Minimum samples&Number of clusters&\rotatebox{90}{Backrank M1} &
+      \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+      \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+      \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+      \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
 
-    \hline
-    50&3&45&&&&&93.28&29.82&7&9&13&28&365\\
-    50&5&45&&&&&93.28&29.82&7&9&13&28&365\\
-    50&7&45&&&&&93.28&29.82&7&9&13&28&365\\
-    50&9&37&&&&&93.65&34.32&9&10&16&28&365\\
-    100&3&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
-    100&5&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
-    100&7&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
-    100&9&38&Y&&&Y&83.88&84.84&9&13&26&51&1000\\
-    250&3&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
-    250&5&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
-    250&7&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
-    250&9&32&Y&&Y&Y&67.60&202.56&9&13&30&112&2643\\
-    500&3&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
-    500&5&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
-    \rowcolor{lightgray} 500&7&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
-    500&9&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
-    750&3&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
-    750&5&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
-    750&7&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
-    750&9&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227& \\
+      \hline
+      50&3&45&&&&&93.28&29.82&7&9&13&28&365\\
+      50&5&45&&&&&93.28&29.82&7&9&13&28&365\\
+      50&7&45&&&&&93.28&29.82&7&9&13&28&365\\
+      50&9&37&&&&&93.65&34.32&9&10&16&28&365\\
+      100&3&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
+      100&5&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
+      100&7&43&Y&&&Y&83.69&75.86&7&11&21&41&1000\\
+      100&9&38&Y&&&Y&83.88&84.84&9&13&26&51&1000\\
+      250&3&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
+      250&5&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
+      250&7&36&Y&&Y&Y&67.36&181.39&7&9&25&87&2643\\
+      250&9&32&Y&&Y&Y&67.60&202.56&9&13&30&112&2643\\
+      500&3&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
+      500&5&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
+      \rowcolor{lightgray} 500&7&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
+      500&9&5&Y&Y&Y&Y&37.03&2519.4&17&256&391&2039&9894\\
+      750&3&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
+      750&5&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
+      750&7&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227\\
+      750&9&2&Y&Y&Y&Y&8.69&9133.0&2039&5586&9133&12680&16227& \\
 
-  \end{tabular}
+    \end{tabular}
   \end{adjustbox}
   \caption{Results of DBSCAN}
   \label{tabDBSCAN}
@@ -640,43 +633,43 @@ highlighted rows can be seen in Section \ref{treeS23}.
 \begin{table}[H]
   \centering
   \begin{adjustbox}{width=\textwidth}
-  \begin{tabular}{rr|rccccrrrrrrr}
-    \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
-    &&
-    \multicolumn{6}{c}{Cluster size statistics} \\
+    \begin{tabular}{rr|rccccrrrrrrr}
+      \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
+      &&
+      \multicolumn{6}{c}{Cluster size statistics} \\
 
-    Cluster selection $\epsilon$&Min cluster size&Number of
-    clusters&\rotatebox{90}{Backrank M1} &
-    \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
-    \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
-    \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
-    \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
+      Cluster selection $\epsilon$&Min cluster size&Number of
+      clusters&\rotatebox{90}{Backrank M1} &
+      \rotatebox{90}{Knight fork} & \rotatebox{90}{Greek gift} &
+      \rotatebox{90}{Rook sac M3} & Outlier \% & \rotatebox{90}{Mean} &
+      \rotatebox{90}{Min} & \rotatebox{90}{Q1} & \rotatebox{90}{Median} &
+      \rotatebox{90}{Q3} & \rotatebox{90}{Max} \\
 
-    \hline
+      \hline
 
-    0&3&1347&Y&Y&&Y&42.57&8.53&3&3&5&9&338\\
-    0&5&801&Y&Y&&Y&49.21&12.69&5&6&8&12&347\\
-    0&7&546&Y&Y&&Y&52.17&17.52&7&8&10&15&917\\
-    0&9&342&&Y&Y&Y&59.84&23.49&9&11&14&19&386\\
-    25&3&1156&&Y&Y&Y&44.91&9.53&3&4&5&10&355\\
-    25&5&693&Y&Y&Y&Y&49.6&14.55&5&6&8&13&352\\
-    25&7&462&Y&Y&Y&Y&53.16&20.27&7&8&11&16&980\\
-    25&9&354&&Y&Y&Y&58.77&23.3&9&10&13&20&383\\
-    50&3&1212&&Y&Y&Y&42.80&9.44&3&3&5&9&353\\
-    50&5&706&&Y&Y&Y&48.61&14.56&5&6&8&12&384\\
-    50&7&479&Y&Y&Y&Y&50.94&20.48&7&8&10&15&901\\
-    50&9&330&Y&Y&Y&Y&59.0&24.85&9&10&13&20&379\\
-    100&3&1123&Y&Y&Y&Y&41.14&10.49&3&3&5&8&1000\\
-    100&5&624&Y&Y&Y&Y&46.9&17.02&5&6&8&11&1000\\
-    \rowcolor{lightgray}100&7&410&Y&Y&Y&Y&51.72&23.55&7&8&10&15&1000\\
-    100&9&276&Y&Y&Y&Y&55.06&32.57&9&10&13&19&1000\\
-    250&3&928&Y&Y&Y&Y&33.90&14.25&3&3&5&8&2606\\
-    250&5&541&Y&Y&Y&Y&37.46&23.13&5&6&8&11&2853\\
-    250&7&355&Y&Y&Y&Y&41.18&33.15&7&8&9&14&2853\\
-    250&9&226&Y&Y&Y&Y&43.72&49.82&9&10&12&17&2611\\
+      0&3&1347&Y&Y&&Y&42.57&8.53&3&3&5&9&338\\
+      0&5&801&Y&Y&&Y&49.21&12.69&5&6&8&12&347\\
+      0&7&546&Y&Y&&Y&52.17&17.52&7&8&10&15&917\\
+      0&9&342&&Y&Y&Y&59.84&23.49&9&11&14&19&386\\
+      25&3&1156&&Y&Y&Y&44.91&9.53&3&4&5&10&355\\
+      25&5&693&Y&Y&Y&Y&49.6&14.55&5&6&8&13&352\\
+      25&7&462&Y&Y&Y&Y&53.16&20.27&7&8&11&16&980\\
+      25&9&354&&Y&Y&Y&58.77&23.3&9&10&13&20&383\\
+      50&3&1212&&Y&Y&Y&42.80&9.44&3&3&5&9&353\\
+      50&5&706&&Y&Y&Y&48.61&14.56&5&6&8&12&384\\
+      50&7&479&Y&Y&Y&Y&50.94&20.48&7&8&10&15&901\\
+      50&9&330&Y&Y&Y&Y&59.0&24.85&9&10&13&20&379\\
+      100&3&1123&Y&Y&Y&Y&41.14&10.49&3&3&5&8&1000\\
+      100&5&624&Y&Y&Y&Y&46.9&17.02&5&6&8&11&1000\\
+      \rowcolor{lightgray}100&7&410&Y&Y&Y&Y&51.72&23.55&7&8&10&15&1000\\
+      100&9&276&Y&Y&Y&Y&55.06&32.57&9&10&13&19&1000\\
+      250&3&928&Y&Y&Y&Y&33.90&14.25&3&3&5&8&2606\\
+      250&5&541&Y&Y&Y&Y&37.46&23.13&5&6&8&11&2853\\
+      250&7&355&Y&Y&Y&Y&41.18&33.15&7&8&9&14&2853\\
+      250&9&226&Y&Y&Y&Y&43.72&49.82&9&10&12&17&2611\\
 
 
-  \end{tabular}
+    \end{tabular}
   \end{adjustbox}
   \caption{Results of HDBSCAN}
   \label{tabHDBSCAN}
@@ -699,39 +692,39 @@ clustering method that fails to assign these a cluster (labelling them an
 `outlier') is unlikely to be effective overall.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-        \caption{Backrank M1: \texttt{1.Rb8\#}}
-        \label{chess11}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
-        \caption{Knight forks rook and king with \texttt{1...Nxc4+}}
-        \label{chess12}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
+    \caption{Backrank M1: \texttt{1.Rb8\#}}
+    \label{chess11}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
+    \caption{Knight forks rook and king with \texttt{1...Nxc4+}}
+    \label{chess12}
+  \end{minipage}
 \end{figure}
 
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=
-        r1bq1rk1/pp2nppp/1bn1p3/1N1pP3/1P6/P2B1N2/2P2PPP/R1BQK2R w KQ - 3 11]
-        \caption{Greek gift sacrifice: \texttt{1.Bxh7+ Kxh7 2.Ng5+}}
-        \label{chess13}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
-        0 1]
-        \caption{Rook sacrificed for mate in three: \texttt{1.Rh8+ Kxh8 2.Qh6+
-        Kg8 3.Qxg7\#}}
-        \label{chess14}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=
+    r1bq1rk1/pp2nppp/1bn1p3/1N1pP3/1P6/P2B1N2/2P2PPP/R1BQK2R w KQ - 3 11]
+    \caption{Greek gift sacrifice: \texttt{1.Bxh7+ Kxh7 2.Ng5+}}
+    \label{chess13}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
+    0 1]
+    \caption{Rook sacrificed for mate in three: \texttt{1.Rh8+ Kxh8 2.Qh6+
+    Kg8 3.Qxg7\#}}
+    \label{chess14}
+  \end{minipage}
 \end{figure}
 
 This allowed some parameter combinations of DBSCAN to be disqualified,
@@ -805,42 +798,42 @@ is no surprise that one of them captures the broad theme of endgames. Luckily,
 this is solved with HDBSCAN.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen= 2rr2k1/ppb3pp/8/3p1q2/1P1Qn2P/P2KP2p/1B6/2RR4 w - -
-        2 32]
-        \caption{Puzzle sharing the cluster with Figure \ref{chess11}. Solution:
-        \texttt{1.Qxg7\#}}
-        \label{dbscanCluster11}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b
-        kq - 4 13]
-        \caption{Same cluster as Figure \ref{chess11}. Solution:
-        \texttt{1...Qxh3\#}}
-        \label{dbscanCluster12}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= 2rr2k1/ppb3pp/8/3p1q2/1P1Qn2P/P2KP2p/1B6/2RR4 w - -
+    2 32]
+    \caption{Puzzle sharing the cluster with Figure \ref{chess11}. Solution:
+    \texttt{1.Qxg7\#}}
+    \label{dbscanCluster11}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b
+    kq - 4 13]
+    \caption{Same cluster as Figure \ref{chess11}. Solution:
+    \texttt{1...Qxh3\#}}
+    \label{dbscanCluster12}
+  \end{minipage}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=8/8/1p3k2/p6p/P3K1pP/1P4P1/8/8 w - - 5 46]
-        \caption{Puzzle from the endgame cluster. Both sides' pawns are frozen,
-        and White wins with \texttt{1.Kf4}, shouldering the black king away
-        from the \texttt{h5} pawn.}
-        \label{dbscanCluster13}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=5k2/1N3ppp/n3p3/P7/5P2/6P1/7P/6K1 b - - 0 33]
-        \caption{Puzzle from the endgame cluster. \texttt{1...Ke7} traps the
-        knight(!), which is lost a few moves later.}
-        \label{dbscanCluster14}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/8/1p3k2/p6p/P3K1pP/1P4P1/8/8 w - - 5 46]
+    \caption{Puzzle from the endgame cluster. Both sides' pawns are frozen,
+    and White wins with \texttt{1.Kf4}, shouldering the black king away
+    from the \texttt{h5} pawn.}
+    \label{dbscanCluster13}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=5k2/1N3ppp/n3p3/P7/5P2/6P1/7P/6K1 b - - 0 33]
+    \caption{Puzzle from the endgame cluster. \texttt{1...Ke7} traps the
+    knight(!), which is lost a few moves later.}
+    \label{dbscanCluster14}
+  \end{minipage}
 \end{figure}
 
 Figure \ref{tsne3} shows HDBSCAN puzzle clustering. The megacluster which was
@@ -868,22 +861,22 @@ this method can pick up on themes that the Lichess puzzle database missed.
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=3r2r1/PR6/2pk2p1/1p1p1nP1/3PnPQ1/1PP1P3/2K5/5R2 b -
-        - 0 39]
-        \caption{Fork cluster puzzle. Black forks with \texttt{1...Nxe3+}}
-        \label{hCl1}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=
-        rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
-        \caption{Fork cluster puzzle. White wins a bishop after
-        \texttt{1.Nxe5+}}
-        \label{hCl2}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=3r2r1/PR6/2pk2p1/1p1p1nP1/3PnPQ1/1PP1P3/2K5/5R2 b -
+    - 0 39]
+    \caption{Fork cluster puzzle. Black forks with \texttt{1...Nxe3+}}
+    \label{hCl1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=
+    rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
+    \caption{Fork cluster puzzle. White wins a bishop after
+    \texttt{1.Nxe5+}}
+    \label{hCl2}
+  \end{minipage}
 \end{figure}
 
 Exploring clusters further, we observe that there exists a cluster of 61
@@ -896,23 +889,23 @@ puzzle from this cluster, and Figure \ref{chess16} contains a more complex
 puzzle.
 
 \begin{figure}[H]
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=8/8/k5r1/p5R1/5K2/P7/8/8 b - - 1 51]
-        \caption{Rook trade cluster. After \texttt{1...Rxg5 2.Kxg5 Kb5}, Black
-        wins the remaining pawn and shoulders the white king for a victory.}
-        \label{chess15}
-    \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.475\textwidth}
-        \centering
-        \chessboard[setfen=8/2p4p/1k4p1/p1r5/2R4P/1P2K3/P4P2/8 b - - 3 47]
-        \caption{Rook trade cluster. \texttt{1...Re5+} is tempting, and was
-        played in the game where this position occured. This, however, loses
-        the advantage. \texttt{1...Rxc4 2.bxc4} leads to a victory, despite the
-        material balance.}
-        \label{chess16}
-    \end{minipage}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/8/k5r1/p5R1/5K2/P7/8/8 b - - 1 51]
+    \caption{Rook trade cluster. After \texttt{1...Rxg5 2.Kxg5 Kb5}, Black
+    wins the remaining pawn and shoulders the white king for a victory.}
+    \label{chess15}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/2p4p/1k4p1/p1r5/2R4P/1P2K3/P4P2/8 b - - 3 47]
+    \caption{Rook trade cluster. \texttt{1...Re5+} is tempting, and was
+    played in the game where this position occured. This, however, loses
+    the advantage. \texttt{1...Rxc4 2.bxc4} leads to a victory, despite the
+    material balance.}
+    \label{chess16}
+  \end{minipage}
 \end{figure}
 
 These clusters are very interesting to analyse, as this method can pick up on
