@@ -14,6 +14,7 @@
 \usepackage{adjustbox}
 \usepackage{url}
 \usepackage{xskak}
+\usepackage{fancyhdr}
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{listings}
@@ -25,6 +26,15 @@
 \title{Chess Puzzle Analysis}
 \author{Mihhail Sorokin}
 % Update supervisor and other title stuff in title/title.tex
+
+
+\fancypagestyle{thesis}{
+  \fancyhf{}
+  \fancyhead[L]{\nouppercase{\leftmark}}
+  \fancyhead[R]{\thepage}
+}
+
+\pagestyle{thesis}
 
 \begin{document}
 \input{title/title.tex}
