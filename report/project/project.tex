@@ -266,15 +266,15 @@ visualisations (\Cref{treeS23}).
 \section{Overview}\label{treeS1}
 
 This method seeks to combine and build upon two approaches seen in the above
-literature review: the tree-based puzzle difficulty classification
-\citep{chessTrees} covered in Section \ref{chessTreesOverview} and chess
-position similarity using dynamic features \citep{chessMotifs} covered in
-Section \ref{chessMotifsOverview}. We hypothesise that by combining these
-approaches to construct meaningful search trees with additional node labels,
-defining a distance function for individual chess moves, and applying a
-labelled tree edit distance function \citep{editDistTrees}, we would be able to
-calculate `closeness' of chess puzzles. This could also help refine the work of
-\citet{chessTrees} by finer segregating puzzles by difficulty level.
+literature review: the tree-based puzzle difficulty classification by
+\citet{chessTrees} and chess position similarity using dynamic features by
+\citet{chessMotifs} (\Cref{typeAndDifficultyReview}).
+
+By combining these approaches to construct meaningful search trees with
+additional node labels, defining a distance function for individual chess
+moves, and applying a labelled tree edit distance function
+\citep{editDistTrees}, it will be possible to calculate `closeness' of chess
+puzzles. 
 
 \subsection{Representing Puzzles With Labelled Trees}\label{treeS11}
 
@@ -282,19 +282,19 @@ As explored by \citet{chessTrees}, `meaningful search trees' have predictive
 possibility of a puzzle's difficulty. These trees are constructed by analysing
 powerful moves that either gain, or at least do not worsen a side's position. 
 
-By additionally labelling these trees with move information, we hope to build
-upon this work. To demonstrate the intuition behind this idea, there are two
-labelled search trees shown in Figures \ref{tree1}, \ref{tree2}. These are the
-search trees for positions in Figures \ref{chess5}, \ref{chess6} which feature
-a identical and complex tactical motif. 
+By additionally labelling these trees with move information, this work can be
+built upon. To demonstrate the intuition behind this idea, there are two
+labelled search trees (\Cref{tree1,tree2}) of visually distinct, but tactically
+similar chess positions (\Cref{chess5,chess6}), which were found by
+\citet{chessLanguage} (\Cref{concWork}). 
 
-In the following trees, algebratic notation of the moves is shown, along with 4
+In these trees, algebratic notation of the moves is shown, along with 4
 slash-delimited integers, which correspond to: pieces attacked, pieces
 defended, number of attackers, number of defenders.\footnote{As the moves must
 be legal, this means a king move will never have any attackers, and any
-check/mate will have at least 1 piece attacked -- the enemy king.} Whilst the 2
+check/mate will have at least 1 piece attacked: the enemy king.} While the 2
 trees do not look similar visually (their size being the main problem), the
-first 3 plies are very similar. 
+first 3 halfmoves are almost identical. 
 
 \begin{figure}[H]
   \begin{minipage}{0.475\textwidth}
@@ -312,32 +312,31 @@ first 3 plies are very similar.
   \end{minipage}
 \end{figure}
 
-In Figures \ref{puzzle5}, \ref{puzzle6} are two chess puzzles from the paper
-`Automatic Recognition of Similar Chess Motifs' \citep{chessMotifs}. Despite
-their visual difference, these both feature a rook sacrifice, and an imminent
-queen checkmate helped by the powerful light-squared bishop. This similarity is
-not immediately obvious, but the search trees for these puzzles is almost
-identical, except for minor attacker/defender discrepancies. The trees are
-shown in Figures \ref{tree3}, \ref{tree4}. These puzzles were already
-successfully grouped by \citet{chessMotifs}.
+A clearer example of tree (\Cref{tree3,tree4}) similarity can be seen in
+simpler puzzles (\Cref{puzzle5,puzzle6}). Both of these chess puzzles feature a
+\emph{rook sacrifice}, and an imminent queen checkmate helped by the powerful
+light-squared bishop. This similarity is not immediately obvious, but the
+search trees for these puzzles is almost identical, except for minor
+attacker/defender discrepancies. These puzzles were already successfully
+grouped by \citet{chessMotifs}.
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
     0 1]
-    \caption{Taken from `Automatic Recognition of Similar Chess Motifs'
-    \citep{chessMotifs}. White mates in 3 (\texttt{1.Rh8+ Kxh8 2.Qh6+ Kg8
-    3.Qxg7#}).}
+    \caption{Taken from `Automatic Recognition of Similar Chess Motifs' by
+    \citet{chessMotifs}. White mates in three moves (\texttt{1.Rh8+ Kxh8 2.Qh6+
+    Kg8 3.Qxg7#}).}
     \label{puzzle5}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \chessboard[setfen=r5k1/5pp1/8/3p3R/2q4P/PbB2P2/1P1Q2P1/K7 w q - 0 1]
-    \caption{Also taken from `Automatic Recognition of Similar Chess
-    Motifs' \citep{chessMotifs}. White mates in 3 with the same moves
-    as the puzzle on the left.}
+    \caption{Also taken from `Automatic Recognition of Similar Chess Motifs' by
+    \citet{chessMotifs}. White mates in three with the same moves as the puzzle
+    on the left.}
     \label{puzzle6}
   \end{minipage}
 \end{figure}
@@ -346,14 +345,14 @@ successfully grouped by \citet{chessMotifs}.
   \begin{minipage}{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/trees/3.drawio.png}
-    \caption{Labelled search tree for game in Figure \ref{puzzle5}.}
+    \caption{Labelled search tree for the game above (\Cref{puzzle5}).}
     \label{tree3}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/trees/4.drawio.png}
-    \caption{Labelled search tree for game in Figure \ref{puzzle6}.}
+    \caption{Labelled search tree for the game above (\Cref{puzzle6}).}
     \label{tree4}
   \end{minipage}
 \end{figure}
@@ -363,8 +362,8 @@ successfully grouped by \citet{chessMotifs}.
 Similar to the work of \citet{chessTrees}, Stockfish (depth=20) was used to
 generate meaningful trees of a maximum depth of 5 ply. Each level of the tree
 has a maximum of 4 possible moves that are within 100 centipawns (arbitrarily
-chosen) of the best move. To simplify analysis, we transform all puzzles to be
-from White's perspective.
+chosen) of the best move. To simplify analysis, all puzzles are transformed to
+be from White's perspective.
 
 \citet{chessTrees} writes: ``[A high branching factor] means that the position
 is already so strong that it no longer matters what move the player chooses
@@ -383,23 +382,25 @@ Whilst generating the tree nodes, each move is annotated with a list of
 attributes describing the properties of these move, such as the name of the
 piece, whether it delivers check, and how many pieces it is defended by.
 
-In total, we generated 3.8 million game trees which took about 10000 hours of
-CPU time. This was done with the help of the Department of Computing's HTCondor
-cluster, managed by \citet{csgCondor}.
+In total, 3.8 million game trees were generated, which took about 10000 hours
+of CPU time. This was done with the help of the Department of Computing's
+HTCondor cluster, managed by \citet{csgCondor}.
 
 \subsection{What Makes Chess Moves Similar?}\label{treeS13}
 
-Given the list in Section \ref{treeS12}, we define a distance function
-between two given lists of attributes. All of the parameters are completely
-arbitrary and were devised by an intermediate chess player. In Table
-\ref{distanceTable}, the `penalties' for each discrepancy is listed. The final
-distance between two nodes is the sum of all of the per-item distances.
+To compare arbitrary tree nodes, a distance function was created -- this can be
+used in the tree edit algorithm to find the distance between trees. The
+properties of the moves in each node are compared, and any difference incurs a
+penalty (\Cref{distanceTable}). These penalties are completely arbitrary and
+were chosen by an intermediate chess player.
 
-The depth of the node affects the final scaling for the distance. The reasoning
-behind this is that an initial move is much more important when comparing two
-puzzles, but later moves are less important. This is also because there is
-usually a lot of differences later in the move tree, and harshly penalising led
-to worse results, from early experiments. The depth multipliers are: $4, 1,
+The penalty for adding or removing a node was set to 250. The final distance
+between the node is given by the sum of all the individual penalties,
+multiplied by a `depth multiplier'. These multipliers heavily discourage puzzle
+difference at the beginning of the solution, and allow greater differences
+towards the end. In early experiments, it was found that puzzles may have a
+similar tactic at the beginning, which is crucial to their similarity, and a
+different ending, which is less important. The depth multipliers are: $4, 1,
 0.5, 0.25, 0.1, 0.05$ for depths $0$ through to $5$, respectively.
 
 \begin{table}[H]
@@ -413,9 +414,11 @@ to worse results, from early experiments. The depth multipliers are: $4, 1,
     Pieces are queen/bishop& $50$ & Both can attack diagonally \\
     Pieces are different and not QR/QB& $100$ & \\
     &&\\
-    Differing source rank/file/diagonal & $3$ each & \\
-    Differing target rank/file/diagonal & $3$ each & \\
-    Chebyshev distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
+    Differing source rank/file/diagonals & $3$ each & There are two diagonal
+    directions:\\
+    Differing target rank/file/diagonals & $3$ each & parallel to
+    \texttt{a1}-\texttt{h8} and parallel to \texttt{a8}-\texttt{h1}. \\
+    Chebyshev move distances $d_1, d_2$ & $|d_1-d_2|$ & Move distance is often
     not important \\
     &&\\
     Capture and non-capture & $50$ & \\
@@ -433,12 +436,31 @@ to worse results, from early experiments. The depth multipliers are: $4, 1,
 \end{table}
 
 This distance function defines a distance between nodes of move trees. Together
-with the unordered labelled tree edit distance algorithm \citep{editDistTrees},
-we can now compare any two chess puzzles. As an example, Table
-\ref{distanceComparisons} shows the distances between the puzzles in Figures
-\ref{chess1}, \ref{chess2} (back-rank mate in 1), \ref{puzzle5}, \ref{puzzle6}
-(rook sacrifice, mate in 3) and \ref{chess5}, \ref{chess6} (complex mating
-sequence).
+with the unordered labelled tree edit distance algorithm by \citet{editDistTrees},
+any two chess puzzles can now be compared. 
+
+The initial results are shown in \Cref{distanceComparisons}, where 3 pairs of
+similar puzzles are compared: a \emph{back-rank mate-in-one}
+\Cref{chess1,chess2}), a \emph{rook sacrifice} featuring \emph{mate-in-three}
+(\Cref{puzzle5,puzzle6}), and finally, a complex mating sequence with a
+\emph{queen sacrifice} (\Cref{chess5,chess6}). 
+
+Due to the design of the distance function, puzzles with the same meaningful
+move tree have a distance of 0, naturally. However, as the nodes are labelled
+with extra parameters, two puzzles with identical solutions do not necessarily
+have a distance of 0.
+
+It should also be noted that this distance function, while being symmetric,
+does not satisfy the triangle inequality. Taking 3 nodes with identical
+parameters except the piece and start square, say, \texttt{Qc4e4},
+\texttt{Rc4e4}, \texttt{Bc2e4}, it is clear that $d(\texttt{Rc4e4},
+\texttt{Bc2e4}) = 100 + 9 > 25 + (50 + 9) = d(\texttt{Rc4e4}, \texttt{Qc4e4}) +
+d(\texttt{Qc4e4, Bc2e4})$.
+
+These results show that this distance function can be used to compare puzzles
+and detect if a pair is similar, as the distance between manually curated
+similar puzzles is distinctly lower than the distance between non-similar
+puzzles.
 
 \begin{table}[H]
   \centering
@@ -454,23 +476,23 @@ sequence).
     \ref{chess5} & $1422$ & $1278$ & $789$ & $795$ & $0$ & $417$ \\
     \ref{chess6} & $1714$ & $1586$ & $1033.15$ & $1035.15$ & $417$ & $0$ \\
   \end{tabular}
-  \caption{Distance matrix for a few chess puzzles.}
+  \caption{Distance matrix for a selection of chess puzzles.}
   \label{distanceComparisons}
 \end{table}
 
 \subsection{Finding Similar Positions Given a Puzzle}\label{treeS21}
 
-Generating the distance matrix in Table \ref{distanceComparisons} is
-prohibitively expensive, as it scales quadratically with the number of
-positions -- calculating this for the whole Lichess database is difficult. By
-extracting one row, however, we can rank puzzles in order of similarity to a
-given puzzle.
+Unfortunately, generating a larger distance matrix is prohibitively expensive,
+as it scales quadratically with the number of positions -- calculating this for
+the whole Lichess database is difficult. By extracting just one row, however,
+which scales linearly, a set of puzzles can be ranked by similarity to a given
+puzzle.
 
-For a simple back-rank mate in 1 puzzle, this is incredibly effective. Given
-the puzzle in Figure \ref{chess1}, we are able to find positions like the ones
-in Figures \ref{m11} and \ref{m22}. These positions are arguably more complex
-as there are more pieces on the board, making it harder to find the winning
-move.
+For a simple \emph{back-rank mate-in-one} puzzle, this is incredibly effective.
+With the basic puzzle (\Cref{chess1}), similar positions (\Cref{m11,m22}) can
+be found in the Lichess puzzle databse. These positions are arguably more
+complex as there are more pieces on the board, making it harder to find the
+winning move, but nonetheless feature a \emph{back-rank mate-in-one}.
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -491,11 +513,11 @@ move.
   \end{minipage}
 \end{figure}
 
-With a more complex position, such as the mate in two in Figure \ref{chess5},
-this method returns the positions in Figures \ref{mag1} and \ref{mag2}. These
-do not feature exactly the same tactic, but they are nonetheless similar,
-featuring a rook sacrifice on \texttt{h3} and different mating squares
-depending on White's response.
+With a more complex position, such as complex \emph{mate-in-two}
+(\Cref{chess5}), this method returns the positions in Figures \ref{mag1} and
+\ref{mag2}. These do not feature exactly the same tactic, but they are
+nonetheless similar, featuring a \emph{rook sacrifice} on \texttt{h3} and
+different mating squares depending on White's response.
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -528,11 +550,54 @@ were not available due to the nature of the problem -- there is no obvious
 vector space representing the search trees, ruling out algorithms like K-means
 \citep{lloyd1982least} or Mean Shift \citep{fukunaga1975estimation}.
 
-We attempted Agglomerative Clustering (average, single, complete)
-\citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and HDBSCAN
-\citep{hdbscan} on this subset of the database. The results are shown in Tables
-\ref{tabAC}, \ref{tabDBSCAN} and \ref{tabHDBSCAN}. Visualisations of the
-highlighted rows can be seen in Section \ref{treeS23}.
+The attempted clustering algorithms were Agglomerative Clustering (average,
+single, complete) \citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and
+HDBSCAN \citep{hdbscan} on this subset of the database. The results are shown
+in \Cref{tabAC,tabDBSCAN,tabHDBSCAN}. Visualisations of the highlighted rows
+can be seen in \Cref{treeS23}.
+
+Parameters of the algorithms were varied, and since there is no obvious way to
+analyse performance, some heuristics were recorded, such as number of clusters,
+cluster size quartlies, and whether some simple puzzles
+(\Cref{chess11,chess12,chess13,chess14}) were assigned to a cluster. A method
+that has unusual cluster sizes, or one that fails to allocate even simple
+puzzles to clusters is unlikely to be effective.
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
+    \caption{\emph{Back-rank mate-in one}: \texttt{1.Rb8\#}}
+    \label{chess11}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
+    \caption{\emph{Knight fork}s rook and king with \texttt{1...Nxc4+}}
+    \label{chess12}
+  \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=
+    r1bq1rk1/pp2nppp/1bn1p3/1N1pP3/1P6/P2B1N2/2P2PPP/R1BQK2R w KQ - 3 11]
+    \caption{\emph{Greek gift sacrifice}: \texttt{1.Bxh7+ Kxh7 2.Ng5+}}
+    \label{chess13}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
+    0 1]
+    \caption{\emph{Mate-in-three} after a \emph{rook sacrifice}: \texttt{1.Rh8+ Kxh8 2.Qh6+
+    Kg8 3.Qxg7\#}}
+    \label{chess14}
+  \end{minipage}
+\end{figure}
 
 \begin{table}[H]
   \centering
@@ -659,115 +724,75 @@ highlighted rows can be seen in Section \ref{treeS23}.
   \label{tabHDBSCAN}
 \end{table}
 
-From these tables, it is easy to identify the methods that really struggle to
+With these results, it is easy to identify the methods that really struggle to
 create meaningful clusters out of the given chess puzzles. Namely, all variants
 of Agglomerative Clustering produced results with either too many clusters
 (10000+) of 1 puzzle each, or a megacluster consisting almost of the entire
-subset of the database.. It is not obvious what an appropriate cluster count
-result is; the Lichess database has approximately 60 unique themes, which gives
-a very rough target. However, the Lichess database themes are not mutually
-exclusive, unlike the cluster membership produced by these algorithms. 
+subset of the database. It is not obvious what an appropriate cluster count is;
+the Lichess database has 60 unique themes, which gives a very rough target.
+However, these themes are not mutually exclusive, unlike the cluster membership
+produced by these algorithms. 
 
-A different heuristic used as a sign that a method is inappropriate is whether
-it assigns a cluster to 4 simple chess puzzles. These are shown below. These
-puzzles were selected as their tactical pattern is relatively common,
-especially Figures \ref{chess11} and \ref{chess12}. This means that a
-clustering method that fails to assign these a cluster (labelling them an
-`outlier') is unlikely to be effective overall.
-
-\begin{figure}[H]
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-    \caption{Backrank M1: \texttt{1.Rb8\#}}
-    \label{chess11}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
-    \caption{Knight forks rook and king with \texttt{1...Nxc4+}}
-    \label{chess12}
-  \end{minipage}
-\end{figure}
-
-
-\begin{figure}[H]
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=
-    r1bq1rk1/pp2nppp/1bn1p3/1N1pP3/1P6/P2B1N2/2P2PPP/R1BQK2R w KQ - 3 11]
-    \caption{Greek gift sacrifice: \texttt{1.Bxh7+ Kxh7 2.Ng5+}}
-    \label{chess13}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen= 4r1k1/1b3pp1/4p3/p2r4/7R/2B1Q1PP/P1P1RP1K/1q6 w - -
-    0 1]
-    \caption{Rook sacrificed for mate in three: \texttt{1.Rh8+ Kxh8 2.Qh6+
-    Kg8 3.Qxg7\#}}
-    \label{chess14}
-  \end{minipage}
-\end{figure}
-
-This allowed some parameter combinations of DBSCAN to be disqualified,
-specifically the lower epsilon ones. Epsilon is the distance at which points
-are considered to be in one neighbourhood \citep{dbscan}, and setting this too
-low means similar puzzles are not given the same cluster. The distance matrix
-in Table \ref{distanceComparisons} shows that puzzles which are similar to a
-human can have a distance of 417, and this is by no means an upper limit.
+The cluster membership of puzzles allowed some parameter combinations of DBSCAN
+to be disqualified, specifically the lower epsilon ones. Epsilon is the
+distance at which points are considered to be in one neighbourhood
+\citep{dbscan}, and setting this too low means similar puzzles are not given
+the same cluster. The small distance matrix (\Cref{distanceComparisons}) seen
+above shows that manually selected similar puzzles can have a distance of 417,
+and this is by no means an upper limit.
 
 Another interesting result is the percentage of outliers -- puzzles which have
 so little neighbours around them that they are not given a cluster and
-considered noise. This number hovers at around 50\% for HDBSCAN (Table
-\ref{tabHDBSCAN}), and drops to about 8-9\% for DBSCAN (Table \ref{tabDBSCAN}).
+considered noise. This number hovers at around 50\% for HDBSCAN
+(\Cref{tabHDBSCAN}), and drops to about 8-9\% for DBSCAN (\Cref{tabDBSCAN}).
 Unfortunately, the lowest percentage happens when DBSCAN identifies 2 clusters,
 which is far too few to draw meaningful conclusions from.
 
 \subsection{Visualisations of Puzzle Clusters}\label{treeS23}
 
-To illustrate what these clusters look like, we use t-distributed Stochastic
-Neighbor Embedding (t-SNE), a method to visualise high dimensional data in two
+To illustrate what these clusters look like, t-distributed Stochastic Neighbor
+Embedding (t-SNE) was used, a method to visualise high dimensional data in two
 or three dimensions, developed by \citet{tsne}. It should be noted that these
 visualisations can be quite misleading \citep{wattenberg2016how}, but they are
 nonetheless helpful for developing some sense of the structure and clustering.
 
 In the following diagrams, vibrant points denote the clusters of the puzzles
 above. Faintly coloured crosses are clusters which do not contain any of those
-puzzles. Faintly coloured black points are outliers.
+puzzles. Faintly coloured black points are outliers. The legend contains only
+the clusters of the known puzzles, as there is no obvious label to the other
+generated clusters.
 
-Figure \ref{tsne1} shows a t-SNE visualisation of the low-performing
-Agglomerative Clustering. There are no outliers in this method, and every
-puzzle is part of a cluster, causing multicoloured blobs. The biggest cluster,
-containing just over half of the puzzles, is the cyan one, spanning multiple
-t-SNE blobs. This megacluster contains all but one of the puzzles: the
-back-rank mate in one in Figure \ref{chess11}. This visualisation clearly shows
-that this method is not applicable.
+\Cref{tsne1} shows a t-SNE visualisation of the low-performing Agglomerative
+Clustering. There are no outliers in this method, and every puzzle is part of a
+cluster, causing multicoloured blobs. The biggest cluster, containing just over
+half of the puzzles, is the cyan one, spanning multiple t-SNE blobs. This
+megacluster contains all but one of the puzzles, the \emph{back-rank
+mate-in-one} (\Cref{chess11}), which gets its own megacluster. This
+visualisation clearly shows that this method is not applicable.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{project/img/tsne/ac_25.png}
+  \includegraphics[width=0.8\textwidth]{project/img/tsne/ac_25.png}
   \caption{Agglomerative Clustering (single linkage, distance threshold $500$)}
   \label{tsne1}
 \end{figure}
 
-A similar behaviour is seen with some of the DBSCAN attempts. Figure
-\ref{tsne2} shows one of these, and whilst this also creates a megacluster, it
-marks many puzzles as outliers. This method creates only 6 clusters, and we can
-see the big orange and blue clusters in-between the red and cyan.
+A similar behaviour is seen with some of the DBSCAN attempts (\Cref{tsne2}),
+which not only keeps the megacluster, but also marks many puzzles as outliers.
+This method creates only 6 clusters: some of these are the big orange and blue
+clusters in-between the red and cyan.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{project/img/tsne/dbscan_500_25.png}
+  \includegraphics[width=0.8\textwidth]{project/img/tsne/dbscan_500_25.png}
   \caption{DBSCAN, $\epsilon=500$, minimum samples $7$.}
   \label{tsne2}
 \end{figure}
 
-Taking samples from cluster 1 reveals that this method likely grouped all mate
-in 1 puzzles into one cluster. Along with the puzzle in Figure \ref{chess11},
-this cluster contains the puzzles in Figures \ref{dbscanCluster11} and
-\ref{dbscanCluster12}. 
+Taking samples from one of these clustes reveals that this method likely
+grouped all \emph{mate-in-one} puzzles into one cluster. Along with the known
+\emph{back-rank mate-in-one} puzzle (\Cref{chess11}), this cluster contains
+other \emph{mate-in-one} puzzles (\Cref{dbscanCluster11,dbscanCluster12}).
 
 A more interesting result lies in sampling puzzles from a different cluster,
 which does not feature any of the known puzzles. One such cluster, as
@@ -786,8 +811,8 @@ this is solved with HDBSCAN.
     \centering
     \chessboard[setfen= 2rr2k1/ppb3pp/8/3p1q2/1P1Qn2P/P2KP2p/1B6/2RR4 w - -
     2 32]
-    \caption{Puzzle sharing the cluster with Figure \ref{chess11}. Solution:
-    \texttt{1.Qxg7\#}}
+    \caption{Puzzle in the same cluster as the \emph{back-rank mate-in-one}
+    puzzle (\Cref{chess11}). Solution: \texttt{1.Qxg7\#}}
     \label{dbscanCluster11}
   \end{minipage}
   \hspace{0.05\textwidth}
@@ -795,8 +820,8 @@ this is solved with HDBSCAN.
     \centering
     \chessboard[setfen= r3k2r/pp1qbppp/2pp1n2/8/3QP3/2N2P1P/PPP2P2/R1B3RK b
     kq - 4 13]
-    \caption{Same cluster as Figure \ref{chess11}. Solution:
-    \texttt{1...Qxh3\#}}
+    \caption{Puzzle in the same cluster as the \emph{back-rank mate-in-one}
+    puzzle (\Cref{chess11}). Solution: \texttt{1...Qxh3\#}}
     \label{dbscanCluster12}
   \end{minipage}
 \end{figure}
@@ -820,18 +845,18 @@ this is solved with HDBSCAN.
   \end{minipage}
 \end{figure}
 
-Figure \ref{tsne3} shows HDBSCAN puzzle clustering. The megacluster which was
-apparent in the previous two examples has been broken up, and there are a few
-promising clusters. In total, there are 420 clusters, with a mean cluster size
-of $22.82$. Unfortunately, the Greek gift puzzle (Figure \ref{chess13}) is
-outside of any clusters, which is surprising, given the apparent effectiveness
-of this algorithm.
+HDBSCAN puzzle clustering (\Cref{tsne3}), breaks up the megacluster which was
+apparent in the previous two examples, and there are a few promising clusters.
+In total, there are 420 clusters, with a mean cluster size of $22.82$.
+Unfortunately, the \emph{Greek gift} puzzle (\Cref{chess13}) is outside of any
+clusters, which is surprising, given the apparent effectiveness of this
+algorithm.
 
 Despite this, the clustering seems to perform much better than the former
-attempts, and yields useful results. Cluster 333, under which the knight fork
-puzzle (Figure \ref{chess12}) falls, contains 18 puzzles, of which 17 are
-tagged with `short' and 15 with `fork'. Figures \ref{hCl1} and \ref{hCl2} are
-examples from this cluster. Interestingly, the puzzle in Figure \ref{hCl2} is
+attempts, and yields useful results. Cluster 333, under which the \emph{knight
+fork} puzzle (\Cref{chess12}) falls, contains 18 puzzles, of which 17 are
+tagged with `short' and 15 with `fork'. Two further puzzles are taken from this
+cluster (\Cref{hCl1,hCl2}). Interestingly, the puzzle in \Cref{hCl2} is
 not tagged as a `fork' , even though it undeniably forks the king and bishop.
 The remaining puzzles with no `fork' tag in this cluster have been manually
 checked and are indeed knight forks. This is a good result, as it shows that
@@ -839,7 +864,7 @@ this method can pick up on themes that the Lichess puzzle database missed.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{project/img/tsne/hdbscan_2_25.png}
+  \includegraphics[width=0.8\textwidth]{project/img/tsne/hdbscan_2_25.png}
   \caption{HDBSCAN, cluster selection $\epsilon=100$, minimum samples $7$.}
   \label{tsne3}
 \end{figure}
@@ -849,7 +874,8 @@ this method can pick up on themes that the Lichess puzzle database missed.
     \centering
     \chessboard[setfen=3r2r1/PR6/2pk2p1/1p1p1nP1/3PnPQ1/1PP1P3/2K5/5R2 b -
     - 0 39]
-    \caption{Fork cluster puzzle. Black forks with \texttt{1...Nxe3+}}
+    \caption{Puzzle from the \emph{knight fork} cluster. Black forks with
+    \texttt{1...Nxe3+}}
     \label{hCl1}
   \end{minipage}
   \hspace{0.05\textwidth}
@@ -857,20 +883,19 @@ this method can pick up on themes that the Lichess puzzle database missed.
     \centering
     \chessboard[setfen=
     rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
-    \caption{Fork cluster puzzle. White wins a bishop after
-    \texttt{1.Nxe5+}}
+    \caption{Puzzle from the \emph{knight fork} cluster. White wins a bishop
+    after \texttt{1.Nxe5+}}
     \label{hCl2}
   \end{minipage}
 \end{figure}
 
-Exploring clusters further, we observe that there exists a cluster of 61
-puzzles, 56 of which are tagged as `endgame', a further 37 as `rook endgame',
-and none are tagged with any sort of `mate'. This cluster appears to contain
-various rook and pawn endgames, where the opposing side offers a rook trade.
-Accepting the trade is the only winning move for the side solving the puzzle,
-and this cluster encapsulates this. Figure \ref{chess15} contains an easy
-puzzle from this cluster, and Figure \ref{chess16} contains a more complex
-puzzle.
+A different cluster of 61 puzzles was also found, 56 of which are tagged as
+`endgame', a further 37 as `rook endgame', and none are tagged with any sort of
+`mate'. This cluster appears to contain various rook and pawn endgames, where
+the opposing side offers a rook trade. Accepting the trade is the only winning
+move for the side solving the puzzle, and this cluster contains the puzzles
+with this theme. An easy example (\Cref{chess15}) and a complex example
+(\Cref{chess16}) from this cluster are featured.
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -893,24 +918,23 @@ puzzle.
 \end{figure}
 
 These clusters are very interesting to analyse, as this method can pick up on
-puzzle similarity that is not immediately obvious. During experimentation, we
-found that a larger distance matrix drastically improves the clustering
+puzzle similarity that is not immediately obvious. During experimentation, it
+was found that a larger distance matrix drastically improves the clustering
 performance; this is likely because there are more examples of niche tactical
 patterns, which means they can be clustered together. Without enough examples,
 many of these puzzles are categorised as as noise/outliers: approximately 50\%
-(see Table \ref{tabHDBSCAN}). 
+(\Cref{tabHDBSCAN}). 
 
 If a larger distance matrix can be constructed, it is likely that the
 clustering method will improve more, and allow finer categorisation of puzzles.
-The resource and time committment to do this unfortunately prohibited this.
+The resource and time commitment to do so unfortunately prohibited this.
 
 \section{$k$-Nearest Neighbours}\label{treeS3}
 
-
 Since the unsupervised clustering method (\Cref{treeS2}) produces too many
-outliers to be useful for inference, a classic $k$-nearest neighbours ($k$-NN) approach
-\citep{fix1985discriminatory} can be used both for classification of puzzle
-themes and regression of puzzle difficulty rating.
+outliers to be useful for inference, a classic $k$-nearest neighbours ($k$-NN)
+approach \citep{fix1985discriminatory} can be used both for classification of
+puzzle themes and regression of puzzle difficulty rating.
 
 It has been shown that the novel distance function (\Cref{treeS13}) has
 promising results for finding similar positions to a given puzzle
