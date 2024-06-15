@@ -8,7 +8,7 @@ The justification for why transformers may work, along with a slightly more
 formal problem statement, is outlined (\Cref{mlS0}).
 
 The data pipeline is then discussed (\Cref{mlS1}), starting with the bitboard
-encoding (\Cref{mlS1}) and ending with the training, validation, and testing
+encoding (\Cref{mlS11}) and ending with the training, validation, and testing
 splits (\Cref{mlS12}).
 
 The model is then described in detail (\Cref{mlS2}), with a high-level diagram
@@ -18,36 +18,35 @@ The model is then described in detail (\Cref{mlS2}), with a high-level diagram
 
 \subsection{Why Should This Work?}
 
-Earlier, we highlighted a number of papers which seek to find new ways to build
-on the naive bitboard representation \citep{middleGamePatterns, chessCNN,
-chess2vec} by exploring new embeddings for chess pieces and chess board
-squares. All three of the publications make the crucial point that chess pieces
-influence each other on the board, and this has to be taken into account,
-whether it is by creating extra features to represent pins and central square
-control \citep{chessCNN}, open files and attack squares
+Earlier (\Cref{bg4}), some papers were highlighted which seek to find new ways
+to build on the naive bitboard representation by exploring new embeddings for
+chess pieces and chess board squares. These publications make the crucial point
+that chess pieces influence each other on the board, and this has to be taken
+into account, whether it is by creating extra features to represent pins and
+central square control \citep{chessCNN}, open files and attack squares
 \citep{middleGamePatterns}, or the hash of the entire chess board
 \cite{chess2vec}.
 
 Continuing along the `chess board as a $N\times64$ vector' path and, given how
 puzzle tactics rely on the interaction of pieces' locations and attack squares,
 it seems natural to explore whether the transformer architecture, as described
-in the infamous paper `Attention is All you Need' \citep{attention}, can help
-extract patterns from static chess positions, which can then be used in the
-downstream task of puzzle classification and difficulty rating. Figure
-\ref{attentionLinks}, taken from this paper, shows how words/tokens can
-influence each other in the transformer encoder. At a high level, chess pieces
-and squares interact in a similar way on the chess board -- see Figure
-\ref{chessPuzzleLinks} for an example.
+in the infamous paper `Attention Is All You Need' by \citet{attention}, can
+help extract patterns from static chess positions, which can then be used in
+the downstream task of puzzle classification and difficulty rating. A
+correspondence can be drawn between how words/tokens influence each other in
+the transformer encoder (\Cref{attentionLinks}) and how chess pieces/squares
+interact on the 64 squares (\Cref{chessPuzzleLinks}).
 
 Applying transformers to chess has been done before by
-\citet{chessTransformer}, but as far as we are aware, treating individual chess
-board squares as embeddings of tokens/words has not been previously explored.
+\citet{chessTransformer}, whose work is reviewed at the end of the report
+(\Cref{chessTransformerSection}), but treating individual chess board squares
+as embeddings of tokens/words has not been previously explored.
 
 \begin{figure}[H]
-  \begin{minipage}{0.425\textwidth}
+  \begin{minipage}{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/attention.png}
-    \caption{Example of attention mechanism in the encoder. Taken from
+    \caption{Example of the attention mechanism in the encoder. Taken from
     `Attention Is All You Need' \citep{attention}.}
     \label{attentionLinks}
   \end{minipage}
@@ -72,29 +71,29 @@ board squares as embeddings of tokens/words has not been previously explored.
 \subsection{Problem Statement}
 
 Given a dataset with $N$ distinct puzzle labels ($N=60$ for the Lichess puzzle
-database), we assign each label an index $i$ and form a binary $N$-dimensional
-vector $x$ such that $x[i]=1$ iff the puzzle is labelled with that label. This
-is a common technique to reduce a multi-label classification into a more
-tractable problem.
+database), each label is assigned an index $i$ and a binary $N$-dimensional
+vector $x$ is formed such that $x[i]=1$ iff the puzzle is labelled with that
+label. This is a common technique to reduce a multi-label classification into a
+more tractable problem.
 
-With this, we seek to develop a model that, given a stationary chess position
-in FEN (see Subsection \ref{fenSection}), returns a prediction for this position's
-puzzle label vector.
+With this, a model is to be developed that, given a stationary chess position
+in FEN (\Cref{fenSection}), returns a prediction for this
+position's puzzle label vector.
 
 \section{The Data}\label{mlS1}
 
 \subsection{Bitboard Encoding}\label{mlS11}
 
 The string-based FEN is naturally incompatible for machine learning models. To
-solve this, we use $12\times8\times8$ chess bitboards, inspired by the work of
-\citet{chess2vec}. Slightly more formally, the element $B[z, x, y]$ of bitboard
-$B$ is $1$ iff there is a piece $z \in \{\texttt{p}, \texttt{P}, \texttt{n},
-\texttt{N}, \texttt{b}, \texttt{B}, \texttt{r}, \texttt{R}, \texttt{q},
-\texttt{Q}, \texttt{k}, \texttt{K}\}$\footnote{FEN-inspired -- white pieces are
-uppercase, black pieces are lowercase.} at rank $x \in \{\texttt{1},
-\texttt{2}, \texttt{3}, \texttt{4}, \texttt{5}, \texttt{6}, \texttt{7},
-\texttt{8}\}$}, file $y \in \{\texttt{a}, \texttt{b}, \texttt{c}, \texttt{d},
-\texttt{e}, \texttt{f}, \texttt{g}, \texttt{h}\}$.
+solve this, $12\times8\times8$ chess bitboards are used, which was also seen in
+the work of \citet{chess2vec}. Slightly more formally, the element $B[z, x, y]$
+of bitboard $B$ is $1$ iff there is a piece $z \in \{\texttt{p}, \texttt{P},
+\texttt{n}, \texttt{N}, \texttt{b}, \texttt{B}, \texttt{r}, \texttt{R},
+\texttt{q}, \texttt{Q}, \texttt{k}, \texttt{K}\}$\footnote{FEN-inspired --
+white pieces are uppercase, black pieces are lowercase.} at rank $x \in
+\{\texttt{1}, \texttt{2}, \texttt{3}, \texttt{4}, \texttt{5}, \texttt{6},
+\texttt{7}, \texttt{8}\}$}, file $y \in \{\texttt{a}, \texttt{b}, \texttt{c},
+\texttt{d}, \texttt{e}, \texttt{f}, \texttt{g}, \texttt{h}\}$.
 
 This method has 2 major downsides: there is no way to distinguish if en passant
 or castling is legal. However, there are only 5644 (0.14\%) puzzles tagged as
@@ -103,127 +102,40 @@ or castling is legal. However, there are only 5644 (0.14\%) puzzles tagged as
 dramatically changed by an impossible en passant/castle being possible can be
 ignored.
 
-To make learning easier (and to decrease implementation complexity), we
-transform all chess positions to be from the perspectiveof White. This has
+To make learning easier (and to decrease implementation complexity), all chess
+positions are transformed to be from the perspective of White. This has
 negligible additional overhead, as it requires a simple mirror and has great
-benefits, as the model no longer needs to distinguish between white-to-move and
-black-to-move puzzles.
+benefits, as the model no longer needs to distinguish between White-to-move and
+Black-to-move puzzles.
 
 \subsection{Train/Validation/Test Split}\label{mlS12}
 
-As is standard in statistical learning problems, we split the dataset into 3
+As is standard in statistical learning problems, the dataset is split into 3
 non-overlapping subsets: a training set containing 60\% of the data, a
 validation set containing 20\% of the data, and a test set with the remaining
 20\% of the data. The training set is used to train the model, the validation
-set is used to find the optimal set of hyperparameters (see Subsection
-\ref{mlS22}), and the test set is withheld until the final evaluation section
-to get an estimate of the model's performance on unseen data.
+set is used to find the optimal set of hyperparameters (\Cref{mlS22}), and the
+test set is withheld until the final evaluation section to get an estimate of
+the model's performance on unseen data. 
 
 
 \section{The Model}\label{mlS2}
 
-\subsection{Architecture}\label{mlS21}
+\subsection{Architecture Diagram}\label{mlS21}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{project/img/ml_diagram.png}
+  \includegraphics[width=0.75\textwidth]{project/img/ml_diagram.png}
   \caption{High-level overview of the model architecture.}
   \label{MLDiagram}
 \end{figure}
 
 \subsection{Hyperparameters}\label{mlS22}
 
-To find the best performing model, we do a grid search on some possible
-combinations of hyperparameters. Specifically, these are:
+Many hyperparameters were fixed to sensible defaults (\Cref{tabFixedparam}).
 
-\begin{itemize}
-
-  \item Number of embedding layers and channels
-    \begin{itemize}
-      \item $64$, $128$, $256$, $512$ (this configuration is shown in Figure
-        \ref{MLDiagram})
-      \item $32$, $64$, $128$, $256$
-      \item $64$, $128$, $256$
-    \end{itemize}
-
-  \item Number of transformer heads (\texttt{n\_heads})
-    \begin{itemize}
-      \item $32$
-      \item $64$
-      \item $128$
-    \end{itemize}
-
-  \item Transformer feedforward dimensions (\texttt{ff\_dim})
-    \begin{itemize}
-      \item $4096$
-      \item $8192$
-      \item $16384$
-    \end{itemize}
-
-\end{itemize}
-
-
-\begin{table}[H]
-  \centering
-  \begin{adjustbox}{width=\textwidth}
-    \begin{tabular}{lll|rrr}
-
-      \multicolumn{3}{c}{Hyperparameter} && \multicolumn{2}{c}{Average loss
-      after 5 epochs} \\
-
-      Embedding layer channels & \texttt{n\_heads} & \texttt{ff\_dim} & Total
-      parameters & Train & Validation\\
-
-      \hline
-
-      $[64, 128, 256, 512 ]$& $32$ & $4096$ & 33,114,812 & 0.08161 & 0.1016   \\
-      $[64, 128, 256, 512 ]$& $32$ & $8192$ & 33,114,812 & 0.08156 & 0.1011 \\
-      $[64, 128, 256, 512 ]$& $32$ & $16384$ & 33,114,812 & 0.08092 & 0.09937 \\[0.1cm]
-
-      $[64, 128, 256, 512 ]$& $64$ & $4096$ & && \\
-      $[64, 128, 256, 512 ]$& $64$ & $8192$ & && \\
-      $[64, 128, 256, 512 ]$& $64$ & $16384$ & && \\[0.1cm]
-
-      $[64, 128, 256, 512 ]$& $128$ & $4096$ & && \\
-      $[64, 128, 256, 512 ]$& $128$ & $8192$ & && \\
-      $[64, 128, 256, 512 ]$& $128$ & $16384$ & && \\[0.5cm]
-
-
-
-      $[32, 64, 128, 256 ]$& $32$ & $4096$ & 8,846,844 & 0.09416 & 0.09942 \\
-      $[32, 64, 128, 256 ]$& $32$ & $8192$ & 8,846,844 & 0.09452 & 0.09991 \\
-      $[32, 64, 128, 256 ]$& $32$ & $16384$ & 8,846,844 & 0.09442 & 0.09990 \\[0.1cm]
-
-      $[32, 64, 128, 256 ]$& $64$ & $4096$ & 8,978,172 & 0.09424 & 0.09987 \\
-      $[32, 64, 128, 256 ]$& $64$ & $8192$ & 8,978,172 & 0.09395 & 0.09990 \\
-      $[32, 64, 128, 256 ]$& $64$ & $16384$ & 8,978,172 & 0.09425 & 0.1001 \\[0.1cm]
-
-      $[32, 64, 128, 256 ]$& $128$ & $4096$ & 9,240,828 & 0.09351 & 0.09918 \\
-      $[32, 64, 128, 256 ]$& $128$ & $8192$ & 9,240,828 & 0.09341 & 0.09953 \\
-      $[32, 64, 128, 256 ]$& $128$ & $16384$ & 9,240,828 & 0.09387 & 0.09914 \\[0.5cm]
-
-
-
-      $[64, 128, 256 ]$& $32$ & $4096$ & 8,779,452 & 0.08161 & 0.1016 \\
-      $[64, 128, 256 ]$& $32$ & $8192$ & 8,779,452 && \\
-      $[64, 128, 256 ]$& $32$ & $16384$ & 8,779,452 && \\[0.1cm]
-
-      $[64, 128, 256 ]$& $64$ & $4096$ & && \\
-      $[64, 128, 256 ]$& $64$ & $8192$ & && \\
-      $[64, 128, 256 ]$& $64$ & $16384$ & && \\[0.1cm]
-
-      $[64, 128, 256 ]$& $128$  & $4096$ & && \\
-      $[64, 128, 256 ]$& $128$ & $8192$ & && \\
-      $[64, 128, 256 ]$& $128$ & $16384$ & && \\
-
-    \end{tabular}
-  \end{adjustbox}
-  \caption{Results of hyperparameter grid search.}
-  \label{tabHyperparam}
-\end{table}
-
-The other hyperparameters were fixed. These are shown in Table
-\ref{tabFixedparam}.
+To find the optimal hyperparameters, a grid search was performed over a subset
+of the hyperparameters (\Cref{tabHyperparam}).
 
 \begin{table}[H]
   \centering
@@ -257,12 +169,84 @@ The other hyperparameters were fixed. These are shown in Table
   \label{tabFixedparam}
 \end{table}
 
-\subsection{Training Infrastructure}\label{mlS23}
 
-The model was trained on the Department of Computing's GPU Slurm Cluster,
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{lll|rrr}
+
+      \multicolumn{3}{c}{Hyperparameter} && \multicolumn{2}{c}{Average loss
+      after 5 epochs} \\
+
+      Embedding layer channels & \texttt{n\_heads} & \texttt{ff\_dim} & Total
+      parameters & Train & Validation\\
+
+      \hline
+
+      $[64, 128, 256, 512 ]$& $32$ & $4096$ & 33,114,812 & 0.08161 & 0.1016   \\
+      $[64, 128, 256, 512 ]$& $32$ & $8192$ & 33,114,812 & 0.08156 & 0.1011 \\
+      $[64, 128, 256, 512 ]$& $32$ & $16384$ & 33,114,812 & 0.08092 & 0.09937 \\[0.1cm]
+
+      $[64, 128, 256, 512 ]$& $64$ & $4096$ & 33,377,212 & 0.08089 & 0.1026 \\
+      $[64, 128, 256, 512 ]$& $64$ & $8192$ & 33,377,212 & 0.08031 & 0.1019 \\
+      $[64, 128, 256, 512 ]$& $64$ & $16384$ & 33,377,212 && \\[0.1cm]
+
+      $[64, 128, 256, 512 ]$& $128$ & $4096$ & && \\
+      $[64, 128, 256, 512 ]$& $128$ & $8192$ & && \\
+      $[64, 128, 256, 512 ]$& $128$ & $16384$ & && \\[0.5cm]
+
+
+
+      $[32, 64, 128, 256 ]$& $32$ & $4096$ & 8,846,844 & 0.09416 & 0.09942 \\
+      $[32, 64, 128, 256 ]$& $32$ & $8192$ & 8,846,844 & 0.09452 & 0.09991 \\
+      $[32, 64, 128, 256 ]$& $32$ & $16384$ & 8,846,844 & 0.09442 & 0.09990 \\[0.1cm]
+
+      $[32, 64, 128, 256 ]$& $64$ & $4096$ & 8,978,172 & 0.09424 & 0.09987 \\
+      $[32, 64, 128, 256 ]$& $64$ & $8192$ & 8,978,172 & 0.09395 & 0.09990 \\
+      $[32, 64, 128, 256 ]$& $64$ & $16384$ & 8,978,172 & 0.09425 & 0.1001 \\[0.1cm]
+
+      $[32, 64, 128, 256 ]$& $128$ & $4096$ & 9,240,828 & 0.09351 & 0.09918 \\
+      $[32, 64, 128, 256 ]$& $128$ & $8192$ & 9,240,828 & 0.09341 & 0.09953 \\
+      $[32, 64, 128, 256 ]$& $128$ & $16384$ & 9,240,828 & 0.09387 & 0.09914 \\[0.5cm]
+
+
+
+      $[64, 128, 256 ]$& $32$ & $4096$ & 8,779,452 & 0.08161 & 0.1016 \\
+      $[64, 128, 256 ]$& $32$ & $8192$ & 8,779,452 & 0.09161 & 0.09787 \\
+      $[64, 128, 256 ]$& $32$ & $16384$ & 8,779,452 & 0.09293 & 0.09885 \\[0.1cm]
+
+      $[64, 128, 256 ]$& $64$ & $4096$ & 8,910,780 && \\
+      $[64, 128, 256 ]$& $64$ & $8192$ & 8,910,780 && \\
+      $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 && \\[0.1cm]
+
+      $[64, 128, 256 ]$& $128$  & $4096$ & && \\
+      $[64, 128, 256 ]$& $128$ & $8192$ & && \\
+      $[64, 128, 256 ]$& $128$ & $16384$ & && \\
+
+    \end{tabular}
+  \end{adjustbox}
+  \caption{Results of hyperparameter grid search.}
+  \label{tabHyperparam}
+\end{table}
+
+\subsection{Training}\label{mlS23}
+
+The models were trained on the Department of Computing's GPU Slurm Cluster,
 managed by \citet{csgGPU}. This cluster contains a multitude of NVIDIA GPUs;
 the cited website has an exhaustive list. Each epoch took approximately 1h-2h,
 depending on resource availability and hyperparameter combination.
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{The Tree-Based Approach}\label{treeChapter}
 
@@ -399,7 +383,7 @@ Whilst generating the tree nodes, each move is annotated with a list of
 attributes describing the properties of these move, such as the name of the
 piece, whether it delivers check, and how many pieces it is defended by.
 
-In total, we generated 3.7 million game trees which took about 10000 hours of
+In total, we generated 3.8 million game trees which took about 10000 hours of
 CPU time. This was done with the help of the Department of Computing's HTCondor
 cluster, managed by \citet{csgCondor}.
 
