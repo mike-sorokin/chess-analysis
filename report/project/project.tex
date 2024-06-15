@@ -118,10 +118,35 @@ set is used to find the optimal set of hyperparameters (\Cref{mlS22}), and the
 test set is withheld until the final evaluation section to get an estimate of
 the model's performance on unseen data. 
 
-
 \section{The Model}\label{mlS2}
 
-\subsection{Architecture Diagram}\label{mlS21}
+\subsection{Architecture}\label{mlS21}
+
+The overview of the model architecture is shown in \Cref{MLDiagram}. 
+
+At first, there is a pointwise convolution to expand the 12 piece bitboards to
+64 channels. This is followed by a stack of `embedding layers'. Each embedding
+layer consists of an $8\times8$ convolution with circular padding, to allow
+every chess square access to other chess squares. The channel count is kept
+constant within every embedding layer. Between each of the four embedding
+layers lies a pointwise convolution which doubles the channel count. The number
+of layers and layer channels are defined at the creation of the model and are
+optimised during the hyperparameter search stage (\Cref{mlS22}). Every
+convolution layer is followed by the rectified linear unit (ReLU) activation
+and batch normalisation \citep{ioffe2015batch}.
+
+This embeds the 64 chess squares in a 512-dimensional space. The 2D structure
+of the board is flattened, and passed through 8 standard transformer encoder
+\citep{attention} layers, featuring self-attention and a feedforward layer. The
+internal dropout and activation of the transformer encoder layer was kept
+default (0.1 and ReLU, respectively). The feedforward layer size was optimised
+(\Cref{mlS22}).
+
+Finally, the entire output is flattened and a fully connected layer connects
+this to the 60 output neurons, which correspond to each of the 60 Lichess
+puzzle database themes. As the themes are not mutually exclusive, sigmoid
+activation is used to map the outputs to the range to $(0, 1)$.
+
 
 \begin{figure}[H]
   \centering
@@ -130,45 +155,28 @@ the model's performance on unseen data.
   \label{MLDiagram}
 \end{figure}
 
-\subsection{Hyperparameters}\label{mlS22}
+\subsection{Training}\label{mlS23}
 
-Many hyperparameters were fixed to sensible defaults (\Cref{tabFixedparam}).
+Training was done for 5 epochs. Every batch, the average binary cross-entropy
+loss (\Cref{bceEq}) between the expected labels and the predicted labels was
+used as the target to be minimised. The Adam optimiser \citep{kingma2014adam},
+an extension of stochastic gradient descent, was used for weight updates, with
+a learning rate of $1\times10^{-5}$ and default $\beta_1$, $\beta_2$.
+
+\begin{equation}\label{bceEq}
+  L(y, \hat{y}) = -\frac{1}{N}\sum_{i=0}^N \hat{y}_i \log y_i +
+    (1-\hat{y}_i)\log(1-y_i)
+\end{equation}
+
+The model was trained on the Department of Computing's GPU Slurm Cluster,
+managed by \citet{csgGPU}. This cluster contains a multitude of NVIDIA GPUs;
+the cited website has an exhaustive list. Each epoch took approximately 1h-2h,
+depending on resource availability and hyperparameter combination.
+
+\subsection{Hyperparameters}\label{mlS22}
 
 To find the optimal hyperparameters, a grid search was performed over a subset
 of the hyperparameters (\Cref{tabHyperparam}).
-
-\begin{table}[H]
-  \centering
-  \begin{adjustbox}{width=\textwidth}
-    \begin{tabular}{l|rl}
-
-      Hyperparameter & Value & Notes \\
-      \hline
-
-      Epochs & 5 & Time constraints during hyperparameter search \\
-
-      Embedding activation function & ReLU & \\
-
-      Transformer encoder layers & 8 & Good balance between size and training
-      time \\
-
-      Transformer dropout & 0.1 & Default from `Attention Is All You Need' by
-      \citet{attention}\\
-
-      Transformer activation & ReLU & Default from `Attention Is All You Need'
-      by \citet{attention} \\
-
-      Optimiser & Adam & As described by \citet{kingma2014adam}. Default
-      $\beta_1$, $\beta_2$ \\
-
-      Optimiser learning rate & $1\times10^{-5}$ &
-
-    \end{tabular}
-  \end{adjustbox}
-  \caption{Fixed hyperparameters.}
-  \label{tabFixedparam}
-\end{table}
-
 
 \begin{table}[H]
   \centering
@@ -188,13 +196,7 @@ of the hyperparameters (\Cref{tabHyperparam}).
       $[64, 128, 256, 512 ]$& $32$ & $16384$ & 33,114,812 & 0.08092 & 0.09937 \\[0.1cm]
 
       $[64, 128, 256, 512 ]$& $64$ & $4096$ & 33,377,212 & 0.08089 & 0.1026 \\
-      $[64, 128, 256, 512 ]$& $64$ & $8192$ & 33,377,212 & 0.08031 & 0.1019 \\
-      $[64, 128, 256, 512 ]$& $64$ & $16384$ & 33,377,212 && \\[0.1cm]
-
-      $[64, 128, 256, 512 ]$& $128$ & $4096$ & && \\
-      $[64, 128, 256, 512 ]$& $128$ & $8192$ & && \\
-      $[64, 128, 256, 512 ]$& $128$ & $16384$ & && \\[0.5cm]
-
+      $[64, 128, 256, 512 ]$& $64$ & $8192$ & 33,377,212 & 0.08031 & 0.1019 \\ [0.5cm]
 
 
       $[32, 64, 128, 256 ]$& $32$ & $4096$ & 8,846,844 & 0.09416 & 0.09942 \\
@@ -215,7 +217,7 @@ of the hyperparameters (\Cref{tabHyperparam}).
       $[64, 128, 256 ]$& $32$ & $8192$ & 8,779,452 & 0.09161 & 0.09787 \\
       $[64, 128, 256 ]$& $32$ & $16384$ & 8,779,452 & 0.09293 & 0.09885 \\[0.1cm]
 
-      $[64, 128, 256 ]$& $64$ & $4096$ & 8,910,780 && \\
+      $[64, 128, 256 ]$& $64$ & $4096$ & 8,910,780 & 0.09253 & 0.09860 \\
       $[64, 128, 256 ]$& $64$ & $8192$ & 8,910,780 && \\
       $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 && \\[0.1cm]
 
@@ -229,12 +231,6 @@ of the hyperparameters (\Cref{tabHyperparam}).
   \label{tabHyperparam}
 \end{table}
 
-\subsection{Training}\label{mlS23}
-
-The models were trained on the Department of Computing's GPU Slurm Cluster,
-managed by \citet{csgGPU}. This cluster contains a multitude of NVIDIA GPUs;
-the cited website has an exhaustive list. Each epoch took approximately 1h-2h,
-depending on resource availability and hyperparameter combination.
 
 
 
@@ -262,6 +258,11 @@ trees (\Cref{treeS12,treeS13}) and how to measure distance between them
 Unsupervised clustering (\Cref{treeS2}) naturally follows these concepts. The
 results of this are shown (\Cref{treeS22}), along with concrete examples and
 visualisations (\Cref{treeS23}).
+
+Afterwards, $k$-Nearest Neighbours (\Cref{treeS3}) is used for the downstream
+task of puzzle label and difficulty rating prediction. Its performance is
+evaluated and compared to the deep learning approach (\Cref{mlChapter}) in the
+next chapter.
 
 \section{Overview}\label{treeS1}
 
@@ -776,7 +777,7 @@ visualisation clearly shows that this method is not applicable.
 A similar behaviour is seen with some of the DBSCAN attempts (\Cref{tsne2}),
 which not only keeps the megacluster, but also marks many puzzles as outliers.
 This method creates only 6 clusters: some of these are the big orange and blue
-clusters in-between the red and cyan.
+clusters in between the red and cyan.
 
 Taking samples from one of these clustes reveals that this method likely
 grouped all \emph{mate-in-one} puzzles into one cluster. Along with the known
