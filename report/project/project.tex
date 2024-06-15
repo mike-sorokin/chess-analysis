@@ -494,6 +494,12 @@ be found in the Lichess puzzle databse. These positions are arguably more
 complex as there are more pieces on the board, making it harder to find the
 winning move, but nonetheless feature a \emph{back-rank mate-in-one}.
 
+With a more complex position, such as the complex \emph{mate-in-two}
+(\Cref{chess5}), positions in Figures \ref{mag1} and \ref{mag2} are returned.
+These do not feature exactly the same tactic, but they are nonetheless similar,
+featuring a \emph{rook sacrifice} on \texttt{h3} and different mates depending
+on White's response.
+
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
     \centering
@@ -513,12 +519,6 @@ winning move, but nonetheless feature a \emph{back-rank mate-in-one}.
   \end{minipage}
 \end{figure}
 
-With a more complex position, such as complex \emph{mate-in-two}
-(\Cref{chess5}), this method returns the positions in Figures \ref{mag1} and
-\ref{mag2}. These do not feature exactly the same tactic, but they are
-nonetheless similar, featuring a \emph{rook sacrifice} on \texttt{h3} and
-different mating squares depending on White's response.
-
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
     \centering
@@ -537,6 +537,8 @@ different mating squares depending on White's response.
   \end{minipage}
 \end{figure}
 
+\pagebreak
+
 \section{Clustering}\label{treeS2}
 
 \subsection{Unsupervised Clustering on Puzzle Distances}\label{treeS22}
@@ -544,11 +546,10 @@ different mating squares depending on White's response.
 To take this further, a distance matrix was constructed for a random sample of
 20,000 puzzles from the Lichess puzzle database. A few labelled puzzles were
 added to help with analysis of the results. A selection of unsupervised
-clustering algorithms were ran on this matrix to identify clusters of puzzles
-which are all similar to each other. Many of the standard clustering algorithms
-were not available due to the nature of the problem -- there is no obvious
-vector space representing the search trees, ruling out algorithms like K-means
-\citep{lloyd1982least} or Mean Shift \citep{fukunaga1975estimation}.
+clustering algorithms identify clusters of similar puzzles were ran. There is
+no obvious vector space of search trees, which ruled out common algorithms like
+K-means \citep{lloyd1982least}, Mean Shift \citep{fukunaga1975estimation}, and
+others.
 
 The attempted clustering algorithms were Agglomerative Clustering (average,
 single, complete) \citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and
@@ -574,7 +575,7 @@ puzzles to clusters is unlikely to be effective.
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \chessboard[setfen=8/1N6/1K6/4k1p1/2P1Pp1p/4n2P/3R2P1/8 b - - 0 49]
-    \caption{\emph{Knight fork}s rook and king with \texttt{1...Nxc4+}}
+    \caption{\emph{Knight fork}s with \texttt{1...Nxc4+}}
     \label{chess12}
   \end{minipage}
 \end{figure}
@@ -599,9 +600,11 @@ puzzles to clusters is unlikely to be effective.
   \end{minipage}
 \end{figure}
 
+\pagebreak
+
 \begin{table}[H]
   \centering
-  \begin{adjustbox}{width=\textwidth}
+  \begin{adjustbox}{width=0.9\textwidth}
     \begin{tabular}{lr|rccccrrrrrrr}
       \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
       &&
@@ -639,7 +642,7 @@ puzzles to clusters is unlikely to be effective.
 
 \begin{table}[H]
   \centering
-  \begin{adjustbox}{width=\textwidth}
+  \begin{adjustbox}{width=0.9\textwidth}
     \begin{tabular}{rr|rccccrrrrrrr}
       \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
       &&
@@ -681,7 +684,7 @@ puzzles to clusters is unlikely to be effective.
 
 \begin{table}[H]
   \centering
-  \begin{adjustbox}{width=\textwidth}
+  \begin{adjustbox}{width=0.9\textwidth}
     \begin{tabular}{rr|rccccrrrrrrr}
       \multicolumn{2}{l}{Parameters}&&\multicolumn{4}{c}{Puzzle is in a cluster}
       &&
@@ -770,24 +773,10 @@ megacluster contains all but one of the puzzles, the \emph{back-rank
 mate-in-one} (\Cref{chess11}), which gets its own megacluster. This
 visualisation clearly shows that this method is not applicable.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{project/img/tsne/ac_25.png}
-  \caption{Agglomerative Clustering (single linkage, distance threshold $500$)}
-  \label{tsne1}
-\end{figure}
-
 A similar behaviour is seen with some of the DBSCAN attempts (\Cref{tsne2}),
 which not only keeps the megacluster, but also marks many puzzles as outliers.
 This method creates only 6 clusters: some of these are the big orange and blue
 clusters in-between the red and cyan.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{project/img/tsne/dbscan_500_25.png}
-  \caption{DBSCAN, $\epsilon=500$, minimum samples $7$.}
-  \label{tsne2}
-\end{figure}
 
 Taking samples from one of these clustes reveals that this method likely
 grouped all \emph{mate-in-one} puzzles into one cluster. Along with the known
@@ -805,6 +794,20 @@ the example puzzles in this cluster.
 This is already a promising result, but since the clustering is so coarse, it
 is no surprise that one of them captures the broad theme of endgames. Luckily,
 this is solved with HDBSCAN.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{project/img/tsne/ac_25.png}
+  \caption{Agglomerative Clustering (single linkage, distance threshold $500$)}
+  \label{tsne1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{project/img/tsne/dbscan_500_25.png}
+  \caption{DBSCAN, $\epsilon=500$, minimum samples $7$.}
+  \label{tsne2}
+\end{figure}
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -830,9 +833,11 @@ this is solved with HDBSCAN.
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \chessboard[setfen=8/8/1p3k2/p6p/P3K1pP/1P4P1/8/8 w - - 5 46]
-    \caption{Puzzle from the endgame cluster. Both sides' pawns are frozen,
-    and White wins with \texttt{1.Kf4}, shouldering the black king away
-    from the \texttt{h5} pawn.}
+    \caption{Puzzle from the endgame cluster. Both sides' pawns are frozen:
+    they are either unable to move, or moving would cause them to be captured,
+    creating a passed pawn for the opponent and losing the game. White wins
+    with \texttt{1.Kf4}, getting \emph{opposition}, shouldering the black king
+    away from the \texttt{h5} pawn.}
     \label{dbscanCluster13}
   \end{minipage}
   \hspace{0.05\textwidth}
@@ -840,9 +845,16 @@ this is solved with HDBSCAN.
     \centering
     \chessboard[setfen=5k2/1N3ppp/n3p3/P7/5P2/6P1/7P/6K1 b - - 0 33]
     \caption{Puzzle from the endgame cluster. \texttt{1...Ke7} traps the
-    knight(!), which is lost a few moves later.}
+    knight(!), which is captured by the black king a few moves later.}
     \label{dbscanCluster14}
   \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{project/img/tsne/hdbscan_2_25.png}
+  \caption{HDBSCAN, cluster selection $\epsilon=100$, minimum samples $7$.}
+  \label{tsne3}
 \end{figure}
 
 HDBSCAN puzzle clustering (\Cref{tsne3}), breaks up the megacluster which was
@@ -857,65 +869,18 @@ attempts, and yields useful results. Cluster 333, under which the \emph{knight
 fork} puzzle (\Cref{chess12}) falls, contains 18 puzzles, of which 17 are
 tagged with `short' and 15 with `fork'. Two further puzzles are taken from this
 cluster (\Cref{hCl1,hCl2}). Interestingly, the puzzle in \Cref{hCl2} is
-not tagged as a `fork' , even though it undeniably forks the king and bishop.
+not tagged as a `fork', even though it undeniably forks the king and bishop.
 The remaining puzzles with no `fork' tag in this cluster have been manually
 checked and are indeed knight forks. This is a good result, as it shows that
 this method can pick up on themes that the Lichess puzzle database missed.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{project/img/tsne/hdbscan_2_25.png}
-  \caption{HDBSCAN, cluster selection $\epsilon=100$, minimum samples $7$.}
-  \label{tsne3}
-\end{figure}
-
-\begin{figure}[H]
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=3r2r1/PR6/2pk2p1/1p1p1nP1/3PnPQ1/1PP1P3/2K5/5R2 b -
-    - 0 39]
-    \caption{Puzzle from the \emph{knight fork} cluster. Black forks with
-    \texttt{1...Nxe3+}}
-    \label{hCl1}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=
-    rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
-    \caption{Puzzle from the \emph{knight fork} cluster. White wins a bishop
-    after \texttt{1.Nxe5+}}
-    \label{hCl2}
-  \end{minipage}
-\end{figure}
-
-A different cluster of 61 puzzles was also found, 56 of which are tagged as
-`endgame', a further 37 as `rook endgame', and none are tagged with any sort of
-`mate'. This cluster appears to contain various rook and pawn endgames, where
-the opposing side offers a rook trade. Accepting the trade is the only winning
-move for the side solving the puzzle, and this cluster contains the puzzles
-with this theme. An easy example (\Cref{chess15}) and a complex example
-(\Cref{chess16}) from this cluster are featured.
-
-\begin{figure}[H]
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=8/8/k5r1/p5R1/5K2/P7/8/8 b - - 1 51]
-    \caption{Rook trade cluster. After \texttt{1...Rxg5 2.Kxg5 Kb5}, Black
-    wins the remaining pawn and shoulders the white king for a victory.}
-    \label{chess15}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}[t]{0.475\textwidth}
-    \centering
-    \chessboard[setfen=8/2p4p/1k4p1/p1r5/2R4P/1P2K3/P4P2/8 b - - 3 47]
-    \caption{Rook trade cluster. \texttt{1...Re5+} is tempting, and was
-    played in the game where this position occured. This, however, loses
-    the advantage. \texttt{1...Rxc4 2.bxc4} leads to a victory, despite the
-    material balance.}
-    \label{chess16}
-  \end{minipage}
-\end{figure}
+Another cluster of 61 puzzles was also found, 56 of which are tagged as
+`endgame', a further 37 as `rook endgame', and none feature a `mate'. This
+cluster appears to contain various rook and pawn endgames, where the opposing
+side offers a rook trade. Accepting the trade is the only winning move for the
+side solving the puzzle, and this cluster contains the puzzles with this theme.
+An easy example (\Cref{chess15}) and a complex example (\Cref{chess16}) from
+this cluster are featured.
 
 These clusters are very interesting to analyse, as this method can pick up on
 puzzle similarity that is not immediately obvious. During experimentation, it
@@ -929,6 +894,52 @@ If a larger distance matrix can be constructed, it is likely that the
 clustering method will improve more, and allow finer categorisation of puzzles.
 The resource and time commitment to do so unfortunately prohibited this.
 
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=3r2r1/PR6/2pk2p1/1p1p1nP1/3PnPQ1/1PP1P3/2K5/5R2 b -
+    - 0 39]
+    \caption{Puzzle from the \emph{knight fork} cluster. Black forks with
+    \texttt{1...Nxe3+}, hitting two major pieces at once.}
+    \label{hCl1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=
+    rn1q1b1r/pp3kpp/2p2n2/4p3/4p1b1/2NP1N2/PPP2PPP/R1BQK2R w KQ - 0 8]
+    \caption{Puzzle from the \emph{knight fork} cluster. White wins a bishop
+    after \texttt{1.Nxe5+}.}
+    \label{hCl2}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/8/k5r1/p5R1/5K2/P7/8/8 b - - 1 51]
+    \caption{Rook trade cluster. After \texttt{1...Rxg5 2.Kxg5 Kb5}, Black wins
+    the remaining white pawn and shoulders the white king for a victory.}
+    \label{chess15}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=8/2p4p/1k4p1/p1r5/2R4P/1P2K3/P4P2/8 b - - 3 47]
+    \caption{Complex position in the rook trade cluster. \texttt{1...Re5+} is
+    tempting, and was played in the game where this position occured. This,
+    however, loses the advantage. After trading rooks, \texttt{1...Rxc4
+    2.bxc4}, Black threatens to win the \texttt{c4} pawn with \texttt{2...Kc5
+    3.Kd3 Kb4}, allowing Black to capture the \texttt{a2} pawn. The white king
+    cannot trap the black king on the \texttt{a} file as both sides quickly run
+    out of pawn moves. With correct play, White is forced into
+    \emph{zugzwang}.}
+    \label{chess16}
+  \end{minipage}
+\end{figure}
+
+\pagebreak
+
 \section{$k$-Nearest Neighbours}\label{treeS3}
 
 Since the unsupervised clustering method (\Cref{treeS2}) produces too many
@@ -938,7 +949,8 @@ puzzle themes and regression of puzzle difficulty rating.
 
 It has been shown that the novel distance function (\Cref{treeS13}) has
 promising results for finding similar positions to a given puzzle
-(\Cref{treeS21}).
+(\Cref{treeS21}), so with the appropriate setup, this method should be viable
+for inference and comparison to the deep learning (\Cref{mlChapter}) method.
 
 \subsection{Label Prediction and Difficulty Regression with $k$-NN}
 
@@ -970,7 +982,7 @@ regression error to $\sim\!434.3^2$ -- a negligible difference.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.7\textwidth]{project/img/knn.png}
+  \includegraphics[width=0.9\textwidth]{project/img/knn.png}
   \caption{Effect of $k$ on label prediction and difficulty regression performance.}
   \label{knn}
 \end{figure}
