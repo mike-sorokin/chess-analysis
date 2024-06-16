@@ -1,9 +1,23 @@
 \chapter{Evaluation}\label{evalChapter}
 
+After explaining the two approachs in the previous two chapters, they are now
+compared on the tasks outlined at the beginning of the report: how good are
+these at predicting the themes in a puzzle (\Cref{evalS1}), and how good are
+they at predicting the difficulty of a puzzle (\Cref{evalS2})?
 
-\section{Prediction of Puzzle Themes}
+Each of the methods is evaluated in greater detail (\Cref{evalS3,evalS4}),
+focusing on their individual advantages and disadvantages
+(\Cref{evalS31,evalS41}).
 
-Both approaches (\Cref{mlChapter,treeChapter}) are compared with an unseen test
+Finally, each method has a unique application that the other does not: a game
+review for the deep learning transformer approach (\Cref{evalS32}) and a
+similarity comparison for the tree-based approach (\Cref{evalS42}). These are
+discussed and judged based on their own merits.
+
+
+\section{Prediction of Puzzle Themes}\label{evalS1}
+
+Both approaches (\Cref{mlChapter,treeChapter}) are compared with the unseen test
 set. The deep learning approach produced a model which can be tested against
 the entire test set, while the $k$-NN method (\Cref{treeS3}) is used to
 evaluate the tree-based approach. Due to its computational complexity
@@ -13,7 +27,35 @@ of course, increases variance, but is unavoidable without great investments in
 time and processing power.
 
 Per-label precision, recall, and F1-scores are considered for both approaches
-(\Cref{labelTable}).
+(\Cref{labelTable}). Additionally, the averaged statistics are also shown. In
+all averaging formats (micro, macro, weighted, sample), the deep learning
+transformer model outperforms the tree-based $k$-NN approach, but it is
+surprisingly close. 
+
+The macro average (unweighted mean of the statistics) suffers greatly for both
+approaches. This is due to the heavily unbalanced dataset
+(\Cref{lichessDataExpl}), so the weighted average (more common themes have a
+higher weight) is more appropriate.
+
+The theme breakdown, despite being difficult to parse, shows some interesting
+differences between the models' performances. All themes discussed in this
+section are highlighted in \Cref{labelTable} for ease of readability. The
+tree-based algorithm, which uses Stockfish for tree generation
+(\Cref{treeS12}), is perfect at identifying \texttt{mateIn1} and almost perfect
+at \texttt{mateIn2}. This is likely because mating patterns are quite common
+and the meaningful move trees constructed for them are almost identical. For
+this same reason, the tree-based model outperforms the deep learning
+transformer model at \texttt{oneMove} and \texttt{short} label prediction.
+
+On the other hand, the deep learning transformer model is almost completely
+accurate at predicting \texttt{middlegame} and \texttt{endgame} labels, along
+with the various types of endgame: \texttt{bishopEndgame},
+\texttt{knightEndgame}, \texttt{pawnEndgame}, \texttt{queenEndgame},
+\texttt{queenRookEndgame}, and \texttt{rookEndgame}. This is definitely a
+result of the model being designed in a way where it can access the whole board
+at once, and an absence of many pieces (what is a giveaway that a position is
+in an endgame), is trivial for it to detect.
+
 
 \begin{table}[H]
   \centering
@@ -30,7 +72,7 @@ Per-label precision, recall, and F1-scores are considered for both approaches
       attackingF2F7&0.8333&0.5556&0.6667&9&0.8693&0.7412&0.8002&4657\\
       attraction&0.9697&0.4156&0.5818&77&0.6858&0.1767&0.2810&26566\\
       backRankMate&0.6607&0.5692&0.6116&65&0.8236&0.8427&0.8330&24332\\
-      bishopEndgame&0.7778&0.4667&0.5833&15&0.9622&0.9774&0.9697&9476\\
+      \rowcolor{lightgray} bishopEndgame&0.7778&0.4667&0.5833&15&0.9622&0.9774&0.9697&9476\\
       bodenMate&0.0000&0.0000&0.0000&2&0.8045&0.5619&0.6617&315\\
       capturingDefender&0.0000&0.0000&0.0000&13&0.7120&0.0209&0.0406&6505\\
       castling&0.0000&0.0000&0.0000&2&0.5000&0.0071&0.0141&421\\
@@ -43,7 +85,7 @@ Per-label precision, recall, and F1-scores are considered for both approaches
       doubleCheck&0.0000&0.0000&0.0000&8&0.7518&0.2327&0.3554&3670\\
       dovetailMate&0.0000&0.0000&0.0000&2&0.7222&0.0323&0.0619&402\\
       enPassant&0.0000&0.0000&0.0000&0&0.7333&0.0189&0.0368&1165\\
-      endgame&0.8036&0.7412&0.7711&966&0.9984&0.9999&0.9992&368846\\
+      \rowcolor{lightgray} endgame&0.8036&0.7412&0.7711&966&0.9984&0.9999&0.9992&368846\\
       equality&0.0000&0.0000&0.0000&23&1.0000&0.0001&0.0002&8503\\
       exposedKing&0.0000&0.0000&0.0000&54&0.3561&0.1114&0.1697&21239\\
       fork&0.7500&0.5445&0.6309&281&0.7666&0.4015&0.5270&111331\\
@@ -52,29 +94,29 @@ Per-label precision, recall, and F1-scores are considered for both approaches
       interference&0.0000&0.0000&0.0000&9&0.6250&0.0016&0.0032&3129\\
       intermezzo&1.0000&0.0357&0.0690&28&0.7517&0.0402&0.0763&11221\\
       kingsideAttack&0.7742&0.3357&0.4683&143&0.7146&0.6082&0.6571&61522\\
-      knightEndgame&0.7000&0.4667&0.5600&15&0.9319&0.9944&0.9621&5887\\
+      \rowcolor{lightgray} knightEndgame&0.7000&0.4667&0.5600&15&0.9319&0.9944&0.9621&5887\\
       long&0.6809&0.1932&0.3009&497&0.5746&0.0754&0.1333&193731\\
       master&0.0000&0.0000&0.0000&148&0.2500&0.0001&0.0001&54003\\
       masterVsMaster&0.0000&0.0000&0.0000&11&0.0000&0.0000&0.0000&4967\\
       mate&0.9783&0.9688&0.9735&512&0.8210&0.7731&0.7963&198507\\
-      mateIn1&1.0000&1.0000&1.0000&219&0.7483&0.6803&0.7127&80324\\
-      mateIn2&0.9773&1.0000&0.9885&215&0.7727&0.5100&0.6145&91787\\
+      \rowcolor{lightgray} mateIn1&1.0000&1.0000&1.0000&219&0.7483&0.6803&0.7127&80324\\
+      \rowcolor{lightgray} mateIn2&0.9773&1.0000&0.9885&215&0.7727&0.5100&0.6145&91787\\
       mateIn3&0.9388&0.6866&0.7931&67&0.7096&0.2987&0.4204&22611\\
       mateIn4&0.6667&0.2500&0.3636&8&0.5562&0.0322&0.0608&3076\\
       mateIn5&0.0000&0.0000&0.0000&3&0.9062&0.0409&0.0783&709\\
-      middlegame&0.7285&0.7293&0.7289&931&0.9919&0.9854&0.9886&377218\\
-      oneMove&1.0000&0.8939&0.9440&245&0.7566&0.6041&0.6718&89681\\
+      \rowcolor{lightgray} middlegame&0.7285&0.7293&0.7289&931&0.9919&0.9854&0.9886&377218\\
+      \rowcolor{lightgray} oneMove&1.0000&0.8939&0.9440&245&0.7566&0.6041&0.6718&89681\\
       opening&0.5909&0.1262&0.2080&103&0.8873&0.9419&0.9138&44379\\
-      pawnEndgame&0.7846&0.9623&0.8644&53&0.9742&0.9998&0.9868&22943\\
+      \rowcolor{lightgray} pawnEndgame&0.7846&0.9623&0.8644&53&0.9742&0.9998&0.9868&22943\\
       pin&0.8261&0.1397&0.2390&136&0.6821&0.2167&0.3288&49568\\
       promotion&1.0000&0.0968&0.1765&31&0.6591&0.3415&0.4499&16317\\
-      queenEndgame&1.0000&0.2500&0.4000&16&0.9748&0.9915&0.9830&7282\\
-      queenRookEndgame&0.0000&0.0000&0.0000&17&0.9482&0.9170&0.9324&5171\\
+      \rowcolor{lightgray} queenEndgame&1.0000&0.2500&0.4000&16&0.9748&0.9915&0.9830&7282\\
+      \rowcolor{lightgray} queenRookEndgame&0.0000&0.0000&0.0000&17&0.9482&0.9170&0.9324&5171\\
       queensideAttack&0.7143&0.1471&0.2439&34&0.5973&0.4695&0.5257&10552\\
       quietMove&0.9231&0.1579&0.2697&76&0.5908&0.1497&0.2388&31019\\
-      rookEndgame&0.7400&0.3814&0.5034&97&0.9759&0.9893&0.9826&37058\\
+      \rowcolor{lightgray} rookEndgame&0.7400&0.3814&0.5034&97&0.9759&0.9893&0.9826&37058\\
       sacrifice&0.8571&0.3947&0.5405&152&0.7042&0.2853&0.4061&55181\\
-      short&0.7341&0.8385&0.7829&1090&0.6810&0.6802&0.6806&434161\\
+      \rowcolor{lightgray} short&0.7341&0.8385&0.7829&1090&0.6810&0.6802&0.6806&434161\\
       skewer&0.6667&0.2927&0.4068&41&0.7135&0.2891&0.4115&17291\\
       smotheredMate&0.5000&0.2500&0.3333&4&0.8920&0.8392&0.8648&2264\\
       superGM&0.0000&0.0000&0.0000&0&0.0000&0.0000&0.0000&462\\
@@ -95,20 +137,96 @@ Per-label precision, recall, and F1-scores are considered for both approaches
 \end{table}
 
 
-\section{Prediction of Puzzle Difficulty}
+\section{Prediction of Puzzle Difficulty}\label{evalS2}
 
 
-\section{Deep Learning Approach}
+\section{Deep Learning Approach}\label{evalS3}
 
-\subsection{Strengths and Weaknesses}
+\subsection{Strengths and Weaknesses}\label{evalS31}
 
-\subsection{Game Review}
+The advantages of this approach are clearly the better performance
+(\Cref{labelTable}) over the tree-based approach. After a relatively long
+training period, the models produced by this method can analyse new positions
+almost instantly. As the output of the model is a number in the range $(0, 1)$,
+a sense of `confidence' can be easily understood also, which is considerably
+more difficult in the tree-based approach with $k$-NN.
+
+The biggest downside is the trade-off of having fast inference: slow training
+time. This, combined with the need to search for hyperparameters (\Cref{mlS22})
+makes this method quite time and resource intensive. 
+
+\subsection{Game Review}\label{evalS32}
+
+An interesting unintended feature of this approach is that it can, of course,
+predict puzzle themes for any chess position. Since inference time is so fast,
+it is possible to iterate through any chess game's moves and analyse those
+positions. For this example, a game played by the authors was analysed, and the
+interesting positions, along with their labels, are shown below.
+
+Interestingly, the starting position (\Cref{alapin1}) has the labels
+\texttt{crushing}, \texttt{hangingPiece}, and \texttt{oneMove}. The model does
+correctly predict \texttt{opening}. 
+
+After playing a strange sequence of pawn moves (\Cref{alapin2}), Black gets a
+losing position, where White has a classic \emph{attack on f7} tactic. Indeed,
+White's best move in this position is a \emph{bishop sacrifice},
+\texttt{9.Bxf7+ Kxf7}, which walks into a knight check: \texttt{10.Ng5+ Ke8
+11.Qxg4}. Right before the \emph{bishop sacrifice} was played, the model
+correctly predicts \texttt{attackingF2F7}, \texttt{attraction} (the black king
+is attracted onto a square where it can be checked by the knight) and
+\texttt{sacrifice}. This is the only position throughout the entire game where
+the model predicts all of these themes. As a side note, the position
+immediately prior to \texttt{10.Ng5+} is labelled \texttt{discoveredAttack}. It
+is also at this point that the model stops predicting \texttt{opening} and
+begins predicting \texttt{middlegame}.
+
+This attack leads to what seems to be a mating position (\Cref{alapin3}).
+Despite this, White does not have a checkmate. The player with the white pieces
+testifies that he thought the position must have a forced mate, and the model
+agrees, predicting \texttt{mate} and \texttt{mateIn1}. Both are wrong.
+
+After many moves, White fails to convert his advantage (\Cref{alapin4}), and
+ends up in an equal position. After the rook trade, \texttt{30...Rxe1+ 31.Rxe1
+Bxd4}, the model switches its predictions from \texttt{middlegame} to
+\texttt{endgame}. No more sharp positions appear for the rest of the game and
+the model's predictions are equally uninteresting.
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1]
+    \caption{The starting position.}
+    \label{alapin1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=2rqkbnr/3npppp/p2p4/1ppB4/3PP1b1/2P2N2/PP3PPP/RNBQ1RK1 w k - 0 9]
+    \caption{White has a winning advantage.}
+    \label{alapin2}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=2rqkb1r/4p1pp/pn1pQn2/1pp3N1/3PP3/2P5/PP3PPP/RNB2RK1 w - - 3 13]
+    \caption{Despite looking lethal for Black, White does not have a forced mate.}
+    \label{alapin3}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \chessboard[setfen=1r6/3kr1b1/3p3p/3n2p1/1p1P4/6N1/P2B1PPP/1R2R1K1 b - - 4 30]
+    \caption{After the rook trade, White loses the \texttt{d4} pawn and loses the game soon after.}
+    \label{alapin4}
+  \end{minipage}
+\end{figure}
 
 
+\section{Tree-Based Approach}\label{evalS4}
 
-\section{Tree-Based Approach}
-
-\subsection{Strengths and Weaknesses}
+\subsection{Strengths and Weaknesses}\label{evalS41}
 
 The biggest weakness of the tree-based approach -- using $k$-NN to predict
 labels and difficulty -- is the inference time. This has had large consequences
@@ -140,7 +258,7 @@ possible to view a puzzle's meaningful move tree, and to reason about why a
 certain puzzle is said to be close to another, or said to have a certain label
 or difficulty.
 
-\subsection{Puzzle Similarity}
+\subsection{Puzzle Similarity}\label{evalS42}
 
 Grouping puzzles (\Cref{treeS2}) and ranking puzzles by similarity
 (\Cref{treeS21}) is unique to this method. Performance of clustering puzzles
