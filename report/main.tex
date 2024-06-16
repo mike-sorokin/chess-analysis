@@ -9,21 +9,48 @@
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
-\usepackage{amsmath}
-\usepackage{graphicx}
 \usepackage{adjustbox}
-\usepackage{url}
-\usepackage{xskak}
+\usepackage{amsmath}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
 \usepackage{float}
+\usepackage{graphicx}
 \usepackage{listings}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{xskak}
+\usepackage[super]{nth}
 \usepackage[square]{natbib}
 \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage[nameinlink]{cleveref}
 
 \title{Chess Puzzle Analysis}
 \author{Mihhail Sorokin}
 % Update supervisor and other title stuff in title/title.tex
+
+
+\fancypagestyle{thesis}{
+  \fancyhf{}
+  \fancyhead[L]{\nouppercase{\leftmark}}
+  \fancyhead[R]{\nouppercase{\rightmark}}
+  \fancyfoot[LE,RO]{\thepage}
+}
+
+\definecolor[named]{ACMPurple}{cmyk}{0.55,1,0,0.15}
+\definecolor[named]{ACMDarkBlue}{cmyk}{1,0.58,0,0.21}
+\hypersetup{colorlinks,
+linkcolor=ACMPurple,
+citecolor=ACMPurple,
+urlcolor=ACMDarkBlue,
+filecolor=ACMDarkBlue
+}
+
+\widowpenalty10000
+\clubpenalty10000
+
+\pagestyle{thesis}
 
 \begin{document}
 \input{title/title.tex}
@@ -32,38 +59,42 @@
 %%% DELETE COMMENTS LATER
 \begin{abstract}
 
-    This is the abstract placeholder. Hopefully this will get filled with
-    proper text later.
+  This is the abstract placeholder. Hopefully this will get filled with
+  proper text later.
 
 \end{abstract}
 
 \renewcommand{\abstractname}{Acknowledgements}
 \begin{abstract}
 
-    Thanks mum!
+  I would like to thank my supervisor, Nicolas Wu, for his guidance, time, and
+  laissez-faire approach, which helped me thrive and enjoy this project.
+
+  I express my gratitude to my friends and family who helped and supported
+  me during this project, and the rest of my studies. 
 
 \end{abstract}
 
 \renewcommand{\abstractname}{Ethical Discussion}
 \begin{abstract}
 
-    This project has few, if any, ethical considerations that need to be made.
-    The biggest concern is the source of the large datasets that may be used in
-    this project, namely, the Lichess puzzle database. However, this database,
-    along with all Lichess games is released under the Creative Commons CC0
-    license -- meaning there is no restriction in its use.
+  This project has few, if any, ethical considerations that need to be made.
+  The biggest concern is the source of the large datasets that may be used in
+  this project, namely, the Lichess puzzle database. However, this database,
+  along with all Lichess games is released under the Creative Commons CC0
+  license -- meaning there is no restriction in its use.
 
-    Each puzzle in this database contains a link to the game from which it was
-    extracted, and this contains a Lichess username, which is deanonymising. In
-    the initial data processing stage, these links are going to be removed, as
-    they are unnecessary for the goals of the project.
+  Each puzzle in this database contains a link to the game from which it was
+  extracted, and this contains a Lichess username, which is deanonymising. In
+  the initial data processing stage, these links are going to be removed, as
+  they are unnecessary for the goals of the project.
 
-    Another concern is the use of, and reference to specific chess games and
-    the players in them, and various chess compositions\footnote{An
-    artificially created position to showcase a uniquely challenging, rare, or
-    otherwise interesting theme.} with their authors. Other than proper
-    reference to the creators of the game or composition, there are no other
-    considerations to be made.
+  Another concern is the use of, and reference to specific chess games and
+  the players in them, and various chess compositions\footnote{An
+  artificially created position to showcase a uniquely challenging, rare, or
+  otherwise interesting theme.} with their authors. Other than proper
+  reference to the creators of the game or composition, there are no other
+  considerations to be made.
 
 \end{abstract}
 
@@ -74,7 +105,7 @@
 \input{introduction/introduction.tex}
 \input{background/background.tex}
 \input{project/project.tex}
-%\input{evaluation/evaluation.tex}
+\input{evaluation/evaluation.tex}
 \input{conclusion/conclusion.tex}
 %\input{appendix/appendix.tex}
 
