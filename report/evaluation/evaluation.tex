@@ -1,3 +1,148 @@
 \chapter{Evaluation}\label{evalChapter}
 
-This chapter is empty... for now
+
+\section{Prediction of Puzzle Themes}
+
+Both approaches (\Cref{mlChapter,treeChapter}) are compared with an unseen test
+set. The deep learning approach produced a model which can be tested against
+the entire test set, while the $k$-NN method (\Cref{treeS3}) is used to
+evaluate the tree-based approach. Due to its computational complexity
+(\Cref{treeS31}), $k$-NN uses a subset of 100,000 of its training set and is
+evaluated against a random selection of 2,000 puzzles form the test set. This,
+of course, increases variance, but is unavoidable without great investments in
+time and processing power.
+
+Per-label precision, recall, and F1-scores are considered for both approaches
+(\Cref{labelTable}).
+
+\begin{table}[H]
+  \centering
+  \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{l|rrrr|rrrr}
+      & \multicolumn{4}{c}{Tree-Based $k$-NN} & \multicolumn{4}{c}{Deep Learning Transformer} \\
+      Theme & Precision & Recall & F1-score & Support & Precision & Recall & F1-score & Support \\
+      \hline
+
+      advancedPawn&0.7660&0.3600&0.4898&100&0.7044&0.4462&0.5463&43215\\
+      advantage&0.5693&0.4091&0.4761&572&0.5966&0.5898&0.5932&235529\\
+      anastasiaMate&1.0000&0.3333&0.5000&3&0.8554&0.5338&0.6574&798\\
+      arabianMate&0.0000&0.0000&0.0000&1&0.7858&0.5842&0.6702&760\\
+      attackingF2F7&0.8333&0.5556&0.6667&9&0.8693&0.7412&0.8002&4657\\
+      attraction&0.9697&0.4156&0.5818&77&0.6858&0.1767&0.2810&26566\\
+      backRankMate&0.6607&0.5692&0.6116&65&0.8236&0.8427&0.8330&24332\\
+      bishopEndgame&0.7778&0.4667&0.5833&15&0.9622&0.9774&0.9697&9476\\
+      bodenMate&0.0000&0.0000&0.0000&2&0.8045&0.5619&0.6617&315\\
+      capturingDefender&0.0000&0.0000&0.0000&13&0.7120&0.0209&0.0406&6505\\
+      castling&0.0000&0.0000&0.0000&2&0.5000&0.0071&0.0141&421\\
+      clearance&0.5000&0.0400&0.0741&25&0.7768&0.0320&0.0616&10641\\
+      crushing&0.7094&0.6704&0.6893&892&0.7223&0.5972&0.6538&337162\\
+      defensiveMove&0.5000&0.1121&0.1832&107&0.5340&0.0462&0.0850&47212\\
+      deflection&0.7857&0.1341&0.2292&82&0.7243&0.0940&0.1664&32867\\
+      discoveredAttack&0.7778&0.2823&0.4142&124&0.6760&0.2641&0.3799&43352\\
+      doubleBishopMate&0.0000&0.0000&0.0000&0&0.7907&0.5795&0.6689&352\\
+      doubleCheck&0.0000&0.0000&0.0000&8&0.7518&0.2327&0.3554&3670\\
+      dovetailMate&0.0000&0.0000&0.0000&2&0.7222&0.0323&0.0619&402\\
+      enPassant&0.0000&0.0000&0.0000&0&0.7333&0.0189&0.0368&1165\\
+      endgame&0.8036&0.7412&0.7711&966&0.9984&0.9999&0.9992&368846\\
+      equality&0.0000&0.0000&0.0000&23&1.0000&0.0001&0.0002&8503\\
+      exposedKing&0.0000&0.0000&0.0000&54&0.3561&0.1114&0.1697&21239\\
+      fork&0.7500&0.5445&0.6309&281&0.7666&0.4015&0.5270&111331\\
+      hangingPiece&0.6538&0.2073&0.3148&82&0.6806&0.1650&0.2657&33331\\
+      hookMate&0.0000&0.0000&0.0000&5&0.6887&0.4616&0.5527&1107\\
+      interference&0.0000&0.0000&0.0000&9&0.6250&0.0016&0.0032&3129\\
+      intermezzo&1.0000&0.0357&0.0690&28&0.7517&0.0402&0.0763&11221\\
+      kingsideAttack&0.7742&0.3357&0.4683&143&0.7146&0.6082&0.6571&61522\\
+      knightEndgame&0.7000&0.4667&0.5600&15&0.9319&0.9944&0.9621&5887\\
+      long&0.6809&0.1932&0.3009&497&0.5746&0.0754&0.1333&193731\\
+      master&0.0000&0.0000&0.0000&148&0.2500&0.0001&0.0001&54003\\
+      masterVsMaster&0.0000&0.0000&0.0000&11&0.0000&0.0000&0.0000&4967\\
+      mate&0.9783&0.9688&0.9735&512&0.8210&0.7731&0.7963&198507\\
+      mateIn1&1.0000&1.0000&1.0000&219&0.7483&0.6803&0.7127&80324\\
+      mateIn2&0.9773&1.0000&0.9885&215&0.7727&0.5100&0.6145&91787\\
+      mateIn3&0.9388&0.6866&0.7931&67&0.7096&0.2987&0.4204&22611\\
+      mateIn4&0.6667&0.2500&0.3636&8&0.5562&0.0322&0.0608&3076\\
+      mateIn5&0.0000&0.0000&0.0000&3&0.9062&0.0409&0.0783&709\\
+      middlegame&0.7285&0.7293&0.7289&931&0.9919&0.9854&0.9886&377218\\
+      oneMove&1.0000&0.8939&0.9440&245&0.7566&0.6041&0.6718&89681\\
+      opening&0.5909&0.1262&0.2080&103&0.8873&0.9419&0.9138&44379\\
+      pawnEndgame&0.7846&0.9623&0.8644&53&0.9742&0.9998&0.9868&22943\\
+      pin&0.8261&0.1397&0.2390&136&0.6821&0.2167&0.3288&49568\\
+      promotion&1.0000&0.0968&0.1765&31&0.6591&0.3415&0.4499&16317\\
+      queenEndgame&1.0000&0.2500&0.4000&16&0.9748&0.9915&0.9830&7282\\
+      queenRookEndgame&0.0000&0.0000&0.0000&17&0.9482&0.9170&0.9324&5171\\
+      queensideAttack&0.7143&0.1471&0.2439&34&0.5973&0.4695&0.5257&10552\\
+      quietMove&0.9231&0.1579&0.2697&76&0.5908&0.1497&0.2388&31019\\
+      rookEndgame&0.7400&0.3814&0.5034&97&0.9759&0.9893&0.9826&37058\\
+      sacrifice&0.8571&0.3947&0.5405&152&0.7042&0.2853&0.4061&55181\\
+      short&0.7341&0.8385&0.7829&1090&0.6810&0.6802&0.6806&434161\\
+      skewer&0.6667&0.2927&0.4068&41&0.7135&0.2891&0.4115&17291\\
+      smotheredMate&0.5000&0.2500&0.3333&4&0.8920&0.8392&0.8648&2264\\
+      superGM&0.0000&0.0000&0.0000&0&0.0000&0.0000&0.0000&462\\
+      trappedPiece&1.0000&0.1481&0.2581&27&0.6613&0.1431&0.2352&11135\\
+      underPromotion&0.0000&0.0000&0.0000&0&0.0000&0.0000&0.0000&140\\
+      veryLong&0.7500&0.0180&0.0351&167&0.6098&0.0084&0.0166&62128\\
+      xRayAttack&0.0000&0.0000&0.0000&5&0.7980&0.2401&0.3691&2699\\
+      zugzwang&0.4444&0.2000&0.2759&20&0.7079&0.3097&0.4308&6604\\
+      \hline
+      micro~avg&0.7774&0.5869&0.6689&8630&\textbf{0.8025}&\textbf{0.6040}&\textbf{0.6893}&3388481\\
+      macro~avg&0.5339&0.2801&0.3324&8630&\textbf{0.7065}&\textbf{0.3996}&\textbf{0.4497}&3388481\\
+      weighted~avg&0.7416&0.5869&0.6211&8630&\textbf{0.7600}&\textbf{0.6040}&\textbf{0.6388}&3388481\\
+      samples~avg&0.7501&0.5952&0.6488&8630&\textbf{0.8063}&\textbf{0.6181}&\textbf{0.6734}&3388481\\
+    \end{tabular}
+  \end{adjustbox}
+  \caption{Breakdown of the node distance function for meaningful move trees}
+  \label{labelTable}
+\end{table}
+
+
+\section{Prediction of Puzzle Difficulty}
+
+
+\section{Deep Learning Approach}
+
+\subsection{Strengths and Weaknesses}
+
+\subsection{Game Review}
+
+
+
+\section{Tree-Based Approach}
+
+\subsection{Strengths and Weaknesses}
+
+The biggest weakness of the tree-based approach -- using $k$-NN to predict
+labels and difficulty -- is the inference time. This has had large consequences
+previously in the project, and this is an unavoidable result of using a
+relatively expensive and non-vectorisable distance function. This downside
+meant that the method could not be evaluated fully, as it was time prohibitive
+to analyse the entire test set while using the entire training set.
+
+Another downside is the sensitivity to parameters (\Cref{treeS13}). Different
+parameters in the distance function define what it means for a puzzle to be
+similar, and this, of course, can also vary drastically between chess players.
+The other set of parameters that greatly influences the performance is the tree
+generation parameters (\Cref{treeS12}). These are again non-trivial to
+optimise, as it takes a long time to regenerate the meaningful search trees.
+These parameters also change from person to person, especially the arbitrary
+move consideration boundary, which was kept at 100 centipawns in this project.
+It is very likely that a higher skilled player would not even consider
+low-performing moves when comparing if two puzzles are similar, whereas a lower
+rated player would calculate more variations deeper as he is unable to
+understand the strength of a position with intuition alone.
+
+However, within this weakness also lies the main strength of this method. This
+tunability means chess players of all skills can benefit from the distance
+function, as they can tune it to their performance.
+
+Of course, this also means this method of puzzle comparison is much more
+explainable than the black-box deep learning approach. It is completely
+possible to view a puzzle's meaningful move tree, and to reason about why a
+certain puzzle is said to be close to another, or said to have a certain label
+or difficulty.
+
+\subsection{Puzzle Similarity}
+
+Grouping puzzles (\Cref{treeS2}) and ranking puzzles by similarity
+(\Cref{treeS21}) is unique to this method. Performance of clustering puzzles
+has been shown previously 
+

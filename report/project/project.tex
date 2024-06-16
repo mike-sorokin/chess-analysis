@@ -11,8 +11,10 @@ The data pipeline is then discussed (\Cref{mlS1}), starting with the bitboard
 encoding (\Cref{mlS11}) and ending with the training, validation, and testing
 splits (\Cref{mlS12}).
 
-The model is then described in detail (\Cref{mlS2}), with a high-level diagram
-(\Cref{mlS21}), hyperparameter selection (\Cref{mlS22}).
+The process of creating the model is then described in detail (\Cref{mlS2}),
+including architecture (\Cref{mlS21}), training setup (\Cref{mlS23}), and
+hyperparameter selection (\Cref{mlS22}).
+
 
 \section{Overview}\label{mlS0}
 
@@ -155,13 +157,14 @@ activation is used to map the outputs to the range to $(0, 1)$.
   \label{MLDiagram}
 \end{figure}
 
-\subsection{Training}\label{mlS23}
+\subsection{Training Setup}\label{mlS23}
 
-Training was done for 5 epochs. Every batch, the average binary cross-entropy
-loss (\Cref{bceEq}) between the expected labels and the predicted labels was
-used as the target to be minimised. The Adam optimiser \citep{kingma2014adam},
-an extension of stochastic gradient descent, was used for weight updates, with
-a learning rate of $1\times10^{-5}$ and default $\beta_1$, $\beta_2$.
+The model was trained for 5 epochs. Every batch, the average binary
+cross-entropy loss (\Cref{bceEq}) between the expected labels and the predicted
+labels was used as the target to be minimised. The Adam optimiser
+\citep{kingma2014adam}, an extension of stochastic gradient descent, was used
+for weight updates, with a learning rate of $1\times10^{-5}$ and default
+$\beta_1$, $\beta_2$.
 
 \begin{equation}\label{bceEq}
   L(y, \hat{y}) = -\frac{1}{N}\sum_{i=0}^N \hat{y}_i \log y_i +
@@ -176,7 +179,12 @@ depending on resource availability and hyperparameter combination.
 \subsection{Hyperparameters}\label{mlS22}
 
 To find the optimal hyperparameters, a grid search was performed over a subset
-of the hyperparameters (\Cref{tabHyperparam}).
+of the hyperparameters (\Cref{tabHyperparam}). 
+
+There is evidence of overfitting for the larger models with with \~33 million
+parameters. These achieve a low training loss of approximately 0.08, but the
+validation loss greatly suffers as a result.
+
 
 \begin{table}[H]
   \centering
@@ -196,8 +204,7 @@ of the hyperparameters (\Cref{tabHyperparam}).
       $[64, 128, 256, 512 ]$& $32$ & $16384$ & 33,114,812 & 0.08092 & 0.09937 \\[0.1cm]
 
       $[64, 128, 256, 512 ]$& $64$ & $4096$ & 33,377,212 & 0.08089 & 0.1026 \\
-      $[64, 128, 256, 512 ]$& $64$ & $8192$ & 33,377,212 & 0.08031 & 0.1019 \\ [0.5cm]
-
+      $[64, 128, 256, 512 ]$& $64$ & $8192$ & 33,377,212 & \textbf{0.08031} & 0.1019 \\ [0.5cm]
 
       $[32, 64, 128, 256 ]$& $32$ & $4096$ & 8,846,844 & 0.09416 & 0.09942 \\
       $[32, 64, 128, 256 ]$& $32$ & $8192$ & 8,846,844 & 0.09452 & 0.09991 \\
@@ -211,23 +218,20 @@ of the hyperparameters (\Cref{tabHyperparam}).
       $[32, 64, 128, 256 ]$& $128$ & $8192$ & 9,240,828 & 0.09341 & 0.09953 \\
       $[32, 64, 128, 256 ]$& $128$ & $16384$ & 9,240,828 & 0.09387 & 0.09914 \\[0.5cm]
 
-
-
-      $[64, 128, 256 ]$& $32$ & $4096$ & 8,779,452 & 0.08161 & 0.1016 \\
+      $[64, 128, 256 ]$& $32$ & $4096$ & 8,779,452 & 0.09234 & 0.09823 \\
       $[64, 128, 256 ]$& $32$ & $8192$ & 8,779,452 & 0.09161 & 0.09787 \\
       $[64, 128, 256 ]$& $32$ & $16384$ & 8,779,452 & 0.09293 & 0.09885 \\[0.1cm]
 
       $[64, 128, 256 ]$& $64$ & $4096$ & 8,910,780 & 0.09253 & 0.09860 \\
-      $[64, 128, 256 ]$& $64$ & $8192$ & 8,910,780 && \\
-      $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 && \\[0.1cm]
+      $[64, 128, 256 ]$& $64$ & $8192$ & 8,910,780 & 0.09288 & 0.09896 \\
+      $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 & 0.09119 & \textbf{0.09716} \\[0.1cm]
 
-      $[64, 128, 256 ]$& $128$  & $4096$ & && \\
-      $[64, 128, 256 ]$& $128$ & $8192$ & && \\
-      $[64, 128, 256 ]$& $128$ & $16384$ & && \\
+      $[64, 128, 256 ]$& $128$  & $4096$ & 9,173,436 & 0.09166 & 0.09808 \\
+      $[64, 128, 256 ]$& $128$ & $8192$ & 9,173,436 & 0.09154 & 0.09770 \\
 
     \end{tabular}
   \end{adjustbox}
-  \caption{Results of hyperparameter grid search.}
+  \caption{Results of the hyperparameter grid search.}
   \label{tabHyperparam}
 \end{table}
 
