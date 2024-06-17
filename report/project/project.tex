@@ -1,8 +1,8 @@
 \chapter{The Deep Learning Approach}\label{mlChapter}
 
 This chapter describes and analyses a novel approach to the specific problem of
-chess puzzle classification, inspired by the recent unstoppable advancements in
-the field of natural language processing.
+chess puzzle classification, inspired by the recent advancements in the field
+of natural language processing.
 
 The justification for why transformers may work, along with a slightly more
 formal problem statement, is outlined (\Cref{mlS0}).
@@ -17,7 +17,7 @@ hyperparameter selection (\Cref{mlS22}).
 
 Finally, the internals of the model are explored (\Cref{mlS3}) by visualising
 the input for specific chess boards (\Cref{mlS32}). These are then discussed
-(\Cref{mlS33}).
+(\Cref{mlS33}). The model is fully evaluated in \Cref{evalChapter}, \nameref{evalChapter}.
 
 
 \section{Overview}\label{mlS0}
@@ -31,7 +31,7 @@ that chess pieces influence each other on the board, and this has to be taken
 into account, whether it is by creating extra features to represent pins and
 central square control \citep{chessCNN}, open files and attack squares
 \citep{middleGamePatterns}, or the hash of the entire chess board
-\cite{chess2vec}.
+\citep{chess2vec}.
 
 Continuing along the `chess board as a $N\times64$ vector' path and, given how
 puzzle tactics rely on the interaction of pieces' locations and attack squares,
@@ -52,7 +52,7 @@ as embeddings of tokens/words has not been previously explored.
   \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/attention.png}
-    \caption{Example of the attention mechanism in the encoder. Taken from
+    \caption{Attention mechanism in the encoder. Taken from
     `Attention Is All You Need' \citep{attention}.}
     \label{attentionLinks}
   \end{minipage}
@@ -155,7 +155,7 @@ to $(0, 1)$.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.55\textwidth]{project/img/ml_diagram.png}
+  \includegraphics[width=0.65\textwidth]{project/img/ml_diagram.png}
   \caption{High-level overview of the model architecture.}
   \label{MLDiagram}
 \end{figure}
@@ -167,7 +167,7 @@ The model was trained for 5 epochs. The data was batched into batches of size
 expected labels and the predicted labels was used as the target to be
 minimised. The Adam optimiser \citep{kingma2014adam}, an extension of
 stochastic gradient descent, was used for weight updates, with a learning rate
-of $1\times10^{-5}$ and default $\beta_1$, $\beta_2$.
+of $1\times10^{-5}$ and default coefficients $\beta_1$, $\beta_2$.
 
 \begin{equation}\label{bceEq}
   L(y, \hat{y}) = -\frac{1}{N}\sum_{i=0}^N \hat{y}_i \log y_i +
@@ -182,7 +182,7 @@ depending on resource availability and hyperparameter combination.
 \subsection{Hyperparameters}\label{mlS22}
 
 To find the optimal hyperparameters, a grid search was performed over a subset
-of the hyperparameters (\Cref{tabHyperparam}). 
+of the possible hyperparameter space (\Cref{tabHyperparam}). 
 
 There is evidence of overfitting for the larger models with with $\sim\!33$
 million parameters. These achieve a low training loss of approximately 0.08,
@@ -192,7 +192,8 @@ is highlighted) was selected.
 
 The loss curves for this model over the 5 epochs are shown (\Cref{lossCurves}).
 While these do not show total convergence, the performance of the model was
-adequate and to keep it fair for all combinations, no more training was done.
+adequate. To keep it fair for all combinations, no further training was done
+after the search.
 
 \begin{table}[H]
   \centering
@@ -259,9 +260,9 @@ experiments, multiple outputs and losses were attempted, but this led to
 degradation of performance. To allow the model to predict puzzle difficulty, a
 slight modification was made to the architecture (\Cref{mlS21}). 
 
-The output 60 neurons were replaced with just 1: the difficulty rating
+The 60 output neurons were replaced with just 1: the difficulty rating
 prediction. To make learning easier, all difficulties were scaled down by a
-factor of 3500. As the difficulty rating range in the dataset is $(399, 3331)$
+factor of 3500. As the difficulty rating range in the dataset is $[399, 3331]$
 (\Cref{dataHistogram}), this scaled all ratings to a reasonable range. There
 was no activation function for the final neuron.
 
@@ -274,22 +275,23 @@ entirely new model.
 
 Previously, the idea of chess pieces and squares interacting with each other
 was shown (\Cref{chessPuzzleLinks}). With a trained model, this can now be
-explored further. By extracting the attention values and weights from each of
-the transformer layers, as the bitboards flow through the model, and unflattening
-them back into a $8\times8$ chess board, some interesting patterns can be seen.
+explored further. As the bitboards flow through the model, attention values and
+weights can be extracted from each transformer encoder layer. By unflattening
+them back into a $8\times8$ chess board, interesting patterns are seen.
 
 \subsection{Interpretation}
 
 Attention values and weights are shown below for the puzzle which was used to
 illustrate how transformers could work in this problem
-(\Cref{chessPuzzleLinks}). The values diagram (\Cref{atnP}) shows each channel
-of the chess board atthat stage in the model. In the case of this model, there
+(\Cref{chessPuzzleLinks}). The values diagram (\Cref{atnZ}) shows each channel
+of the chess board at that stage in the model. In the case of this model, there
 are 256 channels, each of size $8\times8$. 
 
-The weights diagram (\Cref{atnP1}) shows the weights of the self-attention
+The weights diagram (\Cref{atnZ1}) shows the weights of the self-attention
 within the transformer architecture. This diagram has 64 heatmaps, arranged in
-a chess-like arrangement. Each heatmap represents the weights it assigns to the
-other board locations when updating its own embedding. 
+a chess board-like arrangement. Each heatmap represents the weights it assigns
+to the other board locations when updating its own embedding in the
+self-attention stage.
 
 To see a concrete example, take the top left heatmap, corresponding to the
 \texttt{a8} square. This value assigns a very positive weight to the
@@ -301,15 +303,15 @@ negative) weight to the middle ranks in the board.
   \begin{minipage}{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/attention_maps/attention_3.png}
-    \caption{Attention values in layer 3 of the transformer encoder.}
-    \label{atnP}
+    \caption{Chess puzzle attention values in layer 3 of the transformer encoder.}
+    \label{atnZ}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/attention_maps/weights_4.png}
-    \caption{Attention weights in layer 4 of the transformer encoder.}
-    \label{atnP1}
+    \caption{Chess puzzle attention weights in layer 4 of the transformer encoder.}
+    \label{atnZ1}
   \end{minipage}
 \end{figure}
 
@@ -337,6 +339,8 @@ This, of course, stems from the moveset of the rook.
     \label{atnR}
   \end{minipage}
 \end{figure}
+
+\newpage
 
 \paragraph{Bishop} This bishop is a light-squared bishop. Bishops can only move
 diagonally, and this means that half of the board will never be accessible to
@@ -383,6 +387,7 @@ queen has vision of \texttt{h7} from \texttt{e4}.
   \end{minipage}
 \end{figure}
 
+\newpage
 
 \paragraph{Knight} The knight heatmaps have a checkerboard pattern similar to
 the bishop's. This is likely a result of its moveset: a knight attacks
@@ -403,6 +408,7 @@ squares of the opposite colour to the square it is on.
     \label{atnN1}
   \end{minipage}
 \end{figure}
+
 
 \paragraph{Pawn} Pawns can only move forwards and usually come in groups,
 aligned horizontally. This is clearly seen in both of the attention heatmaps.
@@ -426,6 +432,7 @@ pawns supported by, or supporting the \texttt{e4} pawn.
   \end{minipage}
 \end{figure}
 
+\newpage
 
 \paragraph{King} Finally, the king. The attention weights heatmap
 (\Cref{atnK1}) shows heavy importance of the \nth{1} and \nth{8} files -- where
@@ -451,7 +458,7 @@ the kings are usually located.
 \subsection{Discussion}\label{mlS33}
 
 The patterns generated by the model (\Cref{mlS32}) are incredible, given the
-model has 0 information about the game of chess other than a collection of
+model has zero information about the game of chess other than a collection of
 static positions and labels. This is reminiscent of the work of
 \citet{chess2vec} (\Cref{bg4}), who were able to find success without
 explicitly implementing chess logic.
@@ -501,46 +508,31 @@ puzzles.
 \subsection{Representing Puzzles With Labelled Trees}\label{treeS11}
 
 As explored by \citet{chessTrees}, `meaningful search trees' have predictive
-possibility of a puzzle's difficulty. These trees are constructed by analysing
+ability of a puzzle's difficulty. These trees are constructed by analysing
 powerful moves that either gain, or at least do not worsen a side's position. 
 
-By additionally labelling these trees with move information, this work can be
-built upon. To demonstrate the intuition behind this idea, there are two
-labelled search trees (\Cref{tree1,tree2}) of visually distinct, but tactically
-similar chess positions (\Cref{chess5,chess6}), which were found by
-\citet{chessLanguage} (\Cref{concWork}). 
+This work can be built upon by additionally labelling these trees with move
+information. To build the intuition behind this idea, there are two labelled
+search trees (\Cref{tree3,tree4}) of visually distinct, but tactically
+identical chess positions (\Cref{puzzle5,puzzle6}), which were found by the
+work of \citet{chessMotifs}.
 
 In these trees, algebratic notation of the moves is shown, along with 4
 slash-delimited integers, which correspond to: pieces attacked, pieces
 defended, number of attackers, number of defenders.\footnote{As the moves must
 be legal, this means a king move will never have any attackers, and any
-check/mate will have at least 1 piece attacked: the enemy king.} While the 2
-trees do not look similar visually (their size being the main problem), the
-first 3 halfmoves are almost identical. 
-
-\begin{figure}[H]
-  \begin{minipage}{0.475\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{project/img/trees/1.drawio.png}
-    \caption{Labelled search tree for game in \ref{chess5}}
-    \label{tree1}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}{0.475\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{project/img/trees/2.drawio.png}
-    \caption{Labelled search tree for game in \ref{chess6}}
-    \label{tree2}
-  \end{minipage}
-\end{figure}
-
-A clearer example of tree (\Cref{tree3,tree4}) similarity can be seen in
-simpler puzzles (\Cref{puzzle5,puzzle6}). Both of these chess puzzles feature a
-\emph{rook sacrifice}, and an imminent queen checkmate helped by the powerful
-light-squared bishop. This similarity is not immediately obvious, but the
-search trees for these puzzles is almost identical, except for minor
-attacker/defender discrepancies. These puzzles were already successfully
+check/mate will have at least 1 piece attacked: the enemy king.} Both of these
+chess puzzles feature a \emph{rook sacrifice}, and an imminent queen checkmate
+helped by the powerful light-squared bishop. This similarity is not immediately
+obvious, but the search trees for these puzzles are almost identical, except for
+minor attacker/defender discrepancies. These puzzles were already successfully
 grouped by \citet{chessMotifs}.
+
+More complicated positions (\Cref{chess5,chess6}) naturally have more
+complicated move trees. Despite being visually distinct, these positions are also
+tactically similar. They were found by \citet{chessLanguage} (\Cref{concWork}).
+While the 2 trees do not look similar visually (their size being the main
+problem), the first 3 halfmoves are almost identical. 
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -579,13 +571,29 @@ grouped by \citet{chessMotifs}.
   \end{minipage}
 \end{figure}
 
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/1.drawio.png}
+    \caption{Labelled search tree for game in \Cref{chess5}}
+    \label{tree1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/trees/2.drawio.png}
+    \caption{Labelled search tree for game in \Cref{chess6}}
+    \label{tree2}
+  \end{minipage}
+\end{figure}
+
 \subsection{Meaningful Tree Generation}\label{treeS12}
 
 Similar to the work of \citet{chessTrees}, Stockfish (depth=20) was used to
-generate meaningful trees of a maximum depth of 5 ply. Each level of the tree
-has a maximum of 4 possible moves that are within 100 centipawns (arbitrarily
-chosen) of the best move. To simplify analysis, all puzzles are transformed to
-be from White's perspective.
+generate meaningful trees of a maximum depth of 5 halfmoves. Each level of the
+tree has a maximum of 4 possible moves that are within 100 centipawns
+(arbitrarily chosen) of the best move. To simplify analysis, all puzzles are
+transformed to be from White's perspective.
 
 \citet{chessTrees} writes: ``[A high branching factor] means that the position
 is already so strong that it no longer matters what move the player chooses
@@ -597,14 +605,14 @@ move for the winning side is equally good). Finally, a checkmate naturally
 indicates that the puzzle is solved. 
 
 This analysis is continued until either every branch of the puzzle is
-exhausted, whether because it has solved the puzzle, or ran out of the maximum
-depth of 5.
+exhausted. This happens because it either has solved the puzzle, or reached the
+maximum depth.
 
 Whilst generating the tree nodes, each move is annotated with a list of
 attributes describing the properties of these move, such as the name of the
 piece, whether it delivers check, and how many pieces it is defended by.
 
-In total, 3.8 million game trees were generated, which took about 10000 hours
+In total, 3.8 million game trees were generated, which took about 10,000 hours
 of CPU time. This was done with the help of the Department of Computing's
 HTCondor cluster, managed by \citet{csgCondor}.
 
@@ -657,9 +665,10 @@ different ending, which is less important. The depth multipliers are: $4, 1,
   \label{distanceTable}
 \end{table}
 
-This distance function defines a distance between nodes of move trees. Together
-with the unordered labelled tree edit distance algorithm by \citet{editDistTrees},
-any two chess puzzles can now be compared. 
+This distance function defines a distance between nodes of meaningful move
+trees. Together with the unordered labelled tree edit distance algorithm by
+\citet{editDistTrees}, any two chess puzzles can now be compared by comparing
+their trees.
 
 The initial results are shown in \Cref{distanceComparisons}, where 3 pairs of
 similar puzzles are compared: a \emph{back-rank mate-in-one}
@@ -728,7 +737,7 @@ on White's response.
     \chessboard[setfen= 6k1/pr4pR/2p2pP1/2Pp4/5N2/P1r2P2/3RP3/3K4 b - - 1
     28]
     \caption{Distance $40$ to Figure \ref{chess1}. Solution:
-    \texttt{1...Rb1\#}}
+    \texttt{1...Rb1\#}.}
     \label{m11}
   \end{minipage}
   \hspace{0.05\textwidth}
@@ -736,7 +745,7 @@ on White's response.
     \centering
     \chessboard[setfen=1r4k1/6p1/p1R1p2p/8/P6P/3R4/2P2rP1/3K4 b - - 0 30]
     \caption{Distance $0$ to Figure \ref{chess1}. Solution:
-    \texttt{1...Rb1\#}}
+    \texttt{1...Rb1\#}.}
     \label{m22}
   \end{minipage}
 \end{figure}
@@ -746,7 +755,7 @@ on White's response.
     \centering
     \chessboard[setfen=2k3r1/p1p4p/8/pP1QR3/P2P3P/2P3r1/5RPK/3q4 b - - 2 30]
     \caption{Distance $255$ to Figure \ref{chess5}. Solution:
-    \texttt{1...Rh3+ (2.Kxh3 Qh1\#) (2.gxh3 Qg1\#)}}
+    \texttt{1...Rh3+ (2.Kxh3 Qh1\#) (2.gxh3 Qg1\#)}.}
     \label{mag1}
   \end{minipage}
   \hspace{0.05\textwidth}
@@ -768,16 +777,16 @@ on White's response.
 To take this further, a distance matrix was constructed for a random sample of
 20,000 puzzles from the Lichess puzzle database. A few labelled puzzles were
 added to help with analysis of the results. A selection of unsupervised
-clustering algorithms identify clusters of similar puzzles were ran. There is
-no obvious vector space of search trees, which ruled out common algorithms like
-K-means \citep{lloyd1982least}, Mean Shift \citep{fukunaga1975estimation}, and
-others.
+clustering algorithms to identify clusters of similar puzzles were trialled.
+There is no obvious vector space of search trees, which ruled out common
+algorithms like K-means \citep{lloyd1982least}, Mean Shift
+\citep{fukunaga1975estimation}, and others.
 
-The attempted clustering algorithms were Agglomerative Clustering (average,
-single, complete) \citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and
-HDBSCAN \citep{hdbscan} on this subset of the database. The results are shown
-in \Cref{tabAC,tabDBSCAN,tabHDBSCAN}. Visualisations of the highlighted rows
-can be seen in \Cref{treeS23}.
+The attempted clustering algorithms on this subset of the dataset were
+Agglomerative Clustering (average, single, complete)
+\citep{szekely2005hierarchical}, DBSCAN \citep{dbscan}, and HDBSCAN
+\citep{hdbscan}. The results are shown in \Cref{tabAC,tabDBSCAN,tabHDBSCAN}.
+Visualisations of the highlighted rows can be seen in \Cref{treeS23}.
 
 Parameters of the algorithms were varied, and since there is no obvious way to
 analyse performance, some heuristics were recorded, such as number of clusters,
@@ -952,7 +961,7 @@ puzzles to clusters is unlikely to be effective.
 With these results, it is easy to identify the methods that really struggle to
 create meaningful clusters out of the given chess puzzles. Namely, all variants
 of Agglomerative Clustering produced results with either too many clusters
-(10000+) of 1 puzzle each, or a megacluster consisting almost of the entire
+(10,000+) of 1 puzzle each, or a megacluster consisting almost of the entire
 subset of the database. It is not obvious what an appropriate cluster count is;
 the Lichess database has 60 unique themes, which gives a very rough target.
 However, these themes are not mutually exclusive, unlike the cluster membership
@@ -977,7 +986,7 @@ which is far too few to draw meaningful conclusions from.
 
 To illustrate what these clusters look like, t-distributed Stochastic Neighbor
 Embedding (t-SNE) was used, a method to visualise high dimensional data in two
-or three dimensions, developed by \citet{tsne}. It should be noted that these
+or three dimensions developed by \citet{tsne}. It should be noted that these
 visualisations can be quite misleading \citep{wattenberg2016how}, but they are
 nonetheless helpful for developing some sense of the structure and clustering.
 
@@ -988,7 +997,7 @@ the clusters of the known puzzles, as there is no obvious label to the other
 generated clusters.
 
 \Cref{tsne1} shows a t-SNE visualisation of the low-performing Agglomerative
-Clustering. There are no outliers in this method, and every puzzle is part of a
+Clustering. There are no outliers in this method and every puzzle is part of a
 cluster, causing multicoloured blobs. The biggest cluster, containing just over
 half of the puzzles, is the cyan one, spanning multiple t-SNE blobs. This
 megacluster contains all but one of the puzzles, the \emph{back-rank
@@ -1079,12 +1088,12 @@ this is solved with HDBSCAN.
   \label{tsne3}
 \end{figure}
 
-HDBSCAN puzzle clustering (\Cref{tsne3}), breaks up the megacluster which was
-apparent in the previous two examples, and there are a few promising clusters.
-In total, there are 420 clusters, with a mean cluster size of $22.82$.
-Unfortunately, the \emph{Greek gift} puzzle (\Cref{chess13}) is outside of any
-clusters, which is surprising, given the apparent effectiveness of this
-algorithm.
+HDBSCAN puzzle clustering (\Cref{tsne3}) breaks up the megacluster which was
+present in the previous two examples, while also producing a few other
+promising clusters. In total, there are 420 clusters, with a mean cluster size
+of $22.82$. Unfortunately, the \emph{Greek gift} puzzle (\Cref{chess13}) is
+outside of any clusters, which is surprising, given the apparent effectiveness
+of this algorithm.
 
 Despite this, the clustering seems to perform much better than the former
 attempts, and yields useful results. Cluster 333, under which the \emph{knight
@@ -1185,12 +1194,12 @@ difficulty is the mean of the difficulty of the neighbours.
 \subsection{Search for the Best $k$}\label{treeS31}
 
 One of the downsides of $k$-NN is the slow inference performance. This makes
-tuning the parameter $k$ difficult, as the running time is roughtly
-proportional to the multiple of the training set size and validation set size.
-To address this, random subsets of the training and validation sets
-(\Cref{mlS12}) of size 20,000 each were used. This amount showed acceptable
-clustering performance (\Cref{treeS22}), so it will provide a reasonable
-starting point for this approach.
+tuning the parameter $k$ difficult, as the running time is roughly proportional
+to the multiple of the training set size and validation set size. To address
+this, random subsets of the training and validation sets (\Cref{mlS12}) of size
+20,000 each were used. This amount showed acceptable clustering performance
+(\Cref{treeS22}), so it will provide a reasonable starting point for this
+approach.
 
 Paramater $k$ was varied from $1$-$100$. The results (\Cref{knn}) show that
 $k=24$ is optimal for label prediction, with an average of $2.8011$ incorrect
@@ -1199,8 +1208,9 @@ regression, $k=22$ is best, with an average mean squared difficulty rating
 error of $\sim\!434.0^2$. 
 
 Even though different $k$ values for the two tasks are possible, $k=24$ was
-chosen for both, as it simplifies implementation and increases difficulty
-regression error to $\sim\!434.3^2$ -- a negligible difference. 
+chosen for both label prediction and difficulty regression, as it simplifies
+implementation and as a trade-off, increases difficulty regression error to
+$\sim\!434.3^2$ -- a negligible difference. 
 
 \begin{figure}[H]
   \centering

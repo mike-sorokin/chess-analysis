@@ -1,7 +1,7 @@
 \chapter{Background}\label{backgroundChapter}
 
-After some brief motivation (\Cref{bg1}), this chapter covers some prerequisite
-knowledge of chess concepts and important work in this topic.
+Starting with some brief motivation (\Cref{bg1}), this chapter covers some
+prerequisite knowledge of chess concepts and important work in this field.
 
 The major chess notation formats are described (\Cref{bg2}), along with some
 example puzzle themes (\Cref{bg3}) afterwards.
@@ -34,16 +34,16 @@ by a professional chess player's drawing of a position from memory
 \citet{thoughtAndChoice} writes, ``the pieces themselves do not appear in the
 drawing: rather the lines of force that go out from them''. This heuristic
 allows expert human players to quickly hone in on the correct moves
-\citep{bilalic2010mechanisms} and significantly reduces their search space,
-when compared to a naive brute-force search, which is the most common strategy
-for chess engines. When analysing positions, even the most basic chess engines
-are able to calculate the most accurate line (except some pathological cases),
-but they are unable to draw similarities between different positions.
+\citep{bilalic2010mechanisms} and significantly reduces their search space
+compared to a naive brute-force search, which is the most common strategy for
+chess engines. When analysing positions, even the most basic chess engines are
+able to calculate the most accurate line (except some pathological cases), but
+they are unable to draw similarities between different positions.
 
 Two sample chess positions are shown (\Cref{chess1,chess2}), featuring
 \emph{back-rank checkmates} -- one of the first tactical patterns that a
 beginner might learn. A castled king is forced to stay on the back-rank due to
-the configuration of his men, and an opposing heavy piece exploits this
+the configuration of his pieces, and an opposing heavy piece exploits this
 weakness by delivering checkmate. It is already non-trivial to programmatically
 identify this type of tactic, as a checkmate delivered to a king on the back
 rank is not necessarily a \emph{back-rank checkmate}.
@@ -56,7 +56,7 @@ rank?
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \chessboard[setfen=6k1/5ppp/8/8/8/8/r4PPP/1R4K1 w - - 0 1]
-    \caption{A trivial back-rank checkmate, White mates with
+    \caption{A trivial back-rank checkmate: White mates with
     \texttt{1.Rb8\#}.}
     \label{chess1}
   \end{minipage}
@@ -71,12 +71,18 @@ rank?
 
 \section{Chess Notation}\label{bg2}
 
+This report assumes that the reader is familiar with basic chess rules such as
+piece movement.
+
 For many decades, the standard for chess notation has been the Algebraic
 System, where, generally speaking, moves are encoded by the piece abbreviation
 (\texttt{Q} for queen, \texttt{K} for king, \texttt{N} for kNight) and a
 reference to the destination square, which can be any letter \texttt{a-h} and
-any number \texttt{1-8} \citep{fideNotation}. This report assumes that the
-reader is familiar with the basic chess rules such as piece movement patterns.
+any number \texttt{1-8} \citep{fideNotation}. The letter \texttt{x} prior to a
+destination square means the move is a capture; the special sequences
+\texttt{O-O} and \texttt{O-O-O} mean castling kingside and queenside
+respectively. There are a number of rules to disambiguate uncertain moves, but
+these are not crucial to the project and omitted for the sake of brevity.
 
 When storing chess games and positions in a computer-readable format was
 required, many formats were proposed by various people, but Portable Game
@@ -88,12 +94,11 @@ PGN is a specific way to write chess moves in a text file. An example, taken
 from Section 2.3 of the PGN Standard \citep{pgnNotation} is shown below. Along
 with some metadata at the top of the file (player names, location, etc.\@), the
 chess moves are written in algebraic notation, with an incrementing move
-counter. In this example, Fischer played \texttt{e4} as his first move, with
-Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's
-\nth{43} move.
+counter. In this example, Fischer played \texttt{e4} as his first move; Spassky
+responded with \texttt{e5}. The game ended in a draw on Spassky's \nth{43}
+move.
 
 \begin{verbatim}
-
 [Event "F/S Return Match"]
 [Site "Belgrade, Serbia JUG"]
 [Date "1992.11.04"]
@@ -101,7 +106,6 @@ Spassky responding with \texttt{e5}. The game ended in a draw on Spassky's
 [White "Fischer, Robert J."]
 [Black "Spassky, Boris V."]
 [Result "1/2-1/2"]
-
 1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3
 O-O 9. h3 Nb8 10. d4 Nbd7 11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15.
 Nb1 h6 16. Bh4 c5 17. dxe5 Nxe4 18. Bxe7 Qxe7 19. exd6 Qf6 20. Nbd2 Nxd6 21.
@@ -109,7 +113,6 @@ Nc4 Nxc4 22. Bxc4 Nb6 23. Ne5 Rae8 24. Bxf7+ Rxf7 25. Nxf7 Rxe1+ 26. Qxe1 Kxf7
 27. Qe3 Qg5 28. Qxg5 hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33.
 f3 Bc8 34. Kf2 Bf5 35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4 38. g3 Nxh3 39. Kd2 Kb5
 40. Rd6 Kc5 41. Ra6 Nf2 42. g4 Bd3 43. Re6 1/2-1/2 
-
 \end{verbatim}
 
 The main advantages of PGN are the ease with which it can be read by a human
@@ -122,11 +125,11 @@ by tracing the moves of the game from the start.
 \subsection{Forsyth-Edwards Notation (FEN)}\label{fenSection}
 
 An alternative notation used for static chess positions is FEN. This is much
-more compact than PGN, as no metadata about the game is stored other than the
-state of the board. The following FEN string encodes a standard position
-arising from a King's Gambit.\footnote{An incredibly aggressive, all-or-nothing
-opening for White. Also the authors' weapon of choice.} The board is also shown
-in \Cref{chessKGA}.
+more compact than PGN, as no metadata about the game or moves are stored. The
+following FEN string encodes a standard position arising from a King's
+Gambit.\footnote{An incredibly aggressive, all-or-nothing opening for White.
+Also the authors' weapon of choice.} The board is also shown in
+\Cref{chessKGA}.
 
 \begin{verbatim}
 rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq - 1 3
@@ -168,7 +171,7 @@ the fifty move draw rule.}, and the number of full moves played.
 When implementing chess programs on a computer, neither PGN or FEN are
 applicable as they are difficult and slow to analyse, being string-based.
 Instead, there are a number of various numerical approaches to storing a chess
-position, with bitboards being one of the bigger ones. One of the first
+position, with bitboards being one of the popular ones. One of the first
 mentions of bitboards was by \citet{bitboardsRussian}.
 
 Described informally, a bitboard is a collection of 12 64-bit integers, where
@@ -259,9 +262,9 @@ Some of the following positions are taken from \citet{chesscomTactics}.
     \texttt{c8} and black king on \texttt{g8}. After moving the king, Black
     gives up the rook for a knight -- an unfavourable exchange.
     \\~\\
-    The double pawn advance \text{1.b4} is also a \emph{fork}. Black's knights
-    are attacked and even though they are able to defend each other, Black
-    cannot move both to safety. One of them will be captured by the pawn.
+    The double pawn advance \texttt{1.b4} is also a \emph{fork}. Black's
+    knights are attacked and even though they are able to defend each other,
+    Black cannot move both to safety. One of them will be captured by the pawn.
   \end{minipage}
 \end{figure}
 
@@ -300,7 +303,7 @@ the squares controlled by a piece exerting a pin on a different piece, centre
 control, and vulnerable squares \citep{chessCNN}. These are well known
 heuristics that are often taught to beginner-intermediate chess players, and
 the author claims that these additional layers are ``extremely representative
-of the chess positions'', and cause the CNN to outperform a naive,
+of the chess positions'' and cause the CNN to outperform a naive
 fully-connected neural network.
 
 \paragraph{Automatic Embedding}\citet{chess2vec} investigate and report on
@@ -316,7 +319,7 @@ claim to predict $8.8\%$ of Stockfish moves correctly, which is an impressive
 statistic given no chess logic or ruleset was explicitly implemented.
 
 The results of these works served as initial inspiration for the design of the
-deep learning model (\Cref{mlS21}).
+transformer-based deep learning model (\Cref{mlS21}).
 
 \subsection{Puzzle Type and Difficulty Prediction}\label{typeAndDifficultyReview}
 
@@ -329,10 +332,10 @@ partly thanks to their detailed representation of the board, where each square
 is represented by 71 binary attribites \citep{middleGamePatterns} to encode the
 piece on the square and the possible squares which are reachable by this piece. 
 
-These attributes were also supplemented by 59 other binary attribites which
-were devised by expert chess players, and represent the more complex, but still
-quantifiable relationships. These include open files, control of vulnerable
-squares, and piece activity, among others.
+These attributes were also supplemented by 59 other binary attribites devised
+by expert chess players, representing more complex, but still quantifiable
+relationships. These include open files, control of vulnerable squares, and
+piece activity, among others.
 
 \citet{middleGamePatterns} achieved an 87.7\% classification performance on
 detecting whether a position features a successful \emph{Greek gift sacrifice}
@@ -341,16 +344,17 @@ on relatively small ($<200$ positions) datasets.
 \paragraph{Meaningful Search Trees}\citet{chessTrees} explore estimation of
 difficulty of chess problems in this paper. By using a powerful chess engine,
 they generate a tentative move tree of forcing or winning moves in a given
-position, mirroring the process of calculating a variation for a chess player. 
+position, mirroring a chess player's process of calculating possible future
+moves.
 
 By creating higher level metrics based off these trees (e.g. branching factor,
 piece variety, move distances) and applying standard statistical machinery, the
-authors are able to categorise the puzzles into various difficulty levels with
+authors are able to categorise the puzzles into three difficulty levels with
 some success.
 
 Their unique `meaningful search tree' \citep{chessTrees} approach to analysing
-chess puzzle moves is full of potential, and is this is built upon and explored
-further with the tree-based approach (\Cref{treeS12}).
+chess puzzle moves is full of potential, and is this is built upon with the
+tree-based approach (\Cref{treeS12}).
 
 \paragraph{Static and Dynamic Similarity}In their thesis, \citet{chessMotifs}
 develop a method to retrieve similar chess positions among a variety of
@@ -371,24 +375,24 @@ the distance function used in the tree-based approach (\Cref{treeS13}).
 
 \section{Lichess Puzzle Database}\label{lichessPuzzlesSection}\label{bg5}
 
-Lichess (\url{https://lichess.org}) is a popular, open-source chess website
-which often publishes the games that have been played by players of all skill
-levels on it. As part of this, Lichess has published over 3.6 million rated and
-tagged puzzle positions \citep{lichessPuzzles}. To generate these, 300 million
-games were analysed with a powerful chess engine to find critical positions in
-which a move must be played to capitalise on the opponent's mistake. These
-puzzles were initially tagged to 60 manually created themes \citep{lichessXML},
-which were identified by a Python script \citep{lichessTagger}.
+Lichess (\url{https://lichess.org}) is a popular open-source chess website
+which publishes the games that have been played by players of all skill levels
+on it. As part of this, Lichess has published over 3.8 million rated and tagged
+puzzle positions \citep{lichessPuzzles}. To generate these, 300 million games
+were analysed with a powerful chess engine to find critical positions in which
+a move must be played to capitalise on the opponent's mistake. These puzzles
+were tagged to 60 pre-defined themes \citep{lichessXML}, which were detected by
+a Python script \citep{lichessTagger}.
 
-As various users of the site solved the puzzles, and manually highlighted the
-themes that they thought occured in the puzzle, the ratings and tags of the
-puzzle database evolved until their current state.
+As various users of the site solved the puzzles and manually highlighted the
+themes that they thought occured, the ratings and tags of the puzzle database
+evolved to their current state.
 
 \subsection{Format}
 
 These puzzles are stored in FEN format, with a reference to the game where they
-appeared. They also contain the solution as a sequence of moves, the tactics
-tags \citep{lichessXML}, and the puzzle rating, along with other metadata.
+appeared. They also contain the solution as a sequence of moves, the theme tags
+\citep{lichessXML}, and the puzzle rating, along with other metadata.
 
 An example puzzle string is shown below. This puzzle is also shown visually in
 \Cref{puzzle1,puzzle2}.
@@ -399,6 +403,12 @@ e8d7 a2e6 d7d8 f7f8,1760,80,83,72,mate mateIn2 middlegame short,
 https://lichess.org/yyznGmXs/black#34,
 Italian_Game Italian_Game_Classical_Variation
 \end{verbatim}
+
+Processing these is a trivial task with one small detail: the given FEN strings
+are the state of the game right before the critical blunder is played by the
+opposing site. This means the puzzle, as shown to the user, is the position
+after the first move has been played. Fortunately, processing this data is made
+simple with the \texttt{python-chess} library \citep{pythonChess}.
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
@@ -419,12 +429,6 @@ Italian_Game Italian_Game_Classical_Variation
     \label{puzzle2}
   \end{minipage}
 \end{figure}
-
-Processing these is a trivial task with one small detail: the given FEN strings
-are the state of the game right before the critical blunder is played by the
-opposing site. This means the puzzle, as shown to the user, is the position
-after the first move has been played. Fortunately, processing this data is made
-simple with the \texttt{python-chess} library \citep{pythonChess}.
 
 \subsection{Data Exploration}\label{lichessDataExpl}
 
@@ -459,19 +463,19 @@ symmetric about the mean, and this is of course a result of the Glicko2 rating
 system, developed by \citet{glicko}.
 
 When analysing the rating distribution by theme, an expected behaviour occurs.
-Some chess tactics patterns are considerably simpler to spot, meaning a weaker
-player is able to solve the puzzle with that theme. Therefore some puzzle
-themes, \emph{back-rank mate} (\Cref{puzzle3}), for example, have lower-rated
-puzzles when compared to puzzles featuring a \emph{trapped piece}
-(\Cref{puzzle4}) or \emph{defensive move}.\footnote{Notoriously difficult for
-humans, who are usually much better at aggression than
-defense.\footnotemark}\footnotetext{In chess.}
+Some chess tactics patterns are much simpler to spot, meaning a weaker player
+can solve the puzzle with that theme. Therefore some puzzle themes,
+\emph{back-rank mate} (\Cref{puzzle3}), for example, have lower-rated puzzles
+when compared to puzzles featuring a \emph{trapped piece} (\Cref{puzzle4}) or
+\emph{defensive move}.\footnote{Notoriously difficult for humans, who are
+usually much better at aggression than defense.\footnotemark}\footnotetext{In
+chess.}
 
 \begin{figure}[H]
   \begin{minipage}[t]{0.475\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/puzzle_histogram.png}
-    \caption{Distribution of Lichess puzzle ratings.}
+    \caption{Distribution of puzzle ratings on Lichess.}
     \label{dataHistogram}
   \end{minipage}
   \hspace{0.05\textwidth}

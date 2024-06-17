@@ -8,11 +8,11 @@
 main features of this language are descriptions for a chess piece
 attacking/defending another, attacking/defending a square, being located at a
 square, a square not being available for the enemy king, and the structure of
-white/black pawns on the board.v
+white/black pawns on the board.
 
 With their novel language, they are able to search a chess database for a
 pre-determined pattern, such as the \emph{Greek gift sacrifice}, defined in the
-language as `\texttt{kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5}. With inspiration
+language as ``\texttt{kg8, pf7, pg7, B(ph7), Nf3, Qd1, Pe5}''. With inspiration
 from the FEN notation, this string corresponds to a black king on g8
 (\texttt{kg8}), black pawns on f7, g7; a white bishop attacking a black pawn on
 h7 (\texttt{B(ph7)}), a white knight on f3 (ready to deliver a check with
@@ -21,7 +21,7 @@ on d1 (\texttt{Qd1}), and finally, a white pawn on e5 (\texttt{Pe5}),
 dislodging the usual black knight on f6.
 
 This returns positions such as the one in Figure \ref{chess3}. After
-\texttt{16...Be7 17. O-O}, Black blundered with \texttt{17...Bxa3??}, after
+\texttt{16...Be7 17.O-O}, Black blundered with \texttt{17...Bxa3??}, after
 which, a \emph{Greek gift sacrifice} (\texttt{18.Bxh7!}, shown in Figure
 \ref{chess4}) was made, eventually leading to a win for White.
 
@@ -46,7 +46,7 @@ which, a \emph{Greek gift sacrifice} (\texttt{18.Bxh7!}, shown in Figure
 
 Their language is also able to deal with some light variations, as it is able
 to identify the games shown in Figures \ref{chess5}, \ref{chess6}. In both of
-these positions, White has the brilliant move \texttt{1.Qh6+!!}, following with
+these positions, White has the amazing move \texttt{1.Qh6+!}, following with
 \texttt{2.Rh8\#} if \texttt{1...Kxh6}, and either \texttt{2.Rf7\#} or
 \texttt{2.Rb7+} (leading to a quick mate) if \texttt{1...gxh6}. 
 
@@ -79,6 +79,14 @@ solution, as mentioned by the authors, is the fact that this language still
 requires an expert with pre-existing extensive knowledge to encode the tactics
 into their language.
 
+This work is quite similar to this project's tree-based puzzle analysis
+(\Cref{treeChapter}). Tree-based puzzle analysis, with a distance function, is
+very computationally expensive due to the need to analyse game positions with a
+chess engine. The language developed by \citet{chessLanguage} is far more
+performant, which makes it much more accessible. The downside, of course, is
+the need for domain knowledge. 
+
+
 \subsection{CQL: Chess Query Language}
 
 The Chess Query Language (CQL), invented by \citet{cql}, is another
@@ -103,20 +111,14 @@ mirror positions or reversed-colour positions.
 In addition to Costeff's CQL, there exists a from-scratch clone of CQL6
 \citep{cqli} which includes extra features and supports other chess variants.
 
-\subsection{Chess Moves As Kernels For Texture Classification}
+This is a very powerful tool, but suffers from the same drawback as the work of
+\citet{chessLanguage}: it requires extensive knowledge to use effectively. It
+has been shown by \citet{cql} that CQL can support incredibly niche and complex
+tactical patterns. It is possible that an expert, armed with the unsupervised
+clustering (\Cref{treeS2}) and this language, can create efficient queries to
+find critical chess positions.
 
-In this study, \citet{chessKernel} propose novel kernels for efficient feature
-extraction in the task of texture detection. These 5x5 kernels are directly
-based on the move a rook, bishop, knight, and their combinations. 
-
-Whilst not directly applicable to the context of chess puzzle analysis, this
-work shows that it may be possible to include these kernels in an CNN-based
-analysis of the chess position. It would be interesting to apply to the other
-CNN chess work (e.g. \citeauthor{chessCNN}'s thesis, discussed in Section
-\ref{chessCNNSection}) and analyse its effect on the success of the technique.
-
-\subsection{The Chess Transformer: Mastering Play using Generative Language
-Models}\label{chessTransformerSection}
+\subsection{The Chess Transformer}\label{chessTransformerSection}
 
 \citet{chessTransformer} demonstrate the ability of transformers to learn the
 rules of chess and complex gameplay by analysing PGN games with a fine-tuned
@@ -129,3 +131,18 @@ have to be filtered manually using a chess library \citep{chessTransformer}.
 This `hallucination' effect is a downside of using transformers, and other
 generative techniques, in chess. 
 
+This work is very similar to this project's work with transformers
+(\Cref{mlChapter}). The key difference is that the work by
+\citet{chessTransformer} operates on sequences of chess moves, while the work
+in this project uses a transformer encoder to learn relationships between the
+chess squares in a static position. It is unlikely that adding the extra
+complexity of learning PGN outweighs the benefits, especially given the task of
+this project. However, along with this project's work on transformers, the work
+of \citet{chessTransformer} shows that there is potential in applying the
+transformer architecture to the logical structure of chess.
+
+\section{Closing Remarks}
+
+At the be
+
+\section{Future Work}

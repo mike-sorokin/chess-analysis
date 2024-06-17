@@ -1,8 +1,8 @@
 \chapter{Evaluation}\label{evalChapter}
 
-After explaining the two approachs in the previous two chapters, they are now
-compared on the tasks outlined at the beginning of the report: how good are
-these at predicting the themes in a puzzle (\Cref{evalS1}), and how good are
+After explaining the two approaches, they are now compared on the tasks
+outlined at the beginning (\Cref{introductionChapter}): how good are they at
+predicting the tactical themes in a puzzle (\Cref{evalS1}), and how good are
 they at predicting the difficulty of a puzzle (\Cref{evalS2})?
 
 Each of the methods is evaluated in greater detail (\Cref{evalS3,evalS4}),
@@ -22,7 +22,7 @@ test set. The deep learning approach produced a model which can be tested
 against the entire test set, while the $k$-NN method (\Cref{treeS3}) is used to
 evaluate the tree-based approach. Due to its computational complexity
 (\Cref{treeS31}), $k$-NN uses a subset of 100,000 of its training set and is
-evaluated against a random selection of 2,000 puzzles form the test set. This,
+evaluated against a random selection of 2,000 puzzles from the test set. This,
 of course, increases variance, but is unavoidable without great investments in
 time and processing power.
 
@@ -51,10 +51,10 @@ On the other hand, the deep learning transformer model is almost completely
 accurate at predicting \texttt{middlegame} and \texttt{endgame} labels, along
 with the various types of endgame: \texttt{bishopEndgame},
 \texttt{knightEndgame}, \texttt{pawnEndgame}, \texttt{queenEndgame},
-\texttt{queenRookEndgame}, and \texttt{rookEndgame}. This is definitely a
+\texttt{queenRookEndgame}, and \texttt{rookEndgame}. This is almost certainly a
 result of the model being designed in a way where it can access the whole board
-at once, and an absence of many pieces (what is a giveaway that a position is
-in an endgame), is trivial for it to detect.
+at once, and an absence of many pieces (which is a giveaway that a position is
+in an endgame), is trivial for it to detect. 
 
 
 \begin{table}[H]
@@ -326,5 +326,10 @@ or difficulty.
 \subsection{Puzzle Similarity}\label{evalS42}
 
 Grouping puzzles (\Cref{treeS2}) and ranking puzzles by similarity
-(\Cref{treeS21}) is unique to this method. Qualitative analysis of clustering performance has been shown to have intriguing results, as this method was able to  
+(\Cref{treeS21}) is unique to this method. Qualitative analysis of clustering
+performance has been shown to have intriguing results (\Cref{treeS23}), as this
+method was able to group together puzzles in ways that have not been
+implemented before. The distance-based method of ranking puzzles by similarity
+is also promising, and can likely be used to datamine game databases to find
+similar positions. 
 
