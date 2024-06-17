@@ -15,6 +15,10 @@ The process of creating the model is then described in detail (\Cref{mlS2}),
 including architecture (\Cref{mlS21}), training setup (\Cref{mlS23}), and
 hyperparameter selection (\Cref{mlS22}).
 
+Finally, the internals of the model are explored (\Cref{mlS3}) by visualising
+the input for specific chess boards (\Cref{mlS32}). These are then discussed
+(\Cref{mlS33}).
+
 
 \section{Overview}\label{mlS0}
 
@@ -45,7 +49,7 @@ Applying transformers to chess has been done before by
 as embeddings of tokens/words has not been previously explored.
 
 \begin{figure}[H]
-  \begin{minipage}{0.475\textwidth}
+  \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{project/img/attention.png}
     \caption{Example of the attention mechanism in the encoder. Taken from
@@ -101,8 +105,7 @@ This method has 2 major downsides: there is no way to distinguish if en passant
 or castling is legal. However, there are only 5644 (0.14\%) puzzles tagged as
 `en passant' in the Lichess database, and 2029 (0.053\%) tagged as `castling'
 -- this is a negligible number and the rare situations where a tactic would be
-dramatically changed by an impossible en passant/castle being possible can be
-ignored.
+changed by an impossible en passant/castle being possible can be ignored.
 
 To make learning easier (and to decrease implementation complexity), all chess
 positions are transformed to be from the perspective of White. This has
@@ -146,25 +149,25 @@ default (0.1 and ReLU, respectively). The feedforward layer size was optimised
 
 Finally, the entire output is flattened and a fully connected layer connects
 this to the 60 output neurons, which correspond to each of the 60 Lichess
-puzzle database themes. As the themes are not mutually exclusive, sigmoid
-activation is used to map the outputs to the range to $(0, 1)$.
-
+puzzle database themes. As the themes are not mutually exclusive, softmax
+cannot be used, so sigmoid activation is used to map the outputs to the range
+to $(0, 1)$.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.75\textwidth]{project/img/ml_diagram.png}
+  \includegraphics[width=0.55\textwidth]{project/img/ml_diagram.png}
   \caption{High-level overview of the model architecture.}
   \label{MLDiagram}
 \end{figure}
 
 \subsection{Training Setup}\label{mlS23}
 
-The model was trained for 5 epochs. Every batch, the average binary
-cross-entropy loss (\Cref{bceEq}) between the expected labels and the predicted
-labels was used as the target to be minimised. The Adam optimiser
-\citep{kingma2014adam}, an extension of stochastic gradient descent, was used
-for weight updates, with a learning rate of $1\times10^{-5}$ and default
-$\beta_1$, $\beta_2$.
+The model was trained for 5 epochs. The data was batched into batches of size
+128, and the average binary cross-entropy loss (\Cref{bceEq}) between the
+expected labels and the predicted labels was used as the target to be
+minimised. The Adam optimiser \citep{kingma2014adam}, an extension of
+stochastic gradient descent, was used for weight updates, with a learning rate
+of $1\times10^{-5}$ and default $\beta_1$, $\beta_2$.
 
 \begin{equation}\label{bceEq}
   L(y, \hat{y}) = -\frac{1}{N}\sum_{i=0}^N \hat{y}_i \log y_i +
@@ -181,10 +184,15 @@ depending on resource availability and hyperparameter combination.
 To find the optimal hyperparameters, a grid search was performed over a subset
 of the hyperparameters (\Cref{tabHyperparam}). 
 
-There is evidence of overfitting for the larger models with with \~33 million
-parameters. These achieve a low training loss of approximately 0.08, but the
-validation loss greatly suffers as a result.
+There is evidence of overfitting for the larger models with with $\sim\!33$
+million parameters. These achieve a low training loss of approximately 0.08,
+but the validation loss greatly suffers as a result. Overall, the
+hyperparameter combination with the best performance on the validation set (row
+is highlighted) was selected.
 
+The loss curves for this model over the 5 epochs are shown (\Cref{lossCurves}).
+While these do not show total convergence, the performance of the model was
+adequate and to keep it fair for all combinations, no more training was done.
 
 \begin{table}[H]
   \centering
@@ -224,8 +232,8 @@ validation loss greatly suffers as a result.
 
       $[64, 128, 256 ]$& $64$ & $4096$ & 8,910,780 & 0.09253 & 0.09860 \\
       $[64, 128, 256 ]$& $64$ & $8192$ & 8,910,780 & 0.09288 & 0.09896 \\
-      $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 & 0.09119 & \textbf{0.09716} \\[0.1cm]
-
+      \rowcolor{lightgray} $[64, 128, 256 ]$& $64$ & $16384$ & 8,910,780 & 0.09119 & \textbf{0.09716} \\
+     
       $[64, 128, 256 ]$& $128$  & $4096$ & 9,173,436 & 0.09166 & 0.09808 \\
       $[64, 128, 256 ]$& $128$ & $8192$ & 9,173,436 & 0.09154 & 0.09770 \\
 
@@ -236,14 +244,223 @@ validation loss greatly suffers as a result.
 \end{table}
 
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{project/img/loss_curves.png}
+  \caption{Training and validation loss of the best performing model.}
+  \label{lossCurves}
+\end{figure}
 
 
+\subsection{Conversion to Difficulty Prediction}\label{mlS23}
+
+The architecture, as currently designed, only predicts puzzle themes. In early
+experiments, multiple outputs and losses were attempted, but this led to
+degradation of performance. To allow the model to predict puzzle difficulty, a
+slight modification was made to the architecture (\Cref{mlS21}). 
+
+The output 60 neurons were replaced with just 1: the difficulty rating
+prediction. To make learning easier, all difficulties were scaled down by a
+factor of 3500. As the difficulty rating range in the dataset is $(399, 3331)$
+(\Cref{dataHistogram}), this scaled all ratings to a reasonable range. There
+was no activation function for the final neuron.
+
+The loss was changed to mean square error, and no other parameters were
+changed. This model was trained with the same hyperparameters as the best
+performing label prediction model (\Cref{mlS22}) for 5 epochs. This produced an
+entirely new model.
+
+\section{Visualisations of the Model}\label{mlS3}
+
+Previously, the idea of chess pieces and squares interacting with each other
+was shown (\Cref{chessPuzzleLinks}). With a trained model, this can now be
+explored further. By extracting the attention values and weights from each of
+the transformer layers, as the bitboards flow through the model, and unflattening
+them back into a $8\times8$ chess board, some interesting patterns can be seen.
+
+\subsection{Interpretation}
+
+Attention values and weights are shown below for the puzzle which was used to
+illustrate how transformers could work in this problem
+(\Cref{chessPuzzleLinks}). The values diagram (\Cref{atnP}) shows each channel
+of the chess board atthat stage in the model. In the case of this model, there
+are 256 channels, each of size $8\times8$. 
+
+The weights diagram (\Cref{atnP1}) shows the weights of the self-attention
+within the transformer architecture. This diagram has 64 heatmaps, arranged in
+a chess-like arrangement. Each heatmap represents the weights it assigns to the
+other board locations when updating its own embedding. 
+
+To see a concrete example, take the top left heatmap, corresponding to the
+\texttt{a8} square. This value assigns a very positive weight to the
+\texttt{g8} square (yellow dot in the top right), and a much lower (possibly
+negative) weight to the middle ranks in the board.
 
 
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/attention_3.png}
+    \caption{Attention values in layer 3 of the transformer encoder.}
+    \label{atnP}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/weights_4.png}
+    \caption{Attention weights in layer 4 of the transformer encoder.}
+    \label{atnP1}
+  \end{minipage}
+\end{figure}
+
+\subsection{Attention Weights and Values of Single Chess Pieces}\label{mlS32}
+
+In this section, a single chess piece is placed on \texttt{e4} and this
+position is passed through the model. The corresponding attention value and
+weight heatmaps are shown.
+
+\paragraph{Rook} Horizontal and vertical patterns can be seen in both diagrams.
+This, of course, stems from the moveset of the rook.
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/R_attention_1.png}
+    \caption{Rook attention values.}
+    \label{atnR1}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/R_weights_1.png}
+    \caption{Rook attention weights.}
+    \label{atnR}
+  \end{minipage}
+\end{figure}
+
+\paragraph{Bishop} This bishop is a light-squared bishop. Bishops can only move
+diagonally, and this means that half of the board will never be accessible to
+the bishop, which explains the checkerboard nature of the heatmaps.
+Interestingly, the weights diagram (\Cref{atnB1}) shows how important the main
+diagonal is, which is controlled by the bishop. Every other square takes it
+into consideration when updating its own value.
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/B_attention_4.png}
+    \caption{Bishop attention values.}
+    \label{atnB}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/B_weights_4.png}
+    \caption{Bishop attention weights.}
+    \label{atnB1}
+  \end{minipage}
+\end{figure}
+
+\paragraph{Queen} The queen combines the moveset of the rook and bishop, and
+this can be seen in the heatmaps, as they are less structured. The weights
+heatmap shows that the \texttt{h7} square is important -- this is possibly
+because many checkmates are delivered by the queen on this square, and the
+queen has vision of \texttt{h7} from \texttt{e4}.
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/Q_attention_6.png}
+    \caption{Queen attention values.}
+    \label{atnQ}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/Q_weights_6.png}
+    \caption{Queen attention weights.}
+    \label{atnQ1}
+  \end{minipage}
+\end{figure}
 
 
+\paragraph{Knight} The knight heatmaps have a checkerboard pattern similar to
+the bishop's. This is likely a result of its moveset: a knight attacks
+squares of the opposite colour to the square it is on.
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/N_attention_1.png}
+    \caption{Knight attention values.}
+    \label{atnN}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/N_weights_1.png}
+    \caption{Knight attention weights.}
+    \label{atnN1}
+  \end{minipage}
+\end{figure}
+
+\paragraph{Pawn} Pawns can only move forwards and usually come in groups,
+aligned horizontally. This is clearly seen in both of the attention heatmaps.
+The weights heatmap (\Cref{atnP1}) especially highlights this: the files in
+front of the pawn and behind the pawn are important, as these usually have
+pawns supported by, or supporting the \texttt{e4} pawn.
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/P_attention_6.png}
+    \caption{Pawn attention values.}
+    \label{atnP}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/P_weights_6.png}
+    \caption{Pawn attention weights.}
+    \label{atnP1}
+  \end{minipage}
+\end{figure}
 
 
+\paragraph{King} Finally, the king. The attention weights heatmap
+(\Cref{atnK1}) shows heavy importance of the \nth{1} and \nth{8} files -- where
+the kings are usually located.
+
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/K_attention_0.png}
+    \caption{King attention values.}
+    \label{atnK}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{project/img/attention_maps/K_weights_0.png}
+    \caption{King attention weights.}
+    \label{atnK1}
+  \end{minipage}
+\end{figure}
+
+\subsection{Discussion}\label{mlS33}
+
+The patterns generated by the model (\Cref{mlS32}) are incredible, given the
+model has 0 information about the game of chess other than a collection of
+static positions and labels. This is reminiscent of the work of
+\citet{chess2vec} (\Cref{bg4}), who were able to find success without
+explicitly implementing chess logic.
+
+This shows that transformers have untapped potential in the area of chess, as
+these patterns were learned in order to label puzzles effectively. Playing
+chess, which would require a deeper understanding of piece interactions and
+positions, was not a target, and despite this, progress towards it seems to
+have been made.
 
 
 
