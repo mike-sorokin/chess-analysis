@@ -132,12 +132,77 @@ in an endgame), is trivial for it to detect.
       samples~avg&0.7501&0.5952&0.6488&8630&\textbf{0.8063}&\textbf{0.6181}&\textbf{0.6734}&3388481\\
     \end{tabular}
   \end{adjustbox}
-  \caption{Breakdown of the node distance function for meaningful move trees}
+  \caption{Label breakdown of precision, recall, and F1-score for the two models.}
   \label{labelTable}
 \end{table}
 
 
 \section{Prediction of Puzzle Difficulty}\label{evalS2}
+
+Both methods were also evaluated on their ability to correctly predict
+difficulty rating of puzzles. To measure their performance, the average root
+mean squared error and $r^2$ score was calculated over the entire test set
+(\Cref{diffTable}). As before, the tree-based $k$-NN method was only tested on
+2,000 samples due to its slow inference time. 
+
+A random sample of 1,000 puzzles, along with their actual and predicted
+difficulty ratings, are also shown for each method
+(\Cref{predTree,predTransformer}).
+
+From the results, we see that the tree-based $k$-NN is considerably better than
+the transformer-based model at predicting difficulty rating, with a root mean
+square error of 64 points lower. Additionally, its $r^2$-score is much higher.
+It should be noted that this model was evaluated on far fewer samples, but
+despite this, its performance is very good.
+
+It is interesting that the transformer-based model tends to overshoot the
+rating when it is low, and tends to predict a lower rating when it is high
+(\Cref{errTransformer}). This is likely a result of slight overfitting, or a
+consequence of the loss function used.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|rr}
+    Metric & Tree-Based $k$-NN & Deep Learning Transformer \\
+    \hline
+    $r^2$ score & \textbf{0.4256} & 0.2593 \\
+    Root mean squared error & \textbf{404.5} & 468.4 \\
+  \end{tabular}
+  \caption{Metrics of success for difficulty prediction.}
+  \label{diffTable}
+\end{table}
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{evaluation/img/tree.png}
+    \caption{Actual vs predicted ratings for the tree-based $k$-NN method.}
+    \label{predTree}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{evaluation/img/transformer.png}
+    \caption{Actual vs predicted ratings for the transformer-based model.}
+    \label{predTransformer}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{evaluation/img/tree_err.png}
+    \caption{Residuals vs predicted ratings for the tree-based $k$-NN method.}
+    \label{errTree}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}{0.475\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{evaluation/img/transformer_err.png}
+    \caption{Residuals vs predicted ratings for the transformer-based model.}
+    \label{errTransformer}
+  \end{minipage}
+\end{figure}
 
 
 \section{Deep Learning Approach}\label{evalS3}
@@ -261,6 +326,5 @@ or difficulty.
 \subsection{Puzzle Similarity}\label{evalS42}
 
 Grouping puzzles (\Cref{treeS2}) and ranking puzzles by similarity
-(\Cref{treeS21}) is unique to this method. Performance of clustering puzzles
-has been shown previously 
+(\Cref{treeS21}) is unique to this method. Qualitative analysis of clustering performance has been shown to have intriguing results, as this method was able to  
 
