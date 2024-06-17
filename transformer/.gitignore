@@ -1,3 +1,5 @@
 # Model pth files
 *.pth
 
+*.png
+*.loss
