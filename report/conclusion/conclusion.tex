@@ -1,5 +1,9 @@
 \chapter{Conclusion}\label{concChapter}
 
+This chapter sums up the results of the project by comparing it to some
+existing work in the field (\Cref{concWork}), highlighting possible future
+avenues (\Cref{concS2}), and finally wrapping everything up (\Cref{concS3}).
+
 \section{Related Work}\label{concWork}
 
 \subsection{A Language For Encoding Piece Relationships}
@@ -18,12 +22,8 @@ from the FEN notation, this string corresponds to a black king on g8
 h7 (\texttt{B(ph7)}), a white knight on f3 (ready to deliver a check with
 \texttt{Ng5+}, a common motif in \emph{Greek gift sacrifices}), a white queen
 on d1 (\texttt{Qd1}), and finally, a white pawn on e5 (\texttt{Pe5}),
-dislodging the usual black knight on f6.
-
-This returns positions such as the one in Figure \ref{chess3}. After
-\texttt{16...Be7 17.O-O}, Black blundered with \texttt{17...Bxa3??}, after
-which, a \emph{Greek gift sacrifice} (\texttt{18.Bxh7!}, shown in Figure
-\ref{chess4}) was made, eventually leading to a win for White.
+dislodging the usual black knight on f6. This returns positions such as the one
+in Figure \ref{chess3}. 
 
 \begin{figure}[H]
     \begin{minipage}{0.475\textwidth}
@@ -141,8 +141,77 @@ this project. However, along with this project's work on transformers, the work
 of \citet{chessTransformer} shows that there is potential in applying the
 transformer architecture to the logical structure of chess.
 
-\section{Closing Remarks}
+\section{Future Work}\label{concS2}
 
-At the be
+\subsection{Expanding the Deep Learning Model Architecture}
 
-\section{Future Work}
+A future improvement on this work is expanding the model architecture in the
+transformer-based model (\Cref{mlS21}). This could involve many tricks that are
+used in deep learning and transformer architectures. To supplement this, more
+hyperparameter combinations could be evaluated. This would involve changing the
+parts of the model that were kept constant in this work, such as learning rate,
+activation functions, and number of transformer encoder layers.
+
+This would be resource intensive, as the models take multiple hours to train,
+and this could well expand to days if the model size is greatly increased.
+Despite this, it is likely one of the most effective improvements on the
+transformer-based model; the design and structure has been shown to be
+effective, and optimising it further would be an attempt to reach its full
+potential.
+
+\subsection{Learning Latent Representations of Chess Puzzles}
+
+Building upon the previous point, it would be interesting to experiment with a
+model that attempts to learn a latent space for chess puzzles. This would
+involve a contracting stage, which the current model does not have. If
+successful, it could be used to group puzzles by distance within this space,
+allowing very advanced clustering and similarity analysis.
+
+Theoretically, this could be used to generate new chess positions with a
+certain tactic. In practice, this would be difficult, as a small change to a
+chess position changes it completely. It could also generate chess positions
+that are illegal or unusual, not appearing in real games.
+
+\subsection{Including Some Tactical Elements in Search Tree Construction}
+
+In the current design, few tactical motifs are included when creating search
+trees (\Cref{treeS13}). This was intentional, as introducing many labels could
+create a biased view on what a chess puzzle truly represents. However, the work
+by \citet{chessCNN} showed that including data about pinned pieces, centre
+control, and vulnerable squares can improve performance. 
+
+This will certainly improve the performance, as the current trees do not
+consider moves that are impossible because of a tactic. These moves, however,
+could very well be the reason why two puzzles are similar to a human player.
+
+\subsection{Combining Both Methods}
+
+Finally, it was mentioned that the deep learning method suffers from not having
+detailed enough labels of puzzle tactics. Meanwhile, the tree-based method can
+create meaningful clusters, but cannot assign any reasonable label to them
+without manual checking. It may be possible to use the clustering output of the
+$k$-NN algorithm and the pattern-learning transformer to extract the themes
+appearing in this puzzle. 
+
+Furthermore, by prompting the user for input, it could be possible to create an
+adaptive model that can learn what a chess player thinks makes chess positions
+similar. This would be an incredible leap forward and would allow automated
+personalised training for chess players of all skill.
+
+\section{Closing Remarks}\label{concS3}
+
+This project has shown two distinct approachs to the problem of chess puzzle
+analysis. Analysis of chess tactics is a topic not as often explored in chess,
+as researches often focus their attention on the proving ground of
+chess-playing algorithms like AlphaZero \citep{silver2018general} and Maia
+Chess \citep{mcilroy2020aligning}. It is arguably more useful to the average
+chess player to have greater access to higher quality chess puzzles, as
+practicing these is one of the best ways of improving one's chess playing
+ability.
+
+Both methods have found success with predicting chess puzzle themes and
+difficulty rating. The transformer-based model shows that this architecture has
+potential for learning the structure and piece relationships in chess, while
+the tree-based model shows that attempting to programmatically encode what it
+means for two puzzles to be different is something that is very much feasible.
+

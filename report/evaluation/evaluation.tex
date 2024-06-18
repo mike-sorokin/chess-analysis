@@ -19,11 +19,12 @@ discussed and judged based on their own merits.
 
 Both approaches (\Cref{mlChapter,treeChapter}) are compared with the unseen
 test set. The deep learning approach produced a model which can be tested
-against the entire test set, while the $k$-NN method (\Cref{treeS3}) is used to
-evaluate the tree-based approach. Due to its computational complexity
-(\Cref{treeS31}), $k$-NN uses a subset of 100,000 of its training set and is
-evaluated against a random selection of 2,000 puzzles from the test set. This,
-of course, increases variance, but is unavoidable without great investments in
+against the entire test set with no further modifications, while the $k$-NN
+method (\Cref{treeS3}) is used to evaluate the tree-based approach. Due to its
+computational complexity (\Cref{treeS31}), $k$-NN uses a subset of 100,000
+puzzles of the training set and is evaluated against a random selection of
+2,000 puzzles from the test set. This, of course, increases variance in the
+final evaluation of the model, but is unavoidable without great investments in
 time and processing power.
 
 Per-label precision, recall, and F1-scores are considered for both approaches
@@ -210,15 +211,18 @@ consequence of the loss function used.
 \subsection{Strengths and Weaknesses}\label{evalS31}
 
 The advantages of this approach are clearly the better performance
-(\Cref{labelTable}) over the tree-based approach. After a relatively long
-training period, the models produced by this method can analyse new positions
-almost instantly. As the output of the model is a number in the range $(0, 1)$,
-a sense of `confidence' can be easily understood also, which is considerably
-more difficult in the tree-based approach with $k$-NN.
+(\Cref{labelTable}) compared to the tree-based approach. After a relatively
+long training period, the models produced by this method can analyse new
+positions almost instantly. As the output of the model is a number in the range
+$(0, 1)$, a sense of `confidence' in the output can also be easily understood,
+which is considerably more difficult in the tree-based approach with $k$-NN.
 
 The biggest downside is the trade-off of having fast inference: slow training
 time. This, combined with the need to search for hyperparameters (\Cref{mlS22})
-makes this method quite time and resource intensive. 
+makes this method quite time and resource intensive. The deep learning method
+also requires a lot of access to chess puzzle data, which can be of varying
+quality. This also means that it cannot learn new puzzle tactic patterns if
+they are not labelled appropriately.
 
 \subsection{Game Review}\label{evalS32}
 
@@ -226,11 +230,10 @@ An interesting unintended feature of this approach is that it can, of course,
 predict puzzle themes for any chess position. Since inference time is so fast,
 it is possible to iterate through any chess game's moves and analyse those
 positions. For this example, a game played by the authors was analysed, and the
-interesting positions, along with their labels, are shown below.
-
-Interestingly, the starting position (\Cref{alapin1}) has the labels
-\texttt{crushing}, \texttt{hangingPiece}, and \texttt{oneMove}. The model does
-correctly predict \texttt{opening}. 
+interesting positions, along with their labels, are shown below. Interestingly,
+the starting position (\Cref{alapin1}) has the labels \texttt{crushing},
+\texttt{hangingPiece}, and \texttt{oneMove}. The model does correctly predict
+\texttt{opening}. 
 
 After playing a strange sequence of pawn moves (\Cref{alapin2}), Black gets a
 losing position, where White has a classic \emph{attack on f7} tactic. Indeed,
@@ -239,11 +242,10 @@ White's best move in this position is a \emph{bishop sacrifice},
 11.Qxg4}. Right before the \emph{bishop sacrifice} was played, the model
 correctly predicts \texttt{attackingF2F7}, \texttt{attraction} (the black king
 is attracted onto a square where it can be checked by the knight) and
-\texttt{sacrifice}. This is the only position throughout the entire game where
-the model predicts all of these themes. As a side note, the position
-immediately prior to \texttt{10.Ng5+} is labelled \texttt{discoveredAttack}. It
-is also at this point that the model stops predicting \texttt{opening} and
-begins predicting \texttt{middlegame}.
+\texttt{sacrifice}. These themes appear only at this position, and nowhere else
+in the game. As a side note, the position immediately prior to \texttt{10.Ng5+}
+is labelled \texttt{discoveredAttack}. It is also at this point that the model
+stops predicting \texttt{opening} and begins predicting \texttt{middlegame}.
 
 This attack leads to what seems to be a mating position (\Cref{alapin3}).
 Despite this, White does not have a checkmate. The player with the white pieces
@@ -315,7 +317,7 @@ understand the strength of a position with intuition alone.
 
 However, within this weakness also lies the main strength of this method. This
 tunability means chess players of all skills can benefit from the distance
-function, as they can tune it to their performance.
+function, as they can tweak it to their performance.
 
 Of course, this also means this method of puzzle comparison is much more
 explainable than the black-box deep learning approach. It is completely
