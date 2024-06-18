@@ -29,14 +29,14 @@ time and processing power.
 
 Per-label precision, recall, and F1-scores are considered for both approaches
 (\Cref{labelTable}). Additionally, the averaged statistics are also shown. In
-all averaging formats (micro, macro, weighted, sample), the deep learning
+all averaging formats (micro, macro, weighted, by-sample), the deep learning
 transformer model outperforms the tree-based $k$-NN approach, but it is
-surprisingly close. 
-
-The macro average (unweighted mean of the statistics) suffers greatly for both
-approaches. This is due to the heavily unbalanced dataset
-(\Cref{lichessDataExpl}), so the weighted average (more common themes have a
-higher weight) is more appropriate.
+surprisingly close. The macro average (unweighted mean of the statistics)
+suffers greatly for both approaches. This is due to the heavily unbalanced
+dataset (\Cref{lichessDataExpl}). The most appropriate metrics to compare are
+the weighted averages, where more frequent themes have a higher weight, and
+samples average, where the scores are calculated for each individual sample.
+The latter is most useful for multilabel classfication.
 
 The theme breakdown, despite being difficult to parse, shows some interesting
 differences between the models' performances. All themes discussed in this
@@ -143,7 +143,9 @@ in an endgame), is trivial for it to detect.
 Both methods were also evaluated on their ability to correctly predict
 difficulty rating of puzzles. To measure their performance, the average root
 mean squared error and $r^2$ score was calculated over the entire test set
-(\Cref{diffTable}). As before, the tree-based $k$-NN method was only tested on
+(\Cref{diffTable}). The $r^2$ score, the coefficient of determination,
+indicates how much of the variance in the results is explined by the model --
+higher is better. As before, the tree-based $k$-NN method was only tested on
 2,000 samples due to its slow inference time. 
 
 A random sample of 1,000 puzzles, along with their actual and predicted
@@ -230,10 +232,10 @@ An interesting unintended feature of this approach is that it can, of course,
 predict puzzle themes for any chess position. Since inference time is so fast,
 it is possible to iterate through any chess game's moves and analyse those
 positions. For this example, a game played by the authors was analysed, and the
-interesting positions, along with their labels, are shown below. Interestingly,
-the starting position (\Cref{alapin1}) has the labels \texttt{crushing},
-\texttt{hangingPiece}, and \texttt{oneMove}. The model does correctly predict
-\texttt{opening}. 
+interesting positions (\Cref{alapin1,alapin2,alapin3,alapin4}), along with
+their labels are discussed. Interestingly, the starting position
+(\Cref{alapin1}) has the labels \texttt{crushing}, \texttt{hangingPiece}, and
+\texttt{oneMove}. The model does correctly predict \texttt{opening}. 
 
 After playing a strange sequence of pawn moves (\Cref{alapin2}), Black gets a
 losing position, where White has a classic \emph{attack on f7} tactic. Indeed,
